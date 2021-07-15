@@ -1,0 +1,10 @@
+code/Data.ipynb
+*.aux
+*.pdf
+*.bbl
+*.fls
+*.gz
+apssamp.blg
+apssamp.fdb_latexmk
+apssamp.log
+code/.ipynb_checkpoints/Data-checkpoint.ipynb
