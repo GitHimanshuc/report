@@ -8,3 +8,5 @@ apssamp.blg
 apssamp.fdb_latexmk
 apssamp.log
 code/.ipynb_checkpoints/Data-checkpoint.ipynb
+code/for_latex.ipynb
+code/.ipynb_checkpoints/for_latex-checkpoint.ipynb
