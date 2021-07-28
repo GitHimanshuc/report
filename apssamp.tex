@@ -233,15 +233,35 @@ In the code we decided to go with $\sigma = 0.1$ a large enough value which did 
 
 \section{\label{sec:Timing data} Timing data}
 
-\textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
+% \textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
 
-Table~\ref{table:timing_data} shows the final timing data. One can see that the total time taken by Arpack + LU decomposition is much less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is around 40 times faster. Matrix generation is the bottleneck when we are using Arpack.
+Table~\ref{table:timing_data} shows the final timing data. One can see that the total time taken by Arpack + LU decomposition is much less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster. Matrix generation is the bottleneck when we are using Arpack.
+
+Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
 
 \begin{table}[h!]
   \centering
   \begin{tabular}{||c | c | c | c| c||}
     \hline
-    L  & Matrix generation(s) & Arpack(s) & LU (s)       & dggev(s)  \\ [0.5ex]
+    L  & Mat gen(s) & Arpack(s) & LU (s)      & dggev(s)       \\ [0.5ex]
+    \hline\hline
+    15 & 0.071161             & 0.000712  & 3.26000e-04 & 4.52780000e-02 \\
+    25 & 0.640234             & 0.004513  & 4.48400e-03 & 1.46575600e+00 \\
+    35 & 2.72389              & 0.015021  & 3.04950e-02 & 2.27840010e+01 \\
+    45 & 9.188617             & 0.094585  & 1.22304e-01 & 1.50830308e+02 \\
+    55 & 21.931774            & 0.230849  & 4.14148e-01 & 6.44315238e+02 \\ [1ex]
+    \hline
+    \label{table:timing_data}
+  \end{tabular}
+  \caption{Timing data for Matrix generation, Arpack, LU decomposition and Lapack's dggev on wheeler (Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz)}
+\end{table}
+
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{||c | c | c | c| c||}
+    \hline
+    L  & Mat gen(s) & Arpack(s) & LU (s)       & dggev(s)  \\ [0.5ex]
     \hline\hline
     15 & 0.087328             & 0.003085  & 3.623000e-03 & 0.104892   \\
     25 & 0.63935              & 0.017232  & 4.547300e-02 & 1.806011   \\
@@ -249,10 +269,10 @@ Table~\ref{table:timing_data} shows the final timing data. One can see that the 
     45 & 10.355544            & 0.196789  & 2.010160     & 74.043790  \\
     55 & 21.472547            & 0.481778  & 6.144312     & 275.292717 \\ [1ex]
     \hline
+    \label{table:timing_data_laptop}
   \end{tabular}
-  \label{table:timing_data}
+  \caption{Timing data for Matrix generation, Arpack, LU decomposition and Lapack's dggev on a laptop (Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz)}
 \end{table}
-
 
 \section{Appendixes}
 
