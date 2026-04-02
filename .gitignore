@@ -32,3 +32,5 @@ _minted*
 # Local build output for this project
 apssamp.pdf
 apssampNotes.bib
+main.pdf
+mainNotes.bib

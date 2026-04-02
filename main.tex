@@ -1,4 +1,4 @@
-% ****** Start of file apssamp.tex ******
+% ****** Start of file main.tex ******
 %
 %   This file is part of the APS files in the REVTeX 4.2 distribution.
 %   Version 4.2a of REVTeX, December 2014
@@ -13,10 +13,10 @@
 % See the REVTeX 4 README file
 % It also requires running BibTeX. The commands are as follows:
 %
-%  1)  latex apssamp.tex
-%  2)  bibtex apssamp
-%  3)  latex apssamp.tex
-%  4)  latex apssamp.tex
+%  1)  latex main.tex
+%  2)  bibtex main
+%  3)  latex main.tex
+%  4)  latex main.tex
 %
 \documentclass[%
  reprint,
@@ -40,10 +40,11 @@
 %floatfix,
 ]{revtex4-2}
 
+
+\usepackage{listings}
 \usepackage{graphicx}% Include figure files
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
-\usepackage{listings}
 \usepackage{hyperref}% add hypertext capabilities
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
@@ -56,67 +57,42 @@
 %%height=10in,a5paper,hmargin={3cm,0.8in},
 %]{geometry}
 
-\graphicspath{ {/home/user/images/} }
+\usepackage{soul} % for highlighting
 \usepackage{xcolor}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    % numbers=left,                    
-    % numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
-}
-
-\lstset{style=mystyle}
+\newcommand{\correct}[1]{\sethlcolor{red}\hl{#1}}
+\newcommand{\todo}[1]{\sethlcolor{yellow}\hl{#1}}
 
 \begin{document}
 
 \preprint{APS/123-QED}
 
-\title{Project Report\\
-  Using Arpack instead of Lapack to find spins of a BH system}% Force line breaks with \\
+\title{Using Arpack instead of Lapack to find spins of a BH system}% Force line breaks with \\
 % \thanks{A footnote to the article title}%
 
-\author{Himanshu}
-%  \altaffiliation{Physics Department, Caltech}%Lines break automatically or can be forced with \\
-% \author{SXS boi}%
-%  \email{Second.Author@institution.edu}
-% \affiliation{%
-%  Authors' institution and/or address\\
-%  This line break forced with \textbackslash\textbackslash
-% }%
+\author{Himanshu Chaudhary}
+\email{hchaudha@caltech.edu}
+\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}%
+\author{Mark Scheel}
+\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
+\author{Rob Owen}
+\affiliation{Department of Physics and Astronomy, Oberlin College}
+\author{Saul Teukolsky}
+\affiliation{Cornell Center for Astrophysics and Planetary Science, Cornell University, Ithaca, New York 14853, USA}
+\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
 
-% \collaboration{SXS Collaboration}%\noaffiliation
-
+\collaboration{SXS Collaboration}%\noaffiliation
 
 \date{\today}% It is always \today, today,
              %  but any date may be explicitly specified
 
 \begin{abstract}
+
   Finding the spin of a black hole involves solving a generalized eigenvalue problem ($M x = \lambda B x$), right now Lapack is being used to do this.  The size of the matrices M and B is approximately $N = L^2$ where $L$ is the maximum degree ($l$) of the spherical harmonics ($Y^l_m$) used in describing the black hole horizon.
   Lapack works well when the black hole horizon can be described using small number of spherical harmonics i.e. $L$ is small or equivalently the horizon is not too deformed. Lapack's eigensolver(dggev) scales as $N^3$ while the matrix  generation scales as $N^2$, using Arpack allows us to remove the costly Lapack solver and the scaling of the complete algorithm effectively becomes $N^2$.
 
-\begin{description}
 
-\item[Structure] 
-  In the section \ref{sec:Introduction} we describe the problem and structure of the matrices $M$ and $B$. In section \ref{sec:Lapack} we will discuss the how the Lapack was being used to solve the generalized eigenvalue problem and the issue associated with it. In section \ref{sec:Arpack} we will describe how using Arpack to solve the generalized eigenvalue problem makes the algorithm scale better. In section \ref{sec:Timing data} we present some timing data.
-\end{description}
+  In the section \ref{sec_Intro} we describe the problem and structure of the matrices $M$ and $B$. In section \ref{sec:Lapack} we will discuss the how the Lapack was being used to solve the generalized eigenvalue problem and the issue associated with it. In section \ref{sec:Arpack} we will describe how using Arpack to solve the generalized eigenvalue problem makes the algorithm scale better. In section \ref{sec:Timing data} we present some timing data.
+
 \end{abstract}
 
 %\keywords{Suggested keywords}%Use showkeys class option if keyword
@@ -125,7 +101,8 @@
 
 %\tableofcontents
 
-\section{\label{sec:Introduction} Introduction}
+\section{\label{sec_Intro}Introduction}
+
 
 Black hole horizons in SpEC are represented using Spherical harmonic. When the black holes are far away from each other their horizons are well approximated as spheres, which means we only need a small number of spherical harmonics to approximate them. On the other hand when the black holes are about to merge their horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. 
 
@@ -136,6 +113,11 @@ In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give th
 
 Matrices $M$ and $B$ are dense and diagonally dominated. One important fact about $M$ is that its diagonal elements can get very large for large $L$, as high as $10^{12}$ for $L = 80$, which makes the matrices very ill conditioned. Also, there is no clear structure in the matrices $M$ and $B$, this meant that we had no way of generating cheap preconditioners in a matrix free manner. Because of these two reasons the originally planned matrix free methods failed to work for large $L$. 
 % this is further discussed in the section \ref{sec:Arpack}.
+
+
+\subsection{\label{sec_outline}Outline}
+
+WRITE outline
 
 
 \section{\label{sec:Lapack} Lapack}
@@ -346,3 +328,5 @@ Finally, there is Arpack which takes hardly a few seconds to run once the LU dec
 
 
 \end{document}
+%
+% ****** End of file main.tex ******
