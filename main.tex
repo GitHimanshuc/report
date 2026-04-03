@@ -20,7 +20,7 @@
 %
 \documentclass[%
  reprint,
-%superscriptaddress,
+ superscriptaddress,
 %groupedaddress,
 %unsortedaddress,
 %runinaddress,
@@ -72,10 +72,10 @@
 \author{Himanshu Chaudhary}
 \email{hchaudha@caltech.edu}
 \affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}%
-\author{Mark Scheel}
-\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
 \author{Rob Owen}
 \affiliation{Department of Physics and Astronomy, Oberlin College}
+\author{Mark Scheel}
+\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
 \author{Saul Teukolsky}
 \affiliation{Cornell Center for Astrophysics and Planetary Science, Cornell University, Ithaca, New York 14853, USA}
 \affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
@@ -87,11 +87,8 @@
 
 \begin{abstract}
 
-  Finding the spin of a black hole involves solving a generalized eigenvalue problem ($M x = \lambda B x$), right now Lapack is being used to do this.  The size of the matrices M and B is approximately $N = L^2$ where $L$ is the maximum degree ($l$) of the spherical harmonics ($Y^l_m$) used in describing the black hole horizon.
-  Lapack works well when the black hole horizon can be described using small number of spherical harmonics i.e. $L$ is small or equivalently the horizon is not too deformed. Lapack's eigensolver(dggev) scales as $N^3$ while the matrix  generation scales as $N^2$, using Arpack allows us to remove the costly Lapack solver and the scaling of the complete algorithm effectively becomes $N^2$.
+The dynamics of a binary black hole systems are governed by their masses and spins. For a binary system it is not possible to define these quantities in an unambiguous way. But, we have a lot of reasonable definitions that reduce to the expected values in the limit of infinite separation. For the simulations done in SpEC one of the spin definition that we use is AKV(Approximate Killing Vector) spins, which as the name suggests are built using the approximate killing vectors of the apparent horizons. Finding these approximate killing vectors requires solving a generalized eigenvalue solve, which scales as O($L^6$), where L is the highest spherical harmonic mode used to represent the apparent horizon. This scaling means that the cost of computing the AKV spins gets very high as we try to simulate more complex systems at higher resolutions. In this paper we describe a new algorithm that uses iterative eigenvalue solvers and runs much faster than the current algorithm using dense solver.
 
-
-  In the section \ref{sec_Intro} we describe the problem and structure of the matrices $M$ and $B$. In section \ref{sec:Lapack} we will discuss the how the Lapack was being used to solve the generalized eigenvalue problem and the issue associated with it. In section \ref{sec:Arpack} we will describe how using Arpack to solve the generalized eigenvalue problem makes the algorithm scale better. In section \ref{sec:Timing data} we present some timing data.
 
 \end{abstract}
 
