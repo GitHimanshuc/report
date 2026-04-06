@@ -100,6 +100,9 @@ The dynamics of a binary black hole systems are governed by their masses and spi
 
 \section{\label{sec_Intro}Introduction}
 
+With the new generation of gravitational wave detectors coming up (CITE) we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. Unlike the rest of the simulation the spin computations are done on a single core, this means that when it is slow all the other cores are effectively wasting resources waiting for it to complete.
+
+In this paper Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Section  
 
 Black hole horizons in SpEC are represented using Spherical harmonic. When the black holes are far away from each other their horizons are well approximated as spheres, which means we only need a small number of spherical harmonics to approximate them. On the other hand when the black holes are about to merge their horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. 
 
@@ -111,19 +114,15 @@ In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give th
 Matrices $M$ and $B$ are dense and diagonally dominated. One important fact about $M$ is that its diagonal elements can get very large for large $L$, as high as $10^{12}$ for $L = 80$, which makes the matrices very ill conditioned. Also, there is no clear structure in the matrices $M$ and $B$, this meant that we had no way of generating cheap preconditioners in a matrix free manner. Because of these two reasons the originally planned matrix free methods failed to work for large $L$. 
 % this is further discussed in the section \ref{sec:Arpack}.
 
+\section{\label{sec:AKV spin definition} AKV spin definition}
 
-\subsection{\label{sec_outline}Outline}
-
-WRITE outline
-
-
-\section{\label{sec:Lapack} Lapack}
+\section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
 As already mentioned the time complexity of Lapack's dggev solver $O(N^3)$ which is worse that the complexity of matrix generation which is $O(N^2)$. Higher time complexity does not directly imply that a process will take more time to run, in our case Lapack is faster than the matrix generation until $L \lessapprox 50$ (on wheeler) after which it becomes slower and eventually the bottleneck.
 
 Note that this is not an issue for runs where $L$ never reached as high as 80, which were almost all of the runs done till now. The only runs where $L$ becomes this large are high mass ratio binaries or very high spin systems but these are the type of systems that we want to simulate next.
 
-\section{\label{sec:Arpack} Arpack}
+\section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
 Arpack designed to solve eigenvalue problems using an iterative procedure called Implicitly Restarted Arnoldi Method. Unlike Lapack, Arpack does not require full matrices to work, it just requires the action of the matrices.
 
@@ -193,11 +192,11 @@ This is just an artificial example to illustrate the importance of shift invert 
 
 \subsection{Transforming the generalized eigenvalue problem into a standard eigenvalue problem}
 
-Arpack is not able to directly handle $M x = \lambda B x$ if B is not Hermitian positive definite (section 3.2.2 of \cite{arpack_guide}), in this situation one has to convert the generalized eigenvalue problem into a standard one and then call the corresponding Arpack routine (dnaupd, Section C.2 \ref{sec:Arpack}).
+Arpack is not able to directly handle $M x = \lambda B x$ if B is not Hermitian positive definite (section 3.2.2 of \cite{arpack_guide}), in this situation one has to convert the generalized eigenvalue problem into a standard one and then call the corresponding Arpack routine (dnaupd, Section C.2 \ref{sec:Sparse AKV algorithm}).
 
 Our matrix B is not Hermitian, but this is not a big issue for us as we are going to use shift invert transform which by default changes a generalized eigenvalue problem into a standard one (Eq~\ref{eqn:shift_inverted_equation}).
 
-\subsection{Selecting the value of $\sigma$}
+\subsection{Selecting the value of \texorpdfstring{sigma($\sigma$)}{sigma}}
 
 Shift invert transform requires taking inverse of $M -\sigma B$ which becomes singular if $\sigma$ is equal to any eigenvalue of the system.
 Matrices $M$ and $B$ in our case are going to be positive semidefinite and negative semidefinite respectively. This implies that the eigenvalues of our system $M x = \lambda B x$ are going to be negative. Which means that we are free to choose any positive value for $\sigma$ without the fear of it ever being equal to an eigenvalue.
@@ -210,7 +209,7 @@ It is important to note that the closer $\sigma$ is to an eigenvalue the larger 
 In the code we decided to go with $\sigma = 0.1$ a large enough value which did not slow down the convergence of Arpack by a lot.
 
 
-\section{\label{sec:Timing data} Timing data}
+\subsection{\label{sec:Timing data} Timing data}
 
 % \textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
 
@@ -252,12 +251,6 @@ Most probably because of different Lapack version, dggev is faster on my laptop 
   \end{tabular}
   \caption{Timing data for Matrix generation, Arpack, LU decomposition and Lapack's dggev on a laptop (Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz)}
 \end{table}
-
-\section{Appendixes}
-
-% \subsection{Matrix Structure \label{matrix_structure}}
-
-% \subsection{Matrix free version\label{appen:matrix_free_version}}
 
 
 \subsection{Loglog plots showing the time scaling \label{appen::loglog_plots}}
@@ -302,10 +295,12 @@ Arpack++ guide:
 \href{https://github.com/m-reuter/arpackpp/blob/master/doc/arpackpp.pdf}{https://github.com/m-reuter/arpackpp/blob/master/doc/arpackpp.pdf}
 
 
+
+
 \subsection{For future reference \label{appen:for_future_reference}}
 
 
-\subsubsection{Possible speedup}
+\section{\label{sec:Future improvements} Future improvements}
 
 The simplest first possibility that may work is going back to the matrix free version and generating the full matrices every 100th step or so to use as a preconditioner. If the spin does not change very rapidly then the matrix should also change slowly and the same preconditioner could be used for multiple time steps. The main issue is that close to the merger spins will change rapidly, and there we may end up calculate the full matrices at every step defeating the whole purpose. All the following suggestion are simply noting the parts that can be parallelized.
 
@@ -316,9 +311,10 @@ After, that the next most costly process is the LU decomposition and using it so
 
 Finally, there is Arpack which takes hardly a few seconds to run once the LU decomposition is done. The chances that we would ever need something faster than it is slim but there is a parallel version of Arpack in the \href{https://github.com/opencollab/arpack-ng/tree/master/PARPACK}{Arpack-ng github repo}.
 
+\section{\label{sec:Conclusions} Conclusions}
 
-\subsubsection{Newer versions of Lapack will be faster}
-\href{https://github.com/Reference-LAPACK/lapack/pull/421}{A recently merged pull request in Lapack} allows it to solve generalized eigenvalue problems 10-12 times faster. This will still be significantly slower than Arpack for our use case as we are only finding 3 eigenvectors but apparently Lapack can still get faster!
+% \subsubsection{Newer versions of Lapack will be faster}
+% \href{https://github.com/Reference-LAPACK/lapack/pull/421}{A recently merged pull request in Lapack} allows it to solve generalized eigenvalue problems 10-12 times faster. This will still be significantly slower than Arpack for our use case as we are only finding 3 eigenvectors but apparently Lapack can still get faster!
 
 
 \bibliography{main}% Produces the bibliography via BibTeX.
