@@ -98,11 +98,29 @@ The dynamics of a binary black hole systems are governed by their masses and spi
 
 %\tableofcontents
 
-\section{\label{sec_Intro}Introduction}
+\section{\label{sec:Introduction} Introduction}
 
 With the new generation of gravitational wave detectors coming up (CITE) we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. Unlike the rest of the simulation the spin computations are done on a single core, this means that when it is slow all the other cores are effectively wasting resources waiting for it to complete.
 
-In this paper Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Section  
+In this paper Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Sections \ref{sec:Future improvements} and \ref{sec:Conclusions} we talk about possible future improvements and conclude.
+
+\section{\label{sec:AKV spin definition} AKV spin definition}
+In this section we only define the quantities relevant to understand the algorithm. Reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} for more background and references. There is no unambiguous way to define spin of a dynamical black hole horizon in a bbh system. We usually settle for quasilocal spin definition which reduce to the "expected" values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions which is constructed by using approximate killing vectors of the black hole horizons.
+
+We start by setting up the conventions used throughout the paper. We work in the standard 3+1 decomposition \cite{Baumgarte:2010ndz}, with spatial slice denoted by $\Sigma$. The spatial metric, extrinsic curvature and the two dimensional apparent horizon are denoted by $g_{ij}$, $K_{ij}$ and $\mathcal{H}$. Lower case Latin letter index the spatial tensors and upper case Latin latter index the tensors on the two dimensional horizon surface. We also put a ring on top of the geometric quantities related to $\mathcal{H}$ to separate then from the geometric quantities on the spatial slice $\Sigma$.
+
+The standard definition (CITE) of spin angular momentum ($S$) in given by, 
+\begin{align}
+S=\frac{1}{8 \pi} \oint_{\mathcal{H}} \phi^i s^j K_{i j} d A
+\label{eqn:spin angular momentum}
+\end{align}
+
+where  $s^j$ is the outgoing normal of $\mathcal{H}$. And $\vec{\phi}$ is an "azimuthal" vector field, tangent to $\mathcal{H}$ which carries the information about the spin axis.
+
+It can be shown that \ref{eqn:spin angular momentum} is conserved (CITE) when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The primary idea behind defining the AKV spin is to find an approximate killing vector field which is 
+
+\section{\label{sec:Current AKV algorithm} Current AKV algorithm}
+
 
 Black hole horizons in SpEC are represented using Spherical harmonic. When the black holes are far away from each other their horizons are well approximated as spheres, which means we only need a small number of spherical harmonics to approximate them. On the other hand when the black holes are about to merge their horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. 
 
@@ -113,10 +131,6 @@ In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give th
 
 Matrices $M$ and $B$ are dense and diagonally dominated. One important fact about $M$ is that its diagonal elements can get very large for large $L$, as high as $10^{12}$ for $L = 80$, which makes the matrices very ill conditioned. Also, there is no clear structure in the matrices $M$ and $B$, this meant that we had no way of generating cheap preconditioners in a matrix free manner. Because of these two reasons the originally planned matrix free methods failed to work for large $L$. 
 % this is further discussed in the section \ref{sec:Arpack}.
-
-\section{\label{sec:AKV spin definition} AKV spin definition}
-
-\section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
 As already mentioned the time complexity of Lapack's dggev solver $O(N^3)$ which is worse that the complexity of matrix generation which is $O(N^2)$. Higher time complexity does not directly imply that a process will take more time to run, in our case Lapack is faster than the matrix generation until $L \lessapprox 50$ (on wheeler) after which it becomes slower and eventually the bottleneck.
 
