@@ -173,7 +173,7 @@ Minimizing this functional with respect to $z$ gives a generalized eigenvalue pr
   \label{eqn:generalized eigenvalue problem}
 \end{align}
 
-Now we can try to discretize the equation \ref{eqn:generalized eigenvalue problem} and solve it numerically. The only remaning issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. We bypass this issue very easily in our case because we are discretizing the problem using spherical harmonics and 
+Now we can try to discretize the equation \ref{eqn:generalized eigenvalue problem} and solve it numerically. The only remaning issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. The standard way to deal with such issues is to remove the kernel space and then solve for z. In our case this is done trivially because we are 
 
 \section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
