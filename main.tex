@@ -105,7 +105,7 @@ With the new generation of gravitational wave detectors coming up (CITE) we will
 In this paper Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Sections \ref{sec:Future improvements} and \ref{sec:Conclusions} we talk about possible future improvements and conclude.
 
 \section{\label{sec:AKV spin definition} AKV spin definition}
-In this section we only define the quantities relevant to understand the algorithm. Reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} for more background and references. There is no unambiguous way to define spin of a dynamical black hole horizon in a bbh system. We usually settle for quasilocal spin definition which reduce to the "expected" values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions which is constructed by using approximate killing vectors of the black hole horizons.
+In this section we only define the quantities relevant to understand the algorithm. Reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} for more background and references. There is no unambiguous way to define spin of a dynamical black hole horizon in a bbh system. We usually settle for quasilocal spin definition which reduce to the ``expected" values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions which is constructed by using approximate killing vectors of the black hole horizons.
 
 We start by setting up the conventions used throughout the paper. We work in the standard 3+1 decomposition \cite{Baumgarte:2010ndz}, with spatial slice denoted by $\Sigma$. The spatial metric, extrinsic curvature and the two dimensional apparent horizon are denoted by $g_{ij}$, $K_{ij}$ and $\mathcal{H}$. Lower case Latin letter index the spatial tensors and upper case Latin latter index the tensors on the two dimensional horizon surface. We also put a ring on top of the geometric quantities related to $\mathcal{H}$ to separate then from the geometric quantities on the spatial slice $\Sigma$.
 
@@ -115,9 +115,30 @@ S=\frac{1}{8 \pi} \oint_{\mathcal{H}} \phi^i s^j K_{i j} d A
 \label{eqn:spin angular momentum}
 \end{align}
 
-where  $s^j$ is the outgoing normal of $\mathcal{H}$. And $\vec{\phi}$ is an "azimuthal" vector field, tangent to $\mathcal{H}$ which carries the information about the spin axis.
+where  $s^j$ is the outgoing normal of $\mathcal{H}$. And $\vec{\phi}$ is an ``azimuthal" vector field, tangent to $\mathcal{H}$ which carries the information about the spin axis.
 
-It can be shown that \ref{eqn:spin angular momentum} is conserved (CITE) when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The primary idea behind defining the AKV spin is to find an approximate killing vector field which is 
+It can be shown that \ref{eqn:spin angular momentum} is conserved (CITE) when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The next best thing one can use is the vector field which is closest to being a Killing vector field, in other words an approximate Killing vector. We will now describe the method used in SpEC for constructing these approximate Killing vector fields (CITE). We start from the Killing's equation for a vector field $\phi_{B}$
+\begin{align}
+D_{(A} \phi_{B)}=0
+\end{align}
+
+This condition can be spilt into two conditions: first that the field has no expansion
+\begin{align}
+\Theta:= \mathring{g}^{A B} D_A \phi_B=0
+\end{align}
+
+and second that it has no shear
+\begin{align}
+\sigma_{A B}:=D_{(A} \phi_{B)}-\frac{1}{2} \mathring{g}_{A B} \Theta=0
+\end{align}
+
+where $\mathring{g}_{AB}$ is the metric on the apparent horizon and $D_A$ is the torsion free covariant derivative associated with that metric. If $\vec{\phi}$ is not a Killing vector field then we can't satisfy both of these condition at once, so we will choose a $\vec{\phi}$ which is expansion free and has the smallest possible shear. Any expansion free vector field tangent to the apparent horizon can be written as
+
+\begin{align}
+    \phi^{A} = \epsilon^{AB}  D_{B} z,
+\end{align}
+
+where $z$ is some smooth function and $\epsilon^{AB}$ is the Levi-Civita tensor.
 
 \section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
