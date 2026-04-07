@@ -130,15 +130,50 @@ This condition can be spilt into two conditions: first that the field has no exp
 and second that it has no shear
 \begin{align}
 \sigma_{A B}:=D_{(A} \phi_{B)}-\frac{1}{2} \mathring{g}_{A B} \Theta=0
+\label{eqn:shear in terms of phi}
 \end{align}
 
 where $\mathring{g}_{AB}$ is the metric on the apparent horizon and $D_A$ is the torsion free covariant derivative associated with that metric. If $\vec{\phi}$ is not a Killing vector field then we can't satisfy both of these condition at once, so we will choose a $\vec{\phi}$ which is expansion free and has the smallest possible shear. Any expansion free vector field tangent to the apparent horizon can be written as
-
 \begin{align}
     \phi^{A} = \epsilon^{AB}  D_{B} z,
+    \label{eqn:phi in terms of z}
 \end{align}
 
-where $z$ is some smooth function and $\epsilon^{AB}$ is the Levi-Civita tensor.
+where $z$ is some smooth function and $\epsilon^{AB}$ is the Levi-Civita tensor. Now the problem of finding the approximate Killing vector boils down to finding the $z$ which gives the smallest shear or minimizing the norm $\|\sigma\|^2$:
+\begin{align}
+\|\sigma\|^2:=\oint_{\mathcal{H}} \sigma_{B C} \sigma^{B C} d A .
+\end{align}
+
+Using the equations \ref{eqn:shear in terms of phi} and \ref{eqn:phi in terms of z} then integrating by parts we get
+\begin{align}
+\|\sigma\|^2=\oint_{\mathcal{H}} z H z d A.
+\label{eqn:shear norm in terms of H and z}
+\end{align}
+
+$H$ is
+\begin{align}
+H z=D^4 z+\mathring{R} D^2 z+D^4 \mathring{R} D_A z
+\label{eqn:equations for H in terms of laplacians}
+\end{align}
+
+where $D^2$ is the laplacian on the apparent horizon and $\mathring{R}$ is the Ricci Scalar. If we try to minimize equation \ref{eqn:shear norm in terms of H and z} with respect to $z$ then we will end up with the trivial solution that $z$ is constant and $\vec{\phi}$ is zero. To avoid this we will require the minimized $\vec{\phi}$ has a non-zero norm,
+\begin{align}
+\oint_{\mathcal{H}} \phi^A \phi_A d A
+\end{align}
+
+By using Lagrange multiplier and the fact that $\phi^A \phi_A = D^A z D_A z$ we get
+\begin{align}
+I[z]:=\oint_{\mathcal{H}} z H z d A+\lambda\left(\oint_{\mathcal{H}} D^A z D_A z d A-N\right),
+\end{align}
+where $N$ is still an undetermined positive constant. Fixing the value of $N$ is same as normalizing the value of the approximate Killing vector field and getting not just the direction but the magnitude of the spin. We will not be dealing with $N$ in this paper and readers can refer to \cite{lovelace_binary-black-hole_2008} for more info.
+
+Minimizing this functional with respect to $z$ gives a generalized eigenvalue problem:
+\begin{align}
+  H z = \lambda D^2 z
+  \label{eqn:generalized eigenvalue problem}
+\end{align}
+
+Now we can try to discretize the equation \ref{eqn:generalized eigenvalue problem} and solve it numerically. The only remaning issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. We bypass this issue very easily in our case because we are discretizing the problem using spherical harmonics and 
 
 \section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
