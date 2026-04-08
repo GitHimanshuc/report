@@ -183,12 +183,11 @@ Once we have discretized the equation \ref{eqn:generalized eigenvalue problem} t
 
 Let's call the matrices formed by discretizing the operators $H$ and $D$ in equation \ref{eqn:generalized eigenvalue problem} $M$ and $B$ respectively. Now we have generalized eigenvalue problem $Mx = \lambda Bx$ and getting the eigenvectors is just a matter of using a standard library like LAPACK. To understand why this became an issue we need to understand how big these matrices are and how they grow with increase in the complexity of the apparent horizons. Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other their apparent horizons are not too deformed and can be approximated using a small number of spherical harmonics. On the other hand when the black holes are about to merge their horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. $L$ can be as small as 15 for simple non-spinning systems during the inspiral but for some complex cases it can get as large as 90 near the merger.
 
-The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_00$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues\footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors Lapack does a reduction of the eigensystem and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly, Table \ref{table:timing_data}. This scaling is particularly bad for SpEC where because of the its parallelization infrastructure we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of compute resources will only get worse as we need to simulate more complex parts of the parameter space at much higher accuracy for the next generation of detectors. 
+The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_{00}$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues\footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors Lapack does a reduction of the eigensystem and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly, Table \ref{table:timing_data}. This scaling is particularly bad for SpEC where because of the its parallelization infrastructure we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of compute resources will only get worse as we need to simulate more complex parts of the parameter space at much higher accuracy for the next generation of detectors. 
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
-A large part of why ddgev is so slow is because it has to find all the $L^3$ eigenvalues when we just need three. The efficient way to solve these kind of problems is to use iterative solvers like ARPACK. 
-% Another possible advantage of using ARPACK is that it does not require full matrices to work, it just requires the action of the matrices on a vector.
+A large part of why ddgev is so slow is because it has to find all the $L^3$ eigenvalues when we just need three. The efficient way to solve these kind of problems is to use iterative solvers like ARPACK.
 
 In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give the action of the matrices $M$ and $B$ respectively on a vector $x$. Thus, to generate the matrices we need to operate on $N$ cartesian basis vectors. This means that the time complexity of generating the matrices $M$ and $B$ is $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. In theory, we don't even need to construct these matrices when using ARPACK because it can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. This is shown in Fig.(\ref{fig: ARPACK call graph for nonsymmetric generalized case}), where we just need the functions $f_M(x)$ and $f_B(x)$ to find the eigenvectors. Note that we need to solve a linear problem($y = B^{-1} v$) to get the vector $y$ required by ARPACK, this can be done using iterative solvers like GMRES and BiCGSTAB. 
 
@@ -231,7 +230,7 @@ In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give th
 
 As it turn out we do not want to use ARPACK in the way describe above because it will get very slow and might even fail when $L$ gets large. This is because we want to find the three smallest eigenvalues while the algorithm in ARPACK converges much faster when we solve for the largest eigenvalues. Another peculiarity of the algorithm is that it also converges faster when the eigenvalues are well separated. This can be seen in the next section where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
 
-\subsection{Speed difference between finding the smallest and the largest eigenvalues}
+\subsection{\label{ssec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest and the largest eigenvalues}
 
 We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
 % Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
@@ -260,7 +259,7 @@ ss.eigs(mat, k=3, sigma=0.0, which="LM")
 #5.5 ms
 \end{lstlisting}
 
-We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient\footnote{This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size. }.
+We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient\footnote{This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size.}.
 
 % Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
 
@@ -287,7 +286,40 @@ where,
 \end{equation}
 
 
-First thing to observe is that both the problems have the same eigenvectors and the corresponding eigenvalues are related via the equation~\ref{eqn:shift_invert_evals_relation}. Note that if we choose $\sigma$ such that it is closer to an eigenvalue $\bar{\lambda}$ that any other eigenvalue, then the corresponding $\bar{\nu}$ will become the largest eigenvalue in the shift inverted system. We can use this fact to speed up the task of finding the smallest magnitude eigenvalues, which is something that Arpack is not super good at.
+First thing to observe is that both the problems have the same eigenvectors and the corresponding eigenvalues are related via the equation~\ref{eqn:shift_invert_evals_relation}. Note that if we choose $\sigma$ such that it is closer to an eigenvalue $\bar{\lambda}$ that any other eigenvalue, then the corresponding $\bar{\nu}$ will become the largest eigenvalue in the shift inverted system. In the Sec.(\ref{ssec:Speed difference between finding the smallest and the largest eigenvalues}) we saw that the if we want to find the eigensystem corresponding to the smallest eigenvalues then using shift invert transform provides a much effecient way. Fig.(\ref{fig:ARPACK_call_graph_shift_invert_generalized}) show the steps involved when we use shift inverse transform in ARPACK. Note that we start by fixing a value of $\sigma$ and then require the action of $f_{B}(x)$ and $f_M(x) - \sigma f_B(x)$ on the vector $x$ given by ARPACK. We will need to use a linear solver to get the action of matrix $(M - \sigma B)^{-1}$, but the matrix $M - \sigma B$ becomes singular if $\sigma$ ends up being equal to one of the eigenvalues. Even if the $\sigma$ is not exactly equal to one the eigenvalues but still very close we get into a situation where the matrix $M -\sigma B$ becomes very ill conditioned and our linear solver fails or worse gives inaccurate results. 
+
+This is not an issue if we finding these in isolation because we can always change the value of $\sigma$ a little and then try again. In a long running simulation where the eigenvalues keep on changing we can not afford to suddenly have a slightly wrong eigenvectors because one of eigenvalues drifted too close to the value of $\sigma$.
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    node distance=2.2cm,
+    block/.style={draw, rectangle, rounded corners, minimum width=3.8cm, minimum height=1.2cm, align=center, thick},
+    input/.style={draw, ellipse, minimum width=2.2cm, minimum height=1.0cm, align=center, thick},
+    arrow/.style={->, thick}
+]
+
+% Main vertical flow
+\node[input, fill=blue!10] (x) {$x$};
+
+\node[block, fill=purple!20, below of=x] (Bapply) {$v = f_B(x)$};
+
+\node[block, fill=green!20, below of=Bapply] (shiftSolve) {$\text{Solve for } y:\; (f_M - \sigma f_B)(y)=v$};
+
+\node[input, fill=blue!10, below of=shiftSolve] (y) {$y$};
+
+% Main arrows
+\draw[arrow] (x) -- (Bapply);
+\draw[arrow] (Bapply) -- (shiftSolve);
+\draw[arrow] (shiftSolve) -- (y);
+
+\end{tikzpicture}
+\label{fig:ARPACK_call_graph_shift_invert_generalized}
+\caption{Operations required for ARPACK in the nonsymmetric generalized case using the shift-invert transformation. In this mode, ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_B$ to obtain $v = f_B(x) = Bx$, and then solve $(f_M-\sigma f_B)(y) = (M-\sigma B)y = v$ for $y$.}
+\end{figure}
+
+Ideally we want $\sigma$ to be closest to the smallest eigenvalue what we want to find but we need to make sure that 
 
 \subsection{Transforming the generalized eigenvalue problem into a standard eigenvalue problem}
 
