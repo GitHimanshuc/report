@@ -190,7 +190,7 @@ The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ b
 A large part of why ddgev is so slow is because it has to find all the $L^3$ eigenvalues when we just need three. The efficient way to solve these kind of problems is to use iterative solvers like ARPACK. 
 % Another possible advantage of using ARPACK is that it does not require full matrices to work, it just requires the action of the matrices on a vector.
 
-In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give the action of the matrices $M$ and $B$ respectively on a vector $x$. Thus, to generate the matrices we need to operate on $N$ cartesian basis vectors. This means that the time complexity of generating the matrices $M$ and $B$ is $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. In theory, we don't even need to construct these matrices when using ARPACK because it can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. This is shown in Fig. (\ref{fig: ARPACK call graph for nonsymmetric generalized case}), where we just need the functions $f_M(x)$ and $f_B(x)$ to find the eigenvectors. Note that 
+In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give the action of the matrices $M$ and $B$ respectively on a vector $x$. Thus, to generate the matrices we need to operate on $N$ cartesian basis vectors. This means that the time complexity of generating the matrices $M$ and $B$ is $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. In theory, we don't even need to construct these matrices when using ARPACK because it can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. This is shown in Fig.(\ref{fig: ARPACK call graph for nonsymmetric generalized case}), where we just need the functions $f_M(x)$ and $f_B(x)$ to find the eigenvectors. Note that we need to solve a linear problem($y = B^{-1} v$) to get the vector $y$ required by ARPACK, this can be done using iterative solvers like GMRES and BiCGSTAB. 
 
 
 \begin{figure}[h]
@@ -229,12 +229,44 @@ In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give th
 \caption{Operations required for ARPACK in the nonsymmetric generalized case. In regular mode (solid line), ARPACK needs the action of $B^{-1} M$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_M$ to obtain $v = f_M(x) = Mx$, and then solve $f_B(y) = By = v$ for $y$. In addition, ARPACK may separately request the application of $B$, in which case we must provide $y = f_B(x) = Bx$.}
 \end{figure}
 
-Matrices $M$ and $B$ are dense and diagonally dominated. One important fact about $M$ is that its diagonal elements can get very large for large $L$, as high as $10^{12}$ for $L = 80$, which makes the matrices very ill conditioned. Also, there is no clear structure in the matrices $M$ and $B$, this meant that we had no way of generating cheap preconditioners in a matrix free manner. Because of these two reasons the originally planned matrix free methods failed to work for large $L$. 
-% this is further discussed in the section \ref{sec:Arpack}.
+As it turn out we do not want to use ARPACK in the way describe above because it will get very slow and might even fail when $L$ gets large. This is because we want to find the three smallest eigenvalues while the algorithm in ARPACK converges much faster when we solve for the largest eigenvalues. Another peculiarity of the algorithm is that it also converges faster when the eigenvalues are well separated. This can be seen in the next section where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
 
-Because, Arpack uses an iterative algorithm there are various factors that affect its convergence to the desired eigenvectors. In particular, Arpack is faster when asked to find well separated and large eigenvalues. 
+\subsection{Speed difference between finding the smallest and the largest eigenvalues}
 
-Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
+We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
+% Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
+
+\begin{lstlisting}[language=Python, caption=Matrix generation code]
+import scipy.sparse.linalg as ss
+import numpy as np
+N = 500
+mat = np.diag(np.arange(1,
+      N+1,dtype=np.float64)**2)
+\end{lstlisting}
+
+Now, we ask Arpack to find the largest three and the smallest three eigenvalues of this matrix,
+
+\begin{lstlisting}[language=Python, caption=Finding the largest eigenvalue is faster]
+
+ss.eigs(mat,k=3,which="LM")
+#19.6 ms
+
+ss.eigs(mat,k=3,which="SM")
+#1.93 s
+\end{lstlisting}
+
+We can see that finding the smallest eigenvalue is much slower. Next we show that using shift invert transform can speed up finding the smallest eigenvalue,
+
+
+\begin{lstlisting}[language=Python, caption=Using shift invert transform to speedup finding the smallest eigenvalues]
+ss.eigs(mat,k=3,sigma=0.0,which="LM")
+#5.5 ms
+\end{lstlisting}
+
+This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, this should further increase with the matrix size. 
+
+
+% Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
 
 \subsection{\label{ssec:Shift Invert transform} Shift Invert transform}
 
@@ -261,41 +293,6 @@ where,
 
 First thing to observe is that both the problems have the same eigenvectors and the corresponding eigenvalues are related via the equation~\ref{eqn:shift_invert_evals_relation}. Note that if we choose $\sigma$ such that it is closer to an eigenvalue $\bar{\lambda}$ that any other eigenvalue, then the corresponding $\bar{\nu}$ will become the largest eigenvalue in the shift inverted system. We can use this fact to speed up the task of finding the smallest magnitude eigenvalues, which is something that Arpack is not super good at.
 
-
-\subsubsection{An Example}
-
-We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
-Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
-
-\begin{lstlisting}[language=Python, caption=Matrix generation code]
-import scipy.sparse.linalg as ss
-import numpy as np
-N = 500
-mat = np.diag(np.arange(1,N+1,dtype=np.float64)**2)
-\end{lstlisting}
-
-Now, we ask Arpack to find the largest three and the smallest three eigenvalues of this matrix,
-
-\begin{lstlisting}[language=Python, caption=Finding the largest eigenvalue is faster]
-
-ss.eigs(mat,k=3,which="LM")
-#19.6 ms
-
-ss.eigs(mat,k=3,which="SM")
-#1.93 s
-\end{lstlisting}
-
-We can see that finding the smallest eigenvalue is much slower. Next we show that using shift invert transform can speed up finding the smallest eigenvalue,
-
-
-\begin{lstlisting}[language=Python, caption=Using shift invert transform to speedup finding the smallest eigenvalues]
-ss.eigs(mat,k=3,sigma=0.0,which="LM")
-#5.5 ms
-\end{lstlisting}
-
-This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, this should further increase with the matrix size. 
-
-
 \subsection{Transforming the generalized eigenvalue problem into a standard eigenvalue problem}
 
 Arpack is not able to directly handle $M x = \lambda B x$ if B is not Hermitian positive definite (section 3.2.2 of \cite{arpack_guide}), in this situation one has to convert the generalized eigenvalue problem into a standard one and then call the corresponding Arpack routine (dnaupd, Section C.2 \ref{sec:Sparse AKV algorithm}).
@@ -313,6 +310,10 @@ Ideally we want $\sigma$ to be as close to zero as possible because that will ma
 It is important to note that the closer $\sigma$ is to an eigenvalue the larger conditioning number of the matrix ($M - \sigma B$) will become. This is not a big deal for the current version of the algorithm where we are generating the full matrix and then using LU linear system solver of Lapack to get the action of $(M - \sigma B)^{-1}$, but was a major source of instability and errors in our older matrix free version.
 
 In the code we decided to go with $\sigma = 0.1$ a large enough value which did not slow down the convergence of Arpack by a lot.
+
+
+Matrices $M$ and $B$ are dense and diagonally dominated. One important fact about $M$ is that its diagonal elements can get very large for large $L$, as high as $10^{12}$ for $L = 80$, which makes the matrices very ill conditioned. Also, there is no clear structure in the matrices $M$ and $B$, this meant that we had no way of generating cheap preconditioners in a matrix free manner. Because of these two reasons the originally planned matrix free methods failed to work for large $L$. 
+% this is further discussed in the section \ref{sec:Arpack}.
 
 
 \subsection{\label{sec:Timing data} Timing data}
