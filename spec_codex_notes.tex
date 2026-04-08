@@ -1,0 +1,353 @@
+
+\section{\label{sec:spec-akv-computations}AKV spin computation in the SpEC implementation}
+
+This section explains what is actually computed in the current SpEC implementation, using the conventions of Sec.~\ref{sec:AKV spin definition}.  The goal is to connect the continuum AKV construction to the concrete algorithm in
+\texttt{/workspaces/spec\_private/SurfaceFinder/StrahlkorperItems/StrahlkorperAKVDimensionfulSpin.cpp}
+and
+\texttt{/workspaces/spec\_private/SurfaceFinder/Strahlkorper/StrahlkorperWithMesh.cpp}.
+
+\subsection{Continuum starting point}
+
+The quasilocal spin associated with a tangent vector field $\phi^i$ on the apparent horizon $\mathcal{H}$ is
+\begin{align}
+S[\phi] = \frac{1}{8\pi}\oint_{\mathcal H} \phi^i s^j K_{ij}\, dA.
+\end{align}
+Restricting to expansion-free tangent fields,
+\begin{align}
+\phi^A = \epsilon^{AB} D_B z,
+\end{align}
+the AKV problem is formulated as the minimization of the shear norm subject to a nontrivial normalization.  This gives the generalized eigenvalue problem
+\begin{align}
+H z = \lambda B z,
+\end{align}
+where in the default Owen normalization used by SpEC,
+\begin{align}
+B z = D^2 z,
+\end{align}
+and the AKV operator is
+\begin{align}
+H z = D^4 z + \mathring{R}\, D^2 z + (D^A \mathring{R})(D_A z).
+\label{eq:spec-akv-H}
+\end{align}
+Equation~\eqref{eq:spec-akv-H} is the operator actually implemented in the code.  In particular, the final term is the gradient contraction
+$(D^A \mathring{R})(D_A z)$, not a higher derivative of $\mathring{R}$.
+
+\subsection{Surface fields read from the DataBox}
+
+At the start of the computation, the code reads the horizon geometry and the necessary volume data interpolated to the horizon:
+\begin{align}
+g_{ij}, \qquad K_{ij}, \qquad s^i, \qquad \mathring{R}, \qquad \Omega,
+\end{align}
+as well as the surface basis and the inertial-frame coordinates.  Here:
+\begin{itemize}
+\item $g_{ij}$ is the spatial metric on the slice $\Sigma$,
+\item $K_{ij}$ is the extrinsic curvature of $\Sigma$,
+\item $s^i$ is the outward unit normal of $\mathcal H$ within $\Sigma$,
+\item $\mathring{R}$ is the Ricci scalar of the apparent-horizon 2-geometry,
+\item $\Omega$ is the ``spin function'', i.e. the curl of the horizon angular-momentum density.
+\end{itemize}
+
+The code also forms
+\begin{align}
+Kn_i := K_{ij} s^j,
+\label{eq:spec-kn}
+\end{align}
+which is the basic angular-momentum-density one-form used in the horizon integrals.  In the implementation this object is stored as \texttt{Kn}.
+
+\subsection{What the spin function $\Omega$ is in the code}
+
+The quantity $\Omega$ used later in the routine is not an independent field.  It is computed from $Kn_i = K_{ij}s^j$ by taking a curl-like derivative of its tangential part on the horizon.  This is implemented in
+\texttt{/workspaces/spec\_private/SurfaceFinder/StrahlkorperItems/StrahlkorperSpinFunction.cpp}.
+
+The code first introduces spherical-coordinate basis vectors centered on the Strahlkorper center,
+\begin{align}
+\partial_r^i, \qquad \partial_\theta^i, \qquad \partial_\phi^i,
+\end{align}
+and then removes the component normal to the horizon to produce basis vectors tangent to $\mathcal H$:
+\begin{align}
+\partial_{\theta,\mathrm{ad}}^i
+  &= \partial_\theta^i - \frac{n_\theta}{n_r}\,\partial_r^i, \\
+\partial_{\phi,\mathrm{ad}}^i
+  &= \partial_\phi^i - \frac{n_\phi}{n_r}\,\partial_r^i,
+\end{align}
+where
+\begin{align}
+n_r = \partial_r^i s_i,
+\qquad
+n_\theta = \partial_\theta^i s_i,
+\qquad
+n_\phi = \partial_\phi^i s_i.
+\end{align}
+
+The tangential components of $Kn_i$ in this adapted basis are then
+\begin{align}
+Kn^{\mathrm{ad}}_\theta &= \partial_{\theta,\mathrm{ad}}^i Kn_i, \\
+Kn^{\mathrm{ad}}_\phi   &= \partial_{\phi,\mathrm{ad}}^i Kn_i.
+\end{align}
+
+The code defines the spin function by
+\begin{align}
+\Omega
+  = - \frac{\partial_\phi\!\left(Kn^{\mathrm{ad}}_\theta \sin\theta\right)
+           - \partial_\theta Kn^{\mathrm{ad}}_\phi}
+          {\sin\theta\, dA}.
+\label{eq:spec-omega-code}
+\end{align}
+Equivalently,
+\begin{align}
+\Omega
+  = \frac{\partial_\theta Kn^{\mathrm{ad}}_\phi
+         - \partial_\phi\!\left(Kn^{\mathrm{ad}}_\theta \sin\theta\right)}
+         {\sin\theta\, dA}.
+\end{align}
+
+Therefore $\Omega$ is the scalar 2-dimensional curl of the horizon angular-momentum density one-form, written in the adapted $(\theta,\phi)$ basis used by the implementation.  In other words, $Kn_i$ is the basic one-form, while $\Omega$ is the scalar obtained after projecting to the horizon and taking its surface curl.
+
+\subsection{Discrete representation of the generalized eigenvalue problem}
+
+The scalar potential $z$ is expanded in the spherical-harmonic basis used on the Strahlkorper surface.  The code removes the $l=0$ mode, because it is the common kernel of both $H$ and $B$, and it also omits the top two angular levels because the AKV operator contains second derivatives.  Thus the retained spectral subspace is
+\begin{align}
+0 < l < L_{\max}-1.
+\end{align}
+
+For each retained basis function $Y_\alpha$, the code explicitly applies the continuum operators and re-expands the results in the same basis.  This produces dense matrices $M$ and $B$ defined schematically by
+\begin{align}
+H Y_\alpha = \sum_\beta M_{\beta\alpha} Y_\beta,
+\qquad
+B Y_\alpha = \sum_\beta B_{\beta\alpha} Y_\beta.
+\end{align}
+The generalized eigenvalue problem is then solved in coefficient space:
+\begin{align}
+M\, v = \lambda\, B\, v.
+\label{eq:spec-discrete-gep}
+\end{align}
+
+The matrix entries are not constructed from analytic formulas.  Instead, the code literally:
+\begin{enumerate}
+\item places a single nonzero coefficient in the chosen spherical-harmonic mode,
+\item evaluates that basis function on the horizon grid,
+\item applies the AKV operator $H$ and the normalization operator $B$ pointwise on the curved horizon,
+\item transforms the results back to spectral coefficients,
+\item writes those coefficients into the corresponding columns of the dense matrices.
+\end{enumerate}
+
+\subsection{Why three eigenvectors are computed}
+
+The code asks ARPACK for three low-lying AKV modes.  Geometrically, on a round sphere the exact rotational Killing fields form a three-dimensional space, corresponding to the three generators of rotations.  The AKV construction is trying to recover the distorted analogue of that rotational subspace on a generic horizon.  Therefore the implementation does not stop after one eigenfunction.
+
+Denote the three selected eigenfunctions by
+\begin{align}
+z_{(1)}, \qquad z_{(2)}, \qquad z_{(3)}.
+\end{align}
+Each of these is turned into a horizon vector field by
+\begin{align}
+\phi^A_{(n)} = \epsilon^{AB} D_B z_{(n)},
+\qquad n=1,2,3.
+\label{eq:spec-phi-n}
+\end{align}
+In the code, the $z_{(n)}$ are first represented as scalar potentials on the horizon grid, and then their surface gradients are computed numerically.
+
+\subsection{Normalization of the AKV potentials}
+
+After the three potentials are obtained, the code normalizes them.  There are two supported normalization choices:
+\begin{enumerate}
+\item a refinement-based normalization using the range of the potential,
+\item a faster Kerr normalization based on the $L^2$ norm of the mean-subtracted potential.
+\end{enumerate}
+The default branch in standard production runs is the Kerr normalization.
+
+The purpose of this step is to fix the overall scale of each AKV generator.  Without a normalization condition, the eigenfunctions are only defined up to arbitrary multiplicative constants.
+
+\subsection{How the three scalar spin components are computed}
+
+The code next projects the one-form $Kn_i$ from Eq.~\eqref{eq:spec-kn} onto the tangent space of the horizon:
+\begin{align}
+Kn_A = e_A{}^i\, Kn_i,
+\end{align}
+where $e_A{}^i$ are the surface tangent vectors.  In the implementation this projected quantity is stored as \texttt{KnSurf(A)}.
+
+For each AKV potential $z_{(n)}$, the code computes the tangent gradient
+\begin{align}
+D_A z_{(n)}.
+\end{align}
+Then it forms the scalar density
+\begin{align}
+\rho_{(n)}
+  := \epsilon^{AB} Kn_A D_B z_{(n)}.
+\label{eq:spec-rho-n}
+\end{align}
+In local surface coordinates $(\theta,\phi)$ this is exactly the quantity coded as
+\begin{align}
+\rho_{(n)} = Kn_\theta\, D_\phi z_{(n)} - Kn_\phi\, D_\theta z_{(n)}.
+\end{align}
+
+The corresponding spin component is
+\begin{align}
+S_{(n)} = \frac{1}{8\pi}\oint_{\mathcal H} \rho_{(n)}\, dA
+        = \frac{1}{8\pi}\oint_{\mathcal H} \epsilon^{AB} Kn_A D_B z_{(n)}\, dA.
+\label{eq:spec-Sn}
+\end{align}
+This is the code realization of the continuum quasilocal spin formula with the AKV generator $\phi^A_{(n)}$ from Eq.~\eqref{eq:spec-phi-n}.
+
+\subsection{How the AKV magnitude is produced}
+
+The three numbers
+\begin{align}
+S_{(1)}, \qquad S_{(2)}, \qquad S_{(3)}
+\end{align}
+are not separately reported as three different black-hole spins.  Instead, the code defines the AKV spin magnitude by their Euclidean norm:
+\begin{align}
+|S|_{\rm AKV}
+  = \sqrt{S_{(1)}^2 + S_{(2)}^2 + S_{(3)}^2}.
+\label{eq:spec-akv-mag}
+\end{align}
+This is the quantity stored in the local variable \texttt{hackspinmag} in the implementation.
+
+Therefore, in the current SpEC code, the ARPACK solve and the three AKV modes are used directly in the computation of the \emph{magnitude} of the black-hole spin.  They are not merely used to identify an axis and then discarded.
+
+\subsection{How the final spin direction is assigned in the current code}
+
+The output of the routine is a three-vector \texttt{SVecAKV}.  One might expect its direction to be taken directly from one of the AKV eigenvectors.  However, this is not what the present implementation does.
+
+Instead, after the magnitude \eqref{eq:spec-akv-mag} is known, the code computes the direction from the spin function $\Omega$.  It forms the first moments of $\Omega$ in inertial coordinates:
+\begin{align}
+\mathcal O_x &= \oint_{\mathcal H} (x-x_0)\, \Omega\, dA, \\
+\mathcal O_y &= \oint_{\mathcal H} (y-y_0)\, \Omega\, dA, \\
+\mathcal O_z &= \oint_{\mathcal H} (z-z_0)\, \Omega\, dA,
+\end{align}
+where $(x_0,y_0,z_0)$ is either the supplied horizon center or the zero-mass-dipole center chosen by the routine.  These moments are then normalized:
+\begin{align}
+\hat n_\Omega^i
+  = \frac{(\mathcal O_x,\mathcal O_y,\mathcal O_z)}
+         {\sqrt{\mathcal O_x^2+\mathcal O_y^2+\mathcal O_z^2}}.
+\end{align}
+Finally, the reported AKV spin vector is set to
+\begin{align}
+S_{\rm AKV}^i = |S|_{\rm AKV}\, \hat n_\Omega^i.
+\label{eq:spec-final-spin-vector}
+\end{align}
+
+This is an important implementation detail:
+\begin{enumerate}
+\item the ARPACK eigenproblem and the three AKV potentials determine the spin magnitude,
+\item the final direction of the reported spin vector is attached afterwards from the dipole moment of the spin function $\Omega$.
+\end{enumerate}
+
+\subsection{Coordinate spin in the current implementation}
+
+SpEC also computes a separate coordinate-rotation-based spin in
+\texttt{/workspaces/spec\_private/SurfaceFinder/StrahlkorperItems/StrahlkorperPhysicalCoordSpin.cpp}.
+This is a different construction from the AKV spin above.  It does not solve an eigenvalue problem.  Instead, it chooses a centroid, builds the three ordinary coordinate rotation generators about that centroid, and evaluates the same quasilocal angular-momentum integral against those generators.
+
+\subsubsection{Centroid used to define the rotation generators}
+
+The routine first computes a centroid in the measurement frame:
+\begin{align}
+x_0^a
+  = \frac{\oint_{\mathcal H} x^a\, dA_{\rm cent}}
+         {\oint_{\mathcal H} dA_{\rm cent}}.
+\end{align}
+Here $dA_{\rm cent}$ is either:
+\begin{enumerate}
+\item the physical surface element $dA$, if the option \texttt{UseCurvedMetricForCentroid} is true, or
+\item the surface element induced by a flat Euclidean metric pulled back to the horizon frame, if that option is false.
+\end{enumerate}
+The default used in the standard BBH wiring is the latter choice.
+
+\subsubsection{Coordinate rotation generators}
+
+The coordinate rotation generators are then constructed as
+\begin{align}
+(\mathrm{RotGen}_a)^i
+  = \eta_{ab}{}^{c}\, (x^b-x_0^b)\, [J^{-1}]^i{}_c,
+\label{eq:spec-rotgen}
+\end{align}
+where $a$ labels the three rotation generators in the measurement frame, $i$ is an index in the apparent-horizon frame, $\eta_{ab}{}^c$ is the three-dimensional Levi-Civita symbol, and $J^{-1}$ is the inverse Jacobian from the measurement frame to the apparent-horizon frame.  If the frames coincide, then $[J^{-1}]^i{}_c = \delta^i{}_c$.
+
+\subsubsection{Standard coordinate spin branch}
+
+If no spin potential is supplied, the code takes the standard branch used in the current BBH setup.  The rotation generators are projected tangent to the horizon:
+\begin{align}
+(\mathrm{RotGen}_a^\parallel)^i
+  = (\mathrm{RotGen}_a)^i - s^i s_j (\mathrm{RotGen}_a)^j.
+\end{align}
+Using again
+\begin{align}
+Kn_i = K_{ij}s^j,
+\end{align}
+the code defines the three coordinate-spin components by
+\begin{align}
+S^{\rm coord}_a
+  = \frac{1}{8\pi}\oint_{\mathcal H}
+      (\mathrm{RotGen}_a^\parallel)^i Kn_i\, dA.
+\label{eq:spec-coordspin}
+\end{align}
+This is just the quasilocal spin formula evaluated with the three coordinate rotation generators instead of the AKV generators.
+
+The important point is that this standard coordinate-spin calculation is a direct surface-integral computation.  It does not involve ARPACK, the AKV operator, or the generalized eigenvalue problem.
+
+\subsubsection{Optional boost-fixed coordinate spin}
+
+If a spin potential $\varpi$ is supplied, the code instead computes a boost-fixed variant.  In that branch the routine constructs tangent adapted vectors corresponding to the angular coordinates on the horizon, projects the coordinate rotation generators onto those adapted directions, and then evaluates
+\begin{align}
+S^{\rm bf}_a
+  = -\frac{1}{8\pi}\oint_{\mathcal H}
+     \left[
+       (\mathrm{RotGen}_\theta)_a\, D_\phi \varpi
+       - \frac{(\mathrm{RotGen}_\phi)_a\, D_\theta \varpi}{\sin\theta}
+     \right].
+\label{eq:spec-boost-fixed}
+\end{align}
+This branch still does not use the AKV eigenvectors.  However, it does depend on the separately computed spin potential.
+
+\subsubsection{Rescaling used in the standard BBH pipeline}
+
+Although the raw coordinate-spin algorithm does not use ARPACK, the standard BBH pipeline does not leave it unscaled.  In
+\texttt{/workspaces/spec\_private/SurfaceFinder/StrahlkorperItems/AddStrahlkorperPhysicalQuantities.cpp}
+the quantity \texttt{CoordSpin} is configured with
+\begin{align}
+\texttt{RescaleTo = S}.
+\end{align}
+Therefore after the raw coordinate spin vector is computed, the code rescales it by
+\begin{align}
+S^{\rm coord}_a \longrightarrow
+S^{\rm coord}_a\,
+\frac{|S|_{\rm target}}{|S^{\rm coord}|},
+\end{align}
+where in the current BBH configuration
+\begin{align}
+|S|_{\rm target} = |S|_{\rm AKV}.
+\end{align}
+Thus:
+\begin{enumerate}
+\item the \emph{direction} of \texttt{CoordSpin} comes from the coordinate-rotation integral \eqref{eq:spec-coordspin},
+\item the \emph{magnitude} of the reported \texttt{CoordSpin} in the current BBH pipeline is normalized to the AKV spin magnitude.
+\end{enumerate}
+
+\subsubsection{Dimensionless coordinate spin}
+
+Finally, SpEC computes the dimensionless coordinate spin by
+\begin{align}
+\chi^{\rm coord} = \frac{S^{\rm coord}}{M_{\rm ch}^2}.
+\end{align}
+In the current standard pipeline, the Christodoulou mass $M_{\rm ch}$ is itself computed from the AKV spin $S$, so \texttt{CoordSpinChi} also inherits an indirect dependence on the AKV calculation.
+
+\subsection{Relation to the Kerr parameters}
+
+In this code, the symbol $S$ denotes the dimensionful black-hole spin angular momentum.  Therefore for an exact Kerr black hole,
+\begin{align}
+|S| = J = a M,
+\end{align}
+where $J$ is the Kerr angular momentum, $M$ is the mass, and
+\begin{align}
+a = \frac{J}{M}.
+\end{align}
+The dimensionless spin reported by SpEC is
+\begin{align}
+\chi = \frac{S}{M_{\rm ch}^2},
+\end{align}
+which reduces to
+\begin{align}
+\chi = \frac{J}{M^2} = \frac{a}{M}
+\end{align}
+for Kerr when the Christodoulou mass agrees with the Kerr mass.  Thus $|S|$ is \emph{not} equal to the Kerr parameter $a$ unless $M=1$.
