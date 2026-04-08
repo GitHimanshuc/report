@@ -240,31 +240,27 @@ We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
 import scipy.sparse.linalg as ss
 import numpy as np
 N = 500
-mat = np.diag(np.arange(1,
-      N+1,dtype=np.float64)**2)
+vals = np.arange(1, N + 1, dtype=np.float64)
+mat = np.diag(vals**2)
 \end{lstlisting}
 
 Now, we ask Arpack to find the largest three and the smallest three eigenvalues of this matrix,
 
-\begin{lstlisting}[language=Python, caption=Finding the largest eigenvalue is faster]
-
-ss.eigs(mat,k=3,which="LM")
+\begin{lstlisting}[language=Python, caption=ARPACK timing comparison]
+# LM: largest three
+ss.eigs(mat, k=3, which="LM")
 #19.6 ms
 
-ss.eigs(mat,k=3,which="SM")
+# SM: smallest three
+ss.eigs(mat, k=3, which="SM")
 #1.93 s
-\end{lstlisting}
 
-We can see that finding the smallest eigenvalue is much slower. Next we show that using shift invert transform can speed up finding the smallest eigenvalue,
-
-
-\begin{lstlisting}[language=Python, caption=Using shift invert transform to speedup finding the smallest eigenvalues]
-ss.eigs(mat,k=3,sigma=0.0,which="LM")
+# Shift-invert near sigma = 0
+ss.eigs(mat, k=3, sigma=0.0, which="LM")
 #5.5 ms
 \end{lstlisting}
 
-This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, this should further increase with the matrix size. 
-
+We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient\footnote{This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size. }.
 
 % Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
 
