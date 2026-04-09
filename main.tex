@@ -158,9 +158,10 @@ H z=D^4 z+\mathring{R} D^2 z+D^4 \mathring{R} D_A z
 \label{eqn:equations for H in terms of laplacians}
 \end{align}
 
-where $D^2$ is the laplacian on the apparent horizon and $\mathring{R}$ is the Ricci Scalar. If we try to minimize equation \ref{eqn:shear norm in terms of H and z} with respect to $z$ then we will end up with the trivial solution that $z$ is constant and $\vec{\phi}$ is zero. To avoid this we will require the minimized $\vec{\phi}$ has a non-zero norm,
+where $D^2$ is the laplacian on the apparent horizon and $\mathring{R}$ is the Ricci Scalar. If we try to minimize equation \ref{eqn:shear norm in terms of H and z} with respect to $z$ then we will end up with the trivial solution that $z$ is constant and $\vec{\phi}$ is zero. To avoid this we will require the minimized $\vec{\phi}$ has a positive norm,
 \begin{align}
 \oint_{\mathcal{H}} \phi^A \phi_A d A
+\label{eqn:Norm condition to be enforced using Lagrange multiplier}
 \end{align}
 
 By using Lagrange multiplier and the fact that $\phi^A \phi_A = D^A z D_A z$ we get
@@ -265,7 +266,7 @@ We can see that finding the three smallest eigenvalue is much slower than findin
 
 \subsection{\label{ssec:Shift Invert transform} Shift Invert transform}
 
-Shift invert transform is a method of transforming our eigenvalue problem into another where the eigenvalues that we desire become large and well separated from its neighbouring eigenvalues.
+Shift invert transform is a method of transforming our eigenvalue problem into another where the eigenvalues that we desire become large and well separated from its neighboring eigenvalues.
 
 Original problem:
 
@@ -288,7 +289,7 @@ where,
 
 First thing to observe is that both the problems have the same eigenvectors and the corresponding eigenvalues are related via the equation~\ref{eqn:shift_invert_evals_relation}. Note that if we choose $\sigma$ such that it is closer to an eigenvalue $\bar{\lambda}$ that any other eigenvalue, then the corresponding $\bar{\nu}$ will become the largest eigenvalue in the shift inverted system. In the Sec.(\ref{ssec:Speed difference between finding the smallest and the largest eigenvalues}) we saw that the if we want to find the eigensystem corresponding to the smallest eigenvalues then using shift invert transform provides a much effecient way. Fig.(\ref{fig:ARPACK_call_graph_shift_invert_generalized}) show the steps involved when we use shift inverse transform in ARPACK. Note that we start by fixing a value of $\sigma$ and then require the action of $f_{B}(x)$ and $f_M(x) - \sigma f_B(x)$ on the vector $x$ given by ARPACK. We will need to use a linear solver to get the action of matrix $(M - \sigma B)^{-1}$, but the matrix $M - \sigma B$ becomes singular if $\sigma$ ends up being equal to one of the eigenvalues. Even if the $\sigma$ is not exactly equal to one the eigenvalues but still very close we get into a situation where the matrix $M -\sigma B$ becomes very ill conditioned and our linear solver fails or worse gives inaccurate results. 
 
-This is not an issue if we finding these in isolation because we can always change the value of $\sigma$ a little and then try again. In a long running simulation where the eigenvalues keep on changing we can not afford to suddenly have a slightly wrong eigenvectors because one of eigenvalues drifted too close to the value of $\sigma$.
+This is not an issue if we finding these in isolation because we can always change the value of $\sigma$ a little and then try again. In a long running simulation where the eigenvalues keep on changing we can not afford to suddenly have a slightly wrong eigenvectors because one of eigenvalues drifted too close to the value of $\sigma$. Fortunately, if we are using the norm described in Eq.(\ref{eqn:Norm condition to be enforced using Lagrange multiplier}) we have an analytical result that all the eigenvalues $\lambda$ will be negative.
 
 
 \begin{figure}[h]
