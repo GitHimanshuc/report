@@ -4,6 +4,7 @@
         "eigensystem",
         "inspiral",
         "inspirals",
+        "preconditioner",
         "quasilocal",
         "Ricci"
     ]

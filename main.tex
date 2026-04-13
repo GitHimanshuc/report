@@ -322,31 +322,11 @@ This is not an issue if we finding these in isolation because we can always chan
 
 Ideally, we want $\sigma$ to be as close to the smallest eigenvalue as possible. Given all the eigenvalues in our case are guaranteed to be negative we can just set $\sigma$ equal to zero which will make the smallest eigenvalues as large and well separated as possible. Having large and well separated eigenvalues makes the inner Arnoldi iterations in ARPACK very effecient allowing us to find those eigenvalues much faster. Although, it is important to note that as $\sigma$ gets closer to one the eigenvalues the matrix $M - \sigma B$ becomes more and more ill-conditioned. Given we need the action of $(M - \sigma B)^{-1}$ for ARPACK we do not $M-\sigma B$ to become too ill-conditioned. This means that there is an ideal value of $\sigma$ which makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Based on some tests that we did we decided to go with $\sigma = 0.1$, which has worked well for the systems we have simulated till now.
 
+\subsection{\label{ssec:action-of-shift-invert} Action of \texorpdfstring{$(M-\sigma B)^{-1}$}{(M-sigma B)^(-1)}}
 
+Once we have chosen a reasonable value for sigma the next big thing is how to get the action of matrix $(M-\sigma B)^{-1}$. The first thing that we tried was using iterative algorithms(GMRES and BiCGSTAB) to get the action of inverse. This was particularly attractive in our case because we do not start with matrices but instead construct them by repeatedly calling the functions $f_{M}(x)$ and $f_{B}(x)$. In almost all cases these iterative algorithms require a good preconditioner to converge at an acceptable rate. We tried a few preconditioners and the whole thing worked really well in the early parts but the convergence became very slow in many cases when the horizon was too deformed. Furthermore, constructing non trivial preconditioners from $f_{M}(x)$ is almost as costly as constructing the full matrix itself.
 
-
-% \subsection{Transforming the generalized eigenvalue problem into a standard eigenvalue problem}
-
-% Arpack is not able to directly handle $M x = \lambda B x$ if B is not Hermitian positive definite (section 3.2.2 of \cite{arpack_guide}), in this situation one has to convert the generalized eigenvalue problem into a standard one and then call the corresponding Arpack routine (dnaupd, Section C.2 \ref{sec:Sparse AKV algorithm}).
-
-% Our matrix B is not Hermitian, but this is not a big issue for us as we are going to use shift invert transform which by default changes a generalized eigenvalue problem into a standard one (Eq~\ref{eqn:shift_inverted_equation}).
-
-% \subsection{Selecting the value of \texorpdfstring{sigma($\sigma$)}{sigma}}
-
-% Shift invert transform requires taking inverse of $M -\sigma B$ which becomes singular if $\sigma$ is equal to any eigenvalue of the system.
-% Matrices $M$ and $B$ in our case are going to be positive semidefinite and negative semidefinite respectively. This implies that the eigenvalues of our system $M x = \lambda B x$ are going to be negative. Which means that we are free to choose any positive value for $\sigma$ without the fear of it ever being equal to an eigenvalue.
-
-% Ideally we want $\sigma$ to be as close to zero as possible because that will make Arpack converge faster ($\sigma$ being closer to zero is same as it being closer to the smallest magnitude eigenvalue of the original system, which will in turn make largest eigenvalue in the shift inverted system even larger and more well separated).
-% % ($\sigma$ being closer to zero means that the smallest magnitude eigenvalues ($\lambda$) of the original system will become the largest magnitude eigenvalues ($\nu$) in the shift inverted system Eq~\ref{eqn:shift_invert_evals_relation}).
-
-% It is important to note that the closer $\sigma$ is to an eigenvalue the larger conditioning number of the matrix ($M - \sigma B$) will become. This is not a big deal for the current version of the algorithm where we are generating the full matrix and then using LU linear system solver of Lapack to get the action of $(M - \sigma B)^{-1}$, but was a major source of instability and errors in our older matrix free version.
-
-% In the code we decided to go with $\sigma = 0.1$ a large enough value which did not slow down the convergence of Arpack by a lot.
-
-
-% Matrices $M$ and $B$ are dense and diagonally dominated. One important fact about $M$ is that its diagonal elements can get very large for large $L$, as high as $10^{12}$ for $L = 80$, which makes the matrices very ill conditioned. Also, there is no clear structure in the matrices $M$ and $B$, this meant that we had no way of generating cheap preconditioners in a matrix free manner. Because of these two reasons the originally planned matrix free methods failed to work for large $L$. 
-% % this is further discussed in the section \ref{sec:Arpack}.
-
+As already mentioned in the section about selecting the value of $\sigma$, given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$.
 
 \subsection{\label{sec:Timing data} Timing data}
 
