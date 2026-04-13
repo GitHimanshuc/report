@@ -49,6 +49,7 @@
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
 \usepackage{tikz}
+\usepackage{booktabs}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
 
 %\usepackage[showframe,%Uncomment any one of the following lines to test 
@@ -332,45 +333,46 @@ As already mentioned in the section about selecting the value of $\sigma$, given
 
 % \textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
 
-Table~\ref{table:timing_data} shows the final timing data. One can see that the total time taken by Arpack + LU decomposition is much less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster. Matrix generation is the bottleneck when we are using Arpack.
+Table~\ref{table:timing_data} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. Note that we despite the 
 
-Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
+Matrix generation is the bottleneck when we are using Arpack.
+
+% Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
 
 \begin{table}[h!]
-  \centering
-  \begin{tabular}{||c | c | c | c| c||}
-    \hline
-    L  & Mat gen(s) & Arpack(s) & LU (s)      & dggev(s)       \\ [0.5ex]
-    \hline\hline
-    15 & 0.071161             & 0.000712  & 3.26000e-04 & 4.52780000e-02 \\
-    25 & 0.640234             & 0.004513  & 4.48400e-03 & 1.46575600e+00 \\
-    35 & 2.72389              & 0.015021  & 3.04950e-02 & 2.27840010e+01 \\
-    45 & 9.188617             & 0.094585  & 1.22304e-01 & 1.50830308e+02 \\
-    55 & 21.931774            & 0.230849  & 4.14148e-01 & 6.44315238e+02 \\ [1ex]
-    \hline
-    \label{table:timing_data}
-  \end{tabular}
-  \caption{Timing data for Matrix generation, Arpack, LU decomposition and Lapack's dggev on wheeler (Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz)}
+\centering
+\begin{tabular}{c c c c c}
+\toprule
+$L$ & Mat gen (s) & Arpack (s) & LU (s) & dggev (s) \\
+\midrule
+15 & 7.1e-02 & 7.1e-04 & 3.3e-04 & 4.5e-02 \\
+25 & 6.4e-01 & 4.5e-03 & 4.5e-03 & 1.5e+00 \\
+35 & 2.7e+00 & 1.5e-02 & 3.0e-02 & 2.3e+01 \\
+45 & 9.2e+00 & 9.5e-02 & 1.2e-01 & 1.5e+02 \\
+55 & 2.2e+01 & 2.3e-01 & 4.1e-01 & 6.4e+02 \\
+\bottomrule
+\end{tabular}
+\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on Wheeler (Intel Xeon E5-2680 v3 @ 2.50\,GHz).}
+\label{table:timing_data}
 \end{table}
 
 
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{||c | c | c | c| c||}
-    \hline
-    L  & Mat gen(s) & Arpack(s) & LU (s)       & dggev(s)  \\ [0.5ex]
-    \hline\hline
-    15 & 0.087328             & 0.003085  & 3.623000e-03 & 0.104892   \\
-    25 & 0.63935              & 0.017232  & 4.547300e-02 & 1.806011   \\
-    35 & 2.83385              & 0.05992   & 3.769910e-01 & 15.621133  \\
-    45 & 10.355544            & 0.196789  & 2.010160     & 74.043790  \\
-    55 & 21.472547            & 0.481778  & 6.144312     & 275.292717 \\ [1ex]
-    \hline
-    \label{table:timing_data_laptop}
-  \end{tabular}
-  \caption{Timing data for Matrix generation, Arpack, LU decomposition and Lapack's dggev on a laptop (Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz)}
-\end{table}
-
+% \begin{table}[h!]
+% \centering
+% \begin{tabular}{c c c c c}
+% \toprule
+% $L$ & Mat gen (s) & Arpack (s) & LU (s) & dggev (s) \\
+% \midrule
+% 15 & 8.7e-02 & 3.1e-03 & 3.6e-03 & 1.0e-01 \\
+% 25 & 6.4e-01 & 1.7e-02 & 4.5e-02 & 1.8e+00 \\
+% 35 & 2.8e+00 & 6.0e-02 & 3.8e-01 & 1.6e+01 \\
+% 45 & 1.0e+01 & 2.0e-01 & 2.0e+00 & 7.4e+01 \\
+% 55 & 2.1e+01 & 4.8e-01 & 6.1e+00 & 2.8e+02 \\
+% \bottomrule
+% \end{tabular}
+% \caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on a laptop (Intel Core i5-7200U @ 2.50\,GHz).}
+% \label{table:timing_data_laptop}
+% \end{table}
 
 \subsection{Loglog plots showing the time scaling \label{appen::loglog_plots}}
 
@@ -399,24 +401,6 @@ Blue dots are the data points and green lines are the fit, we can see that the f
   \centering
   \includegraphics[width=0.45\textwidth]{./images/dggev_loglog.png}
 \end{figure}
-
-\subsection{Arpack and Arpack++ guides \label{appen:user_guides}}
-
-Free html version of Arpack guide:
-\href{https://www.caam.rice.edu/software/ARPACK/UG/ug.html}{https://www.caam.rice.edu/software/ARPACK/UG/ug.html}
-
-% Free pdf version of Arpack guide:
-
-% \href{http://li.mit.edu/Archive/Activities/Archive/CourseWork/Ju_Li/MITCourses/18.335/Doc/ARPACK/Lehoucq97.pdf}{http://li.mit.edu/Archive/Activities/Archive/CourseWork/Ju_Li/MITCourses/18.335/Doc/ARPACK/Lehoucq97.pdf}
-
-
-Arpack++ guide:
-\href{https://github.com/m-reuter/arpackpp/blob/master/doc/arpackpp.pdf}{https://github.com/m-reuter/arpackpp/blob/master/doc/arpackpp.pdf}
-
-
-
-
-\subsection{For future reference \label{appen:for_future_reference}}
 
 
 \section{\label{sec:Future improvements} Future improvements}
