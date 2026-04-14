@@ -1,0 +1,262 @@
+{
+    "15": {
+        "L": 15,
+        "LMax": 18,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L15_Lmesh18_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            0.0808947,
+            0.0801794
+        ],
+        "dggev_time": [
+            0.0463912,
+            0.0648859
+        ],
+        "LU_time": [
+            0.00139474,
+            0.00139833
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            0.00316943,
+            0.00322316
+        ]
+    },
+    "20": {
+        "L": 20,
+        "LMax": 23,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L20_Lmesh23_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            0.303523,
+            0.295207
+        ],
+        "dggev_time": [
+            0.305547,
+            0.323693
+        ],
+        "LU_time": [
+            0.00827053,
+            0.00831541
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            0.0135697,
+            0.0133029
+        ]
+    },
+    "25": {
+        "L": 25,
+        "LMax": 28,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L25_Lmesh28_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            0.761159,
+            0.774817
+        ],
+        "dggev_time": [
+            1.4423,
+            1.41155
+        ],
+        "LU_time": [
+            0.0319005,
+            0.0440547
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            0.044394,
+            0.0595378
+        ]
+    },
+    "30": {
+        "L": 30,
+        "LMax": 33,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L30_Lmesh33_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            1.9262,
+            1.88774
+        ],
+        "dggev_time": [
+            5.04504,
+            4.3146
+        ],
+        "LU_time": [
+            0.100967,
+            0.0977013
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            0.128504,
+            0.124248
+        ]
+    },
+    "35": {
+        "L": 35,
+        "LMax": 38,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L35_Lmesh38_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            3.46034,
+            3.47162
+        ],
+        "dggev_time": [
+            21.8078,
+            19.9721
+        ],
+        "LU_time": [
+            0.272983,
+            0.248635
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            0.341594,
+            0.31034
+        ]
+    },
+    "40": {
+        "L": 40,
+        "LMax": 43,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L40_Lmesh43_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            6.97106,
+            6.88893
+        ],
+        "dggev_time": [
+            45.3718,
+            40.9458
+        ],
+        "LU_time": [
+            0.545415,
+            0.549537
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            0.652992,
+            0.67209
+        ]
+    },
+    "50": {
+        "L": 50,
+        "LMax": 53,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L50_Lmesh53_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            18.1818,
+            17.9184
+        ],
+        "dggev_time": [
+            200.145,
+            200.288
+        ],
+        "LU_time": [
+            2.17679,
+            2.26421
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            2.44621,
+            2.52934
+        ]
+    },
+    "60": {
+        "L": 60,
+        "LMax": 63,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L60_Lmesh63_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            47.4611,
+            47.3011
+        ],
+        "dggev_time": [
+            614.538,
+            614.264
+        ],
+        "LU_time": [
+            6.70314,
+            6.68858
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            7.20658,
+            7.182
+        ]
+    },
+    "70": {
+        "L": 70,
+        "LMax": 73,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L70_Lmesh73_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            99.8656,
+            99.4375
+        ],
+        "dggev_time": [
+            1769.68,
+            1766.47
+        ],
+        "LU_time": [
+            17.1794,
+            17.3513
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            18.1336,
+            18.312
+        ]
+    },
+    "80": {
+        "L": 80,
+        "LMax": 83,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L80_Lmesh83_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            153.351,
+            154.043
+        ],
+        "dggev_time": [
+            4339.23,
+            4333.99
+        ],
+        "LU_time": [
+            38.3802,
+            38.4257
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            40.0221,
+            40.0704
+        ]
+    }
+}
