@@ -7,7 +7,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L15_Lmesh18_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L15_Lmesh18_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             0.116733,
             0.115314
@@ -33,7 +33,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L20_Lmesh23_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L20_Lmesh23_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             0.427922,
             0.429033
@@ -59,7 +59,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L25_Lmesh28_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L25_Lmesh28_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             1.11632,
             1.11728
@@ -85,7 +85,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L30_Lmesh33_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L30_Lmesh33_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             2.77152,
             2.77217
@@ -111,7 +111,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L35_Lmesh38_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L35_Lmesh38_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             4.75597,
             4.76404
@@ -137,7 +137,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L40_Lmesh43_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L40_Lmesh43_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             10.3236,
             10.3106
@@ -163,7 +163,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L50_Lmesh53_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L50_Lmesh53_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             26.6575,
             26.5745
@@ -189,7 +189,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L60_Lmesh63_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L60_Lmesh63_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             70.9982,
             70.9058
@@ -215,7 +215,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L70_Lmesh73_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L70_Lmesh73_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             147.435,
             147.315
@@ -241,7 +241,7 @@
             0.0,
             0.5
         ],
-        "path": "/resnick/groups/sxs/hchaudha/specs/spec_master_worktrees/patch_TensorYlmDirectSparseMatrix/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L80_Lmesh83_spin_0.0_0.0_0.5",
+        "path": "DNT_saved_matrices/L80_Lmesh83_spin_0.0_0.0_0.5",
         "generate_matrices_time": [
             227.594,
             226.88
@@ -257,6 +257,32 @@
         "arpack_dnaupd_wrapper_time": [
             5.81237,
             5.81035
+        ]
+    },
+    "90": {
+        "L": 90,
+        "LMax": 93,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "DNT_saved_matrices/L90_Lmesh93_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            406.807,
+            405.58
+        ],
+        "dggev_time": [
+            5948.12,
+            6083.15
+        ],
+        "LU_time": [
+            9.01254,
+            9.51618
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            11.0767,
+            12.5357
         ]
     }
 }

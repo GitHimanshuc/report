@@ -258,5 +258,31 @@
             40.0221,
             40.0704
         ]
+    },
+    "90": {
+        "L": 90,
+        "LMax": 93,
+        "spin": [
+            0.0,
+            0.0,
+            0.5
+        ],
+        "path": "/workspaces/spec_private/SurfaceFinder/StrahlkorperItems/Tests/TestAddStrahlkorperPhysicalQuantities/DNT_saved_matrices/L90_Lmesh93_spin_0.0_0.0_0.5",
+        "generate_matrices_time": [
+            273.797,
+            272.822
+        ],
+        "dggev_time": [
+            10280.3,
+            10376.0
+        ],
+        "LU_time": [
+            79.0101,
+            81.3924
+        ],
+        "arpack_dnaupd_wrapper_time": [
+            81.5995,
+            84.1472
+        ]
     }
 }
