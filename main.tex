@@ -343,36 +343,46 @@ Matrix generation is the bottleneck when we are using Arpack.
 \centering
 \begin{tabular}{c c c c c}
 \toprule
-$L$ & Mat gen (s) & Arpack (s) & LU (s) & dggev (s) \\
+$L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 \midrule
-15 & 7.1e-02 & 7.1e-04 & 3.3e-04 & 4.5e-02 \\
-25 & 6.4e-01 & 4.5e-03 & 4.5e-03 & 1.5e+00 \\
-35 & 2.7e+00 & 1.5e-02 & 3.0e-02 & 2.3e+01 \\
-45 & 9.2e+00 & 9.5e-02 & 1.2e-01 & 1.5e+02 \\
-55 & 2.2e+01 & 2.3e-01 & 4.1e-01 & 6.4e+02 \\
+15 & 0.0809 & 0.00139 & 0.00177 & 0.0464 \\
+20 & 0.304 & 0.00827 & 0.0053 & 0.306 \\
+25 & 0.761 & 0.0319 & 0.0125 & 1.44 \\
+30 & 1.93 & 0.101 & 0.0275 & 5.05 \\
+35 & 3.46 & 0.273 & 0.0686 & 21.8 \\
+40 & 6.97 & 0.545 & 0.108 & 45.4 \\
+50 & 18.2 & 2.18 & 0.269 & 200 \\
+60 & 47.5 & 6.7 & 0.503 & 615 \\
+70 & 99.9 & 17.2 & 0.954 & 1.77e+03 \\
+80 & 153 & 38.4 & 1.64 & 4.34e+03 \\
 \bottomrule
 \end{tabular}
-\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on Wheeler (Intel Xeon E5-2680 v3 @ 2.50\,GHz).}
-\label{table:timing_data}
+\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on PC.}
+\label{table:timing_data_PC}
 \end{table}
 
 
-% \begin{table}[h!]
-% \centering
-% \begin{tabular}{c c c c c}
-% \toprule
-% $L$ & Mat gen (s) & Arpack (s) & LU (s) & dggev (s) \\
-% \midrule
-% 15 & 8.7e-02 & 3.1e-03 & 3.6e-03 & 1.0e-01 \\
-% 25 & 6.4e-01 & 1.7e-02 & 4.5e-02 & 1.8e+00 \\
-% 35 & 2.8e+00 & 6.0e-02 & 3.8e-01 & 1.6e+01 \\
-% 45 & 1.0e+01 & 2.0e-01 & 2.0e+00 & 7.4e+01 \\
-% 55 & 2.1e+01 & 4.8e-01 & 6.1e+00 & 2.8e+02 \\
-% \bottomrule
-% \end{tabular}
-% \caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on a laptop (Intel Core i5-7200U @ 2.50\,GHz).}
-% \label{table:timing_data_laptop}
-% \end{table}
+\begin{table}[h!]
+\centering
+\begin{tabular}{c c c c c}
+\toprule
+$L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
+\midrule
+15 & 0.117 & 0.00244 & 0.00419 & 0.0734 \\
+20 & 0.428 & 0.00158 & 0.00286 & 0.301 \\
+25 & 1.12 & 0.00594 & 0.00788 & 1.29 \\
+30 & 2.77 & 0.015 & 0.0145 & 3.62 \\
+35 & 4.76 & 0.0357 & 0.0309 & 9.95 \\
+40 & 10.3 & 0.0754 & 0.0646 & 26.4 \\
+50 & 26.7 & 0.276 & 0.183 & 125 \\
+60 & 71 & 0.806 & 0.404 & 361 \\
+70 & 147 & 2.01 & 0.775 & 949 \\
+80 & 228 & 4.47 & 1.35 & 3.02e+03 \\
+\bottomrule
+\end{tabular}
+\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on Wheeler (Intel Xeon E5-2680 v3 @ 2.50\,GHz).}
+\label{table:timing_data_HPC}
+\end{table}
 
 \subsection{Loglog plots showing the time scaling \label{appen::loglog_plots}}
 
