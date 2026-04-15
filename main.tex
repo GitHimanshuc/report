@@ -339,29 +339,6 @@ Matrix generation is the bottleneck when we are using Arpack.
 
 % Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{c c c c c}
-\toprule
-$L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
-\midrule
-15 & 0.0809 & 0.00139 & 0.00177 & 0.0464 \\
-20 & 0.304 & 0.00827 & 0.0053 & 0.306 \\
-25 & 0.761 & 0.0319 & 0.0125 & 1.44 \\
-30 & 1.93 & 0.101 & 0.0275 & 5.05 \\
-35 & 3.46 & 0.273 & 0.0686 & 21.8 \\
-40 & 6.97 & 0.545 & 0.108 & 45.4 \\
-50 & 18.2 & 2.18 & 0.269 & 200 \\
-60 & 47.5 & 6.7 & 0.503 & 615 \\
-70 & 99.9 & 17.2 & 0.954 & 1.77e+03 \\
-80 & 153 & 38.4 & 1.64 & 4.34e+03 \\
-90 & 274 & 79 & 2.59 & 1.03e+04 \\
-\bottomrule
-\end{tabular}
-\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on PC.}
-\label{table:timing_data_PC}
-\end{table}
-
 
 \begin{table}[h!]
 \centering
@@ -382,37 +359,28 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 90 & 407 & 9.01 & 2.06 & 5.95e+03 \\
 \bottomrule
 \end{tabular}
-\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on Wheeler (Intel Xeon E5-2680 v3 @ 2.50\,GHz).}
+\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on Caltech HPC (Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz).}
 \label{table:timing_data_HPC}
 \end{table}
 
-\subsection{Loglog plots showing the time scaling \label{appen::loglog_plots}}
+\subsection{\label{sec::loglog_plots} Loglog plots showing the time scaling}
 
 Blue dots are the data points and green lines are the fit, we can see that the fit is acceptable in all the four cases. The scaling is as we expected $O(L^4)$ for Arpack and matrix generation while $O(L^6)$ for the LU decomposition and Lapack's dggev.
 
-\begin{figure}[h]
-  % \caption{Example of a parametric plot ($\sin (x), \cos(x), x$)}
-  \centering
-  \includegraphics[width=0.45\textwidth]{./images/arpack_loglog.png}
-\end{figure}
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.5\textwidth]{./images/temp/HPC_all_in_one.png}
+%   \label{fig:HPC_all_in_one}
+%   \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode used L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
+% \end{figure}
 
-\begin{figure}[h]
-  % \caption{Example of a parametric plot ($\sin (x), \cos(x), x$)}
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=0.45\textwidth]{./images/lu_loglog.png}
-\end{figure}
+  \includegraphics[width=0.8\textwidth]{./images/temp/HPC_all_in_one.png}
+  \label{fig:HPC_all_in_one}
+  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode used L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
+\end{figure*}
 
-\begin{figure}[h]
-  % \caption{Example of a parametric plot ($\sin (x), \cos(x), x$)}
-  \centering
-  \includegraphics[width=0.45\textwidth]{./images/matrix_generation_loglog.png}
-\end{figure}
-
-\begin{figure}[h]
-  % \caption{Example of a parametric plot ($\sin (x), \cos(x), x$)}
-  \centering
-  \includegraphics[width=0.45\textwidth]{./images/dggev_loglog.png}
-\end{figure}
 
 
 \section{\label{sec:Future improvements} Future improvements}
@@ -432,8 +400,39 @@ Finally, there is Arpack which takes hardly a few seconds to run once the LU dec
 % \href{https://github.com/Reference-LAPACK/lapack/pull/421}{A recently merged pull request in Lapack} allows it to solve generalized eigenvalue problems 10-12 times faster. This will still be significantly slower than Arpack for our use case as we are only finding 3 eigenvectors but apparently Lapack can still get faster!
 
 
-% \appendix
-% \include{spec_codex_notes}
+\appendix
+\section{\label{app:Timing data PC} Timing data PC}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{c c c c c}
+\toprule
+$L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
+\midrule
+15 & 0.0809 & 0.00139 & 0.00177 & 0.0464 \\
+20 & 0.304 & 0.00827 & 0.0053 & 0.306 \\
+25 & 0.761 & 0.0319 & 0.0125 & 1.44 \\
+30 & 1.93 & 0.101 & 0.0275 & 5.05 \\
+35 & 3.46 & 0.273 & 0.0686 & 21.8 \\
+40 & 6.97 & 0.545 & 0.108 & 45.4 \\
+50 & 18.2 & 2.18 & 0.269 & 200 \\
+60 & 47.5 & 6.7 & 0.503 & 615 \\
+70 & 99.9 & 17.2 & 0.954 & 1.77e+03 \\
+80 & 153 & 38.4 & 1.64 & 4.34e+03 \\
+90 & 274 & 79 & 2.59 & 1.03e+04 \\
+\bottomrule
+\end{tabular}
+\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz).}
+\label{table:timing_data_PC}
+\end{table}
+
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./images/temp/PC_all_in_one.png}
+%   \albe
+\end{figure*}
 
 \bibliography{main}% Produces the bibliography via BibTeX.
 
