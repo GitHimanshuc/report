@@ -103,7 +103,9 @@ The dynamics of a binary black hole systems are governed by their masses and spi
 
 \section{\label{sec:Introduction} Introduction}
 
-With the new generation of gravitational wave detectors coming up \cite{Evans:2023euw,2017arXiv170200786A} we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. Unlike the rest of the simulation the spin computations are done on a single core, this means that when it is slow all the other cores are effectively wasting resources waiting for it to complete.
+% {Evans:2023euw,2017arXiv170200786A}
+
+With the new generation of gravitational wave detectors coming up (CITE) we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. Unlike the rest of the simulation the spin computations are done on a single core, this means that when it is slow all the other cores are effectively wasting resources waiting for it to complete.
 
 In this paper Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Sections \ref{sec:Future improvements} and \ref{sec:Conclusions} we talk about possible future improvements and conclude.
 
@@ -185,7 +187,7 @@ Once we have discretized the equation \ref{eqn:generalized eigenvalue problem} t
 
 Let's call the matrices formed by discretizing the operators $H$ and $D$ in equation \ref{eqn:generalized eigenvalue problem} $M$ and $B$ respectively. Now we have generalized eigenvalue problem $Mx = \lambda Bx$ and getting the eigenvectors is just a matter of using a standard library like LAPACK. To understand why this became an issue we need to understand how big these matrices are and how they grow with increase in the complexity of the apparent horizons. Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other their apparent horizons are not too deformed and can be approximated using a small number of spherical harmonics. On the other hand when the black holes are about to merge their horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. $L$ can be as small as 15 for simple non-spinning systems during the inspiral but for some complex cases it can get as large as 90 near the merger.
 
-The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_{00}$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues\footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors Lapack does a reduction of the eigensystem and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly, Table \ref{table:timing_data}. This scaling is particularly bad for SpEC where because of the its parallelization infrastructure we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of compute resources will only get worse as we need to simulate more complex parts of the parameter space at much higher accuracy for the next generation of detectors. 
+The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_{00}$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues\footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors Lapack does a reduction of the eigensystem and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly, Table \ref{table:timing_data_HPC}. This scaling is particularly bad for SpEC where because of the its parallelization infrastructure we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of compute resources will only get worse as we need to simulate more complex parts of the parameter space at much higher accuracy for the next generation of detectors. 
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
@@ -327,15 +329,13 @@ Ideally, we want $\sigma$ to be as close to the smallest eigenvalue as possible.
 
 Once we have chosen a reasonable value for sigma the next big thing is how to get the action of matrix $(M-\sigma B)^{-1}$. The first thing that we tried was using iterative algorithms(GMRES and BiCGSTAB) to get the action of inverse. This was particularly attractive in our case because we do not start with matrices but instead construct them by repeatedly calling the functions $f_{M}(x)$ and $f_{B}(x)$. In almost all cases these iterative algorithms require a good preconditioner to converge at an acceptable rate. We tried a few preconditioners and the whole thing worked really well in the early parts but the convergence became very slow in many cases when the horizon was too deformed. Furthermore, constructing non trivial preconditioners from $f_{M}(x)$ is almost as costly as constructing the full matrix itself.
 
-As already mentioned in the section about selecting the value of $\sigma$, given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$.
+As already mentioned in the section about selecting the value of $\sigma$, given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$. Note that while ARPACK requires multiple actions of $(M- \sigma B)^{-1}$ on the vectors it provides, we only need to do the costly LU factorization once and then cache it. Getting the action of $(M- \sigma B)^{-1}$ on a vector from a cached LU factorization is as cheap as a simple matrix vector product.
 
 \subsection{\label{sec:Timing data} Timing data}
 
 % \textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
 
-Table~\ref{table:timing_data} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. Note that we despite the 
-
-Matrix generation is the bottleneck when we are using Arpack.
+Table~\ref{table:timing_data_HPC} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. From the Figure \ref{fig:HPC_all_in_one} we can see that the matrix generation dominates the overall cost in the new algorithm and roughly scales as $O(L^{4.5})$ which is not far away from the idealized expectation of $O(L^4)$.
 
 % Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
 
@@ -363,10 +363,6 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 \label{table:timing_data_HPC}
 \end{table}
 
-\subsection{\label{sec::loglog_plots} Loglog plots showing the time scaling}
-
-Blue dots are the data points and green lines are the fit, we can see that the fit is acceptable in all the four cases. The scaling is as we expected $O(L^4)$ for Arpack and matrix generation while $O(L^6)$ for the LU decomposition and Lapack's dggev.
-
 % \begin{figure}[t]
 %   \centering
 %   \includegraphics[width=0.5\textwidth]{./images/temp/HPC_all_in_one.png}
@@ -378,27 +374,18 @@ Blue dots are the data points and green lines are the fit, we can see that the f
   \centering
   \includegraphics[width=0.8\textwidth]{./images/temp/HPC_all_in_one.png}
   \label{fig:HPC_all_in_one}
-  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode used L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
+  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
 \end{figure*}
 
 
 
-\section{\label{sec:Future improvements} Future improvements}
+\section{\label{sec:Future improvements and Conclusions} Future improvements and Conclusions}
 
-The simplest first possibility that may work is going back to the matrix free version and generating the full matrices every 100th step or so to use as a preconditioner. If the spin does not change very rapidly then the matrix should also change slowly and the same preconditioner could be used for multiple time steps. The main issue is that close to the merger spins will change rapidly, and there we may end up calculate the full matrices at every step defeating the whole purpose. All the following suggestion are simply noting the parts that can be parallelized.
+The simplest first possibility that may work is going back to the matrix free version and generating the full matrices every 100th step or so to use as a preconditioner. If the spin does not change very rapidly then the matrix should also change slowly and the same preconditioner could be used for multiple time steps. The main issue is that close to the merger spins will change rapidly, and there we may end up calculate the full matrices much more frequently.
 
+Also, the matrix generation is an embarrassingly parallel problem where we apply the functions $f_{M}$ and $f_{B}$ on unit vectors one by one to construct the matrices. For large values of $L$ we can gain good speedup by doing this in parallel.
 
-Now that we are using Arpack the bottleneck is matrix generation. The matrix is simply generated by using the action of the matrices on unit vectors. In theory the matrix action function can act on multiple basis vectors in parallel.
-
-After, that the next most costly process is the LU decomposition and using it solve a linear system which is being done by Lapack.
-
-Finally, there is Arpack which takes hardly a few seconds to run once the LU decomposition is done. The chances that we would ever need something faster than it is slim but there is a parallel version of Arpack in the \href{https://github.com/opencollab/arpack-ng/tree/master/PARPACK}{Arpack-ng github repo}.
-
-\section{\label{sec:Conclusions} Conclusions}
-
-% \subsubsection{Newer versions of Lapack will be faster}
-% \href{https://github.com/Reference-LAPACK/lapack/pull/421}{A recently merged pull request in Lapack} allows it to solve generalized eigenvalue problems 10-12 times faster. This will still be significantly slower than Arpack for our use case as we are only finding 3 eigenvectors but apparently Lapack can still get faster!
-
+We have 
 
 \appendix
 \section{\label{app:Timing data PC} Timing data PC}
