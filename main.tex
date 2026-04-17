@@ -323,14 +323,22 @@ This is not an issue if we finding these in isolation because we can always chan
 \caption{Operations required for ARPACK in the nonsymmetric generalized case using the shift-invert transformation. In this mode, ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_B$ to obtain $v = f_B(x) = Bx$, and then solve $(f_M-\sigma f_B)(y) = (M-\sigma B)y = v$ for $y$.}
 \end{figure}
 
-Ideally, we want $\sigma$ to be as close to the smallest eigenvalue as possible. Given all the eigenvalues in our case are guaranteed to be negative we can just set $\sigma$ equal to zero which will make the smallest eigenvalues as large and well separated as possible. Having large and well separated eigenvalues makes the inner Arnoldi iterations in ARPACK very effecient allowing us to find those eigenvalues much faster. Although, it is important to note that as $\sigma$ gets closer to one the eigenvalues the matrix $M - \sigma B$ becomes more and more ill-conditioned. Given we need the action of $(M - \sigma B)^{-1}$ for ARPACK we do not $M-\sigma B$ to become too ill-conditioned. This means that there is an ideal value of $\sigma$ which makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Figure~\ref{fig:HPC_condition_number} show how the condition number of $M-\sigma B$ depends on the value of $\sigma$, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Based on some tests that we did we decided to go with $\sigma = 0.1$, which has worked well for the systems we have simulated till now.
+Ideally, we want $\sigma$ to be as close to the smallest eigenvalue as possible. Given all the eigenvalues in our case are guaranteed to be negative we can just set $\sigma$ equal to zero which will make the smallest eigenvalues as large and well separated as possible. Having large and well separated eigenvalues makes the inner Arnoldi iterations in ARPACK very effecient allowing us to find those eigenvalues much faster. Although, it is important to note that as $\sigma$ gets closer to one the eigenvalues the matrix $M - \sigma B$ becomes more and more ill-conditioned. Given we need the action of $(M - \sigma B)^{-1}$ for ARPACK we do not $M-\sigma B$ to become too ill-conditioned. This means that there is an ideal value of $\sigma$ which makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Fig.(\ref{fig:HPC_condition_number}) show how the condition number of $M-\sigma B$ depends on the value of $\sigma$, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Based on some tests that we did we decided to go with $\sigma = 0.1$, which has worked well for the systems we have simulated till now.
 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{./images/HPC_condition_number.png}
+  \includegraphics[width=0.45\textwidth]{./images/condition_number_vs_sigma.png}
   \label{fig:HPC_condition_number}
   \caption{The figure shows how the value of sigma affects the condition number of the matrix $M-\sigma B$ for different L. The matrices were generated for a test Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Note that the conditioning number also gets worse as the number of $L$ required to represent the horizon increases. The behavior will depends on the shape of the black hole horizons but for the systems we tested having a small $\sigma$ always showed this blowup because most of the time one of the eigenvalues are close to zero.}
+\end{figure}
+
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.45\textwidth]{./images/LU_solve_nums_L50.png}
+  \caption{Number of LU solves required by the ARPACK to converge. This is simple Kerr-Schild spacetime with spin=(0,0,0.5) and mass=1, but we have noticed that the number of iterations required by ARPACK rarely goes beyond 30 even for much complicated systems. On the other hand not having a good enough value of $\sigma$ makes the converge very slow as we can see from the graph. For the bbh simulations we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
+  \label{fig:LU_solve_nums_L50}
 \end{figure}
 
 \subsection{\label{ssec:action-of-shift-invert} Action of \texorpdfstring{$(M-\sigma B)^{-1}$}{(M-sigma B)^(-1)}}
@@ -343,7 +351,7 @@ As already mentioned in the section about selecting the value of $\sigma$, given
 
 % \textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
 
-Table~\ref{table:timing_data_HPC} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. From the Figure \ref{fig:HPC_all_in_one} we can see that the matrix generation dominates the overall cost in the new algorithm and roughly scales as $O(L^{4.5})$ which is not far away from the idealized expectation of $O(L^4)$.
+Table~\ref{table:timing_data_HPC} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. From the Fig.(\ref{fig:HPC_all_in_one}) we can see that the matrix generation dominates the overall cost in the new algorithm and roughly scales as $O(L^{4.5})$ which is not far away from the idealized expectation of $O(L^4)$.
 
 % Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
 
@@ -379,13 +387,18 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 %   \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode used L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
 % \end{figure}
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
   \centering
-  \includegraphics[width=0.8\textwidth]{./images/HPC_all_in_one.png}
-  \label{fig:HPC_all_in_one}
+  \includegraphics[width=0.75\textwidth]{./images/HPC_all_in_one.png}
   \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
+  \label{fig:HPC_all_in_one}
 \end{figure*}
-
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.75\textwidth]{./images/PC_all_in_one.png}
+  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
+  \label{fig:PC_all_in_one}
+\end{figure*}
 
 
 \section{\label{sec:Future improvements and Conclusions} Future improvements and Conclusions}
@@ -394,16 +407,9 @@ The simplest first possibility that may work is going back to the matrix free ve
 
 Another possibility is trying to get a better preconditioner using the analytical properties of matrices, which will allow us to work in a matrix free manner avoiding the cost of building the matrices $M$ and $B$. The construction of the matrices requires $L^2$ calls to the functions $f_M$ and $f_B$, which is the bottleneck in the new algorithm. When using a matrix free version we need to use a linear solver like GMRES which will call these functions multiple times to get the action of the $(M-\sigma B)^{-1}$. In our testing we have found that with $\sigma = 0.1$ ARPACK usually needs less than 30 iterations to converge. For each ARPACK iteration we need the linear solver to converge in less than $O(L)$ iterations (otherwise it will be faster to generate the full matrix), which is very hard to do for the matrices we have without good preconditioners. 
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.45\textwidth]{./images/LU_solve_nums_L50.png}
-  \label{fig:LU_solve_nums_L50}
-  \caption{Number of LU solves required by the ARPACK to converge. This is simple Kerr-Schild spacetime with spin=(0,0,0.5) and mass=1, but we have noticed that the number of iterations required by ARPACK rarely goes beyond 30 even for much complicated systems. On the other hand not having a good enough value of $\sigma$ makes the converge very slow as we can see from the graph. For the bbh simulations we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
-\end{figure}
-
 Also, the matrix generation is an embarrassingly parallel problem where we apply the functions $f_{M}$ and $f_{B}$ on unit vectors one by one to construct the matrices. For large values of $L$ we can gain good speedup by doing this in parallel.
 
-We have shown that the new algorithm based on the sparse eigensystem solver (ARPACK) and LU decomposition is close to two orders of magnitude faster than the original one based on dense eigensystem solver. But, if we add the time required to construct the matrices, which is required by both algorithm, then the speedup then the speedup is closer to an order of magnitude. We tried to use a fully matrix free algorithm but lacked 
+We have shown that the new algorithm based on the sparse eigensystem solver (ARPACK) and LU decomposition is close to two orders of magnitude faster than the original one based on dense eigensystem solver. But, if we add the time required to construct the matrices, which is required by both algorithm, then the speedup then the speedup is closer to an order of magnitude. We tried to use a fully matrix free algorithm but were not able to come up with preconditioners where the overall cost of the iterations and the preconditioner construction was lower than the cost of constructing the full matrix.
 
 \appendix
 \section{\label{app:Timing data PC} Timing data PC}
@@ -435,13 +441,6 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 \label{table:timing_data_PC}
 \end{table}
 
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.8\textwidth]{./images/PC_all_in_one.png}
-  \label{fig:PC_all_in_one}
-  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
-\end{figure*}
 
 \bibliography{main}% Produces the bibliography via BibTeX.
 
