@@ -108,7 +108,7 @@ def unwrap_bibtex_value(value: str) -> str:
     return text.strip()
 
 
-def first_n_authors(author_value: str, count: int = 3) -> str:
+def first_n_authors(author_value: str, count: int = 5) -> str:
     authors = re.split(r"\s+and\s+", author_value)
     cleaned_authors = [author.strip() for author in authors if author.strip()]
     if not cleaned_authors:

@@ -1,8 +1,11 @@
+import argparse
 import csv
+import io
 import json
 import math
 import os
 import re
+from contextlib import redirect_stdout
 from pathlib import Path
 
 try:
@@ -10,24 +13,39 @@ try:
 except ModuleNotFoundError:
     from ads_api.embed_joined_refs import default_output_path, fetch_embeddings
 
-
-# INPUT_TEXT = """Abbott B P et al. (LIGO Scientific, Virgo) 2016 Phys. Rev. Lett. 116 061102 [arXiv:1602.03837]"""
-INPUT_TEXT = """T. W. Baumgarte and S. L. Shapiro, Numerical Relativity: Solving Einstein's Equations on the Computer (Cambridge University Press, New York, 2010)."""
-# INPUT_TEXT = """C. O. Lousto and Y. Zlochower (2013), 1312.5775."""
-# INPUT_TEXT = """T. Futamase and Y. Itoh, Living Rev. Rel. 10, 2 (2007)."""
-# INPUT_TEXT = """R. Owen, Phys. Rev. D 80, 084012 (2009)."""
-INPUT_TEXT = """J. Blackman, S. E. Field, M. A. Scheel, C. R. Galley, C. D. Ott, M. Boyle, L. E. Kidder, H. P. Pfeiffer, and B. Szilagyi, Phys. Rev. D 96, 024058 (2017)"""
-
 MODEL = "openai/text-embedding-3-small"
 TOP_K_FALLBACK = 5
-DEBUG = False
 EMBEDDING_ACCEPT_SCORE = 0.75
 EMBEDDING_ACCEPT_FALLOFF = 0.15
 NUMERIC_ACCEPT_SCORE = 0.8
 NUMERIC_REJECT_NEXT_SCORE = 0.5
+MIN_NUMERIC_ALL_MATCH_SCORE = 5
+MIN_NUMERIC_TOKEN_VALUE = 50
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATABASE_PATH = SCRIPT_DIR / "database.json"
 EMBEDDINGS_CSV = default_output_path(SCRIPT_DIR, MODEL)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Match each reference in a text file against ads_api/database.json."
+    )
+    parser.add_argument(
+        "input_file",
+        type=Path,
+        help="Path to a .txt file containing one reference per line.",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Include detailed matching diagnostics in the output report.",
+    )
+    parser.add_argument(
+        "--only-failed",
+        action="store_true",
+        help="Write only failed matches to the output report.",
+    )
+    return parser.parse_args()
 
 
 def load_database(database_path: Path) -> dict:
@@ -64,10 +82,10 @@ def cosine_similarity(vec_a: list[float], vec_b: list[float]) -> float:
 
 
 def extract_arxiv_id(text: str) -> str | None:
-    match = re.search(r"\b\d{4}\.\d{4,5}\b", text)
+    match = re.search(r"(?:arXiv:)?(\d{4}\.\d{4,5})(?:v\d+)?", text, flags=re.IGNORECASE)
     if match is None:
         return None
-    return match.group(0)
+    return match.group(1)
 
 
 def find_arxiv_match(database: dict, arxiv_id: str) -> tuple[str, dict] | None:
@@ -82,6 +100,12 @@ def extract_numeric_tokens(text: str) -> list[str]:
     tokens = re.findall(r"\d+\.\d+|\d+", text)
     unique_tokens: list[str] = []
     for token in tokens:
+        try:
+            numeric_value = float(token)
+        except ValueError:
+            continue
+        if numeric_value < MIN_NUMERIC_TOKEN_VALUE:
+            continue
         if token not in unique_tokens:
             unique_tokens.append(token)
     return unique_tokens
@@ -122,8 +146,12 @@ def rerank_top_matches_by_numeric_overlap(
     scored_matches: list[tuple[float, str]],
     database: dict,
     input_text: str,
+    *,
+    excluded_tokens: set[str] | None = None,
 ) -> list[tuple[float, float, int, list[str], str]]:
     numeric_tokens = extract_numeric_tokens(input_text)
+    if excluded_tokens:
+        numeric_tokens = [token for token in numeric_tokens if token not in excluded_tokens]
     top_candidates = scored_matches[:10]
 
     if not numeric_tokens:
@@ -162,49 +190,39 @@ def print_numeric_rerank_debug(reranked_matches: list[tuple[float, float, int, l
         )
 
 
-def print_match_result(
-    bibcode: str,
-    matched_entry: dict,
-    path: str,
-    extra_lines: list[str] | None = None,
-) -> None:
-    if DEBUG:
-        print(f"Match path: {path}")
-        if extra_lines:
-            for line in extra_lines:
-                print(line)
-        print(f"Bibcode: {bibcode}")
-        print(json.dumps(matched_entry, indent=2, ensure_ascii=False))
-        return
+def match_text(
+    input_text: str,
+    *,
+    debug: bool | None = None,
+    database: dict | None = None,
+    embedding_rows: list[tuple[str, list[float]]] | None = None,
+    api_key: str | None = None,
+) -> tuple[str, dict, str, list[str]]:
+    if not input_text:
+        raise ValueError("Input text is empty")
 
-    print(f"Bibcode: {bibcode}")
-    print(json.dumps(matched_entry, indent=2, ensure_ascii=False))
-
-
-def main() -> None:
-    if not INPUT_TEXT:
-        raise ValueError("Set INPUT_TEXT before running this script")
-
-    database = load_database(DATABASE_PATH)
-    arxiv_id = extract_arxiv_id(INPUT_TEXT)
+    debug_enabled = bool(debug)
+    database = database if database is not None else load_database(DATABASE_PATH)
+    arxiv_id = extract_arxiv_id(input_text)
+    excluded_numeric_tokens: set[str] = set()
     if arxiv_id is not None:
         arxiv_match = find_arxiv_match(database, arxiv_id)
         if arxiv_match is not None:
             bibcode, matched_entry = arxiv_match
-            print_match_result(
+            return (
                 bibcode,
                 matched_entry,
-                path="arxiv",
-                extra_lines=[f"Matched exact arXiv token: {arxiv_id}"],
+                "arxiv",
+                [f"Matched exact arXiv token: {arxiv_id}"],
             )
-            return
+        excluded_numeric_tokens.add(arxiv_id)
 
-    api_key = os.getenv("OPENROUTER_API_KEY_EMBEDDING")
+    api_key = api_key if api_key is not None else os.getenv("OPENROUTER_API_KEY_EMBEDDING")
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY_EMBEDDING environment variable is not set")
 
-    embedding_rows = load_embeddings(EMBEDDINGS_CSV)
-    query_embedding = fetch_embeddings([INPUT_TEXT], api_key=api_key, model=MODEL)[0]
+    embedding_rows = embedding_rows if embedding_rows is not None else load_embeddings(EMBEDDINGS_CSV)
+    query_embedding = fetch_embeddings([input_text], api_key=api_key, model=MODEL)[0]
 
     scored_matches: list[tuple[float, str]] = []
     for bibcode, embedding in embedding_rows:
@@ -218,7 +236,7 @@ def main() -> None:
     top_embedding_score, top_embedding_bibcode = scored_matches[0]
     top_embedding_falloff = embedding_falloff(scored_matches, rank=5)
 
-    if DEBUG:
+    if debug_enabled:
         print_top10_decay(scored_matches)
         print(
             f"\nEmbedding acceptance check: "
@@ -230,55 +248,60 @@ def main() -> None:
         top_embedding_score > EMBEDDING_ACCEPT_SCORE
         and top_embedding_falloff >= EMBEDDING_ACCEPT_FALLOFF
     ):
-        print_match_result(
+        return (
             top_embedding_bibcode,
             database["joined_refs"][top_embedding_bibcode],
-            path="embedding",
-            extra_lines=[
+            "embedding",
+            [
                 f"embedding_score={top_embedding_score:.6f}",
                 f"falloff_top1_to_top5={top_embedding_falloff:.6f}",
             ],
         )
-        return
 
-    numeric_tokens = extract_numeric_tokens(INPUT_TEXT)
-    if DEBUG:
+    numeric_tokens = extract_numeric_tokens(input_text)
+    if debug_enabled:
         if numeric_tokens:
             print("\nNumeric tokens from input: " + ", ".join(numeric_tokens))
         else:
             print("\nNumeric tokens from input: none")
 
     reranked_matches = rerank_top_matches_by_numeric_overlap(
-        scored_matches, database=database, input_text=INPUT_TEXT
+        scored_matches,
+        database=database,
+        input_text=input_text,
+        excluded_tokens=excluded_numeric_tokens,
     )
-    if DEBUG:
+    if debug_enabled:
         print_numeric_rerank_debug(reranked_matches)
 
     top_numeric_match = reranked_matches[0]
     top_numeric_score = top_numeric_match[1]
     second_numeric_score = reranked_matches[1][1] if len(reranked_matches) > 1 else 0.0
 
-    full_numeric_matches = [match for match in reranked_matches if match[1] == 1.0]
+    full_numeric_matches = [
+        match
+        for match in reranked_matches
+        if match[1] == 1.0 and match[2] >= MIN_NUMERIC_ALL_MATCH_SCORE
+    ]
     if len(full_numeric_matches) == 1:
         winning_match = full_numeric_matches[0]
-        print_match_result(
+        return (
             winning_match[4],
             database["joined_refs"][winning_match[4]],
-            path="numeric-all-match",
-            extra_lines=[
+            "numeric-all-match",
+            [
                 f"normalized_numeric_score={winning_match[1]:.6f}",
                 f"embedding_score={winning_match[0]:.6f}",
                 "matched_numeric_tokens=" + ", ".join(winning_match[3]),
             ],
         )
-        return
 
     if top_numeric_score > NUMERIC_ACCEPT_SCORE and second_numeric_score < NUMERIC_REJECT_NEXT_SCORE:
-        print_match_result(
+        return (
             top_numeric_match[4],
             database["joined_refs"][top_numeric_match[4]],
-            path="numeric-rerank",
-            extra_lines=[
+            "numeric-rerank",
+            [
                 f"normalized_numeric_score={top_numeric_match[1]:.6f}",
                 f"next_normalized_numeric_score={second_numeric_score:.6f}",
                 f"embedding_score={top_numeric_match[0]:.6f}",
@@ -286,11 +309,134 @@ def main() -> None:
                 + (", ".join(top_numeric_match[3]) if top_numeric_match[3] else "none"),
             ],
         )
-        return
 
     raise ValueError(
         "No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous."
     )
+
+
+def format_match_block(
+    input_text: str,
+    bibcode: str,
+    matched_entry: dict,
+    path: str,
+    extra_lines: list[str],
+    debug_output: str,
+    *,
+    debug: bool,
+) -> str:
+    lines = [f"Query: {input_text}"]
+    if debug:
+        lines.append(f"Match path: {path}")
+        lines.extend(extra_lines)
+        debug_output = debug_output.strip()
+        if debug_output:
+            lines.append(debug_output)
+    lines.append(f"Bibcode: {bibcode}")
+    lines.append(json.dumps(matched_entry, indent=2, ensure_ascii=False))
+    return "\n".join(lines)
+
+
+def format_error_block(input_text: str, error: Exception, debug_output: str, *, debug: bool) -> str:
+    lines = [f"Query: {input_text}", f"Error: {type(error).__name__}: {error}"]
+    if debug:
+        debug_output = debug_output.strip()
+        if debug_output:
+            lines.append(debug_output)
+    return "\n".join(lines)
+
+
+def output_path_for_input(input_path: Path) -> Path:
+    return input_path.with_name(f"{input_path.stem}_OUTPUT.txt")
+
+
+def print_progress(index: int, total: int, success_count: int, failure_count: int, status: str) -> None:
+    print(
+        f"[{index}/{total}] {status}  "
+        f"success={success_count}  "
+        f"failed={failure_count}",
+        flush=True,
+    )
+
+
+def main() -> None:
+    args = parse_args()
+    input_path = args.input_file.resolve()
+    if input_path.suffix.lower() != ".txt":
+        raise ValueError("Input file must have a .txt extension")
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file not found: {input_path}")
+
+    database = load_database(DATABASE_PATH)
+    embedding_rows = load_embeddings(EMBEDDINGS_CSV)
+    api_key = os.getenv("OPENROUTER_API_KEY_EMBEDDING")
+    if not api_key:
+        raise ValueError("OPENROUTER_API_KEY_EMBEDDING environment variable is not set")
+
+    input_lines = [
+        line.strip()
+        for line in input_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    if not input_lines:
+        raise ValueError(f"No non-empty lines found in {input_path}")
+
+    output_blocks: list[str] = []
+    separator = "\n\n" + ("=" * 100) + "\n\n"
+    total_count = len(input_lines)
+    success_count = 0
+    failure_count = 0
+
+    print(f"Processing {total_count} references from {input_path}", flush=True)
+
+    for index, input_text in enumerate(input_lines, start=1):
+        debug_buffer = io.StringIO()
+        try:
+            with redirect_stdout(debug_buffer):
+                bibcode, matched_entry, path, extra_lines = match_text(
+                    input_text,
+                    debug=args.debug,
+                    database=database,
+                    embedding_rows=embedding_rows,
+                    api_key=api_key,
+                )
+            if not args.only_failed:
+                output_blocks.append(
+                    format_match_block(
+                        input_text,
+                        bibcode,
+                        matched_entry,
+                        path,
+                        extra_lines,
+                        debug_buffer.getvalue(),
+                        debug=args.debug,
+                    )
+                )
+            success_count += 1
+            print_progress(index, total_count, success_count, failure_count, "OK")
+        except Exception as error:
+            output_blocks.append(
+                format_error_block(
+                    input_text,
+                    error,
+                    debug_buffer.getvalue(),
+                    debug=args.debug,
+                )
+            )
+            failure_count += 1
+            print_progress(index, total_count, success_count, failure_count, "ERR")
+
+    output_path = output_path_for_input(input_path)
+    output_text = separator.join(output_blocks)
+    if output_text:
+        output_text += "\n"
+    output_path.write_text(output_text, encoding="utf-8")
+    print(
+        f"Completed {total_count} references: "
+        f"success={success_count}, failed={failure_count}",
+        flush=True,
+    )
+    print(f"Wrote results to {output_path}")
 
 
 if __name__ == "__main__":
