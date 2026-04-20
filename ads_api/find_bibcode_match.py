@@ -16,9 +16,10 @@ except ModuleNotFoundError:
 MODEL = "openai/text-embedding-3-small"
 TOP_K_FALLBACK = 5
 EMBEDDING_ACCEPT_SCORE = 0.75
-EMBEDDING_ACCEPT_FALLOFF = 0.15
+EMBEDDING_ACCEPT_FALLOFF = 0.20
 NUMERIC_ACCEPT_SCORE = 0.8
 NUMERIC_REJECT_NEXT_SCORE = 0.5
+MIN_EMBEDDING_SCORE_FOR_NUMERIC_RERANK = 0.60
 MIN_NUMERIC_ALL_MATCH_SCORE = 5
 MIN_NUMERIC_TOKEN_VALUE = 50
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -256,6 +257,11 @@ def match_text(
                 f"embedding_score={top_embedding_score:.6f}",
                 f"falloff_top1_to_top5={top_embedding_falloff:.6f}",
             ],
+        )
+
+    if top_embedding_score < MIN_EMBEDDING_SCORE_FOR_NUMERIC_RERANK:
+        raise ValueError(
+            "No confident match found. Top embedding score was below the numeric-rerank threshold."
         )
 
     numeric_tokens = extract_numeric_tokens(input_text)

@@ -1,0 +1,754 @@
+Embedding candidates for 2008PhRvD..78h4017L: total=76  existing=76  pending=0
+Embeddings already up to date at /home/himanshu/Desktop/papers/spin_project/ads_api/2008PhRvD..78h4017L__openai__text-embedding-3-small.csv
+Embedding candidates for 2019PhRvD..99h4031O: total=61  existing=61  pending=0
+Embeddings already up to date at /home/himanshu/Desktop/papers/spin_project/ads_api/2019PhRvD..99h4031O__openai__text-embedding-3-small.csv
+Embedding candidates for 2025CQGra..42s5017S: total=249  existing=249  pending=0
+Embeddings already up to date at /home/himanshu/Desktop/papers/spin_project/ads_api/2025CQGra..42s5017S__openai__text-embedding-3-small.csv
+Processing 85 references for 2008PhRvD..78h4017L from /home/himanshu/Desktop/papers/spin_project/ads_api/lovelace_2008.txt
+[1/85] OK  success=1  failed=0  alias=__lovelace08_1  bibcode=2005ApJ...620...69V  path=numeric-all-match
+[2/85] OK  success=2  failed=0  alias=__lovelace08_2  bibcode=2004ApJ...602..312G  path=numeric-all-match
+[3/85] OK  success=3  failed=0  alias=__lovelace08_3  bibcode=2005ApJ...620...59S  path=numeric-all-match
+[4/85] OK  success=4  failed=0  alias=__lovelace08_4  bibcode=2006ApJ...642L.111W  path=numeric-all-match
+[5/85] OK  success=5  failed=0  alias=__lovelace08_5  bibcode=2006ApJ...652..518M  path=numeric-all-match
+[6/85] ERR  success=5  failed=1  alias=__lovelace08_6
+[7/85] ERR  success=5  failed=2  alias=__lovelace08_7
+[8/85] OK  success=6  failed=2  alias=__lovelace08_8  bibcode=2008ApJ...684..822B  path=arxiv
+[9/85] OK  success=7  failed=2  alias=__lovelace08_9  bibcode=2007PhRvL..99d1102K  path=numeric-all-match
+[10/85] OK  success=8  failed=2  alias=__lovelace08_10  bibcode=2007PhRvL..98w1102C  path=numeric-all-match
+[11/85] OK  success=9  failed=2  alias=__lovelace08_11  bibcode=2007PhRvL..98w1101G  path=numeric-all-match
+[12/85] OK  success=10  failed=2  alias=__lovelace08_12  bibcode=2007ApJ...661..430H  path=numeric-all-match
+[13/85] OK  success=11  failed=2  alias=__lovelace08_13  bibcode=2007PhRvD..76j4026C  path=numeric-all-match
+[14/85] OK  success=12  failed=2  alias=__lovelace08_14  bibcode=2007ApJ...659L...5C  path=numeric-all-match
+[15/85] OK  success=13  failed=2  alias=__lovelace08_15  bibcode=2008PhRvD..77l4047B  path=numeric-all-match
+[16/85] OK  success=14  failed=2  alias=__lovelace08_16  bibcode=2007ApJ...668.1140B  path=numeric-all-match
+[17/85] OK  success=15  failed=2  alias=__lovelace08_17  bibcode=2008PhRvD..77d4031S  path=numeric-all-match
+[18/85] OK  success=16  failed=2  alias=__lovelace08_18  bibcode=2007PhRvD..75f4030C  path=numeric-all-match
+[19/85] OK  success=17  failed=2  alias=__lovelace08_19  bibcode=2006PhRvD..74h4023C  path=numeric-all-match
+[20/85] OK  success=18  failed=2  alias=__lovelace08_20  bibcode=2006PhRvD..74d1501C  path=numeric-all-match
+[21/85] OK  success=19  failed=2  alias=__lovelace08_21  bibcode=2007PhRvD..76h4032H  path=numeric-all-match
+[22/85] OK  success=20  failed=2  alias=__lovelace08_22  bibcode=2008PhRvD..77f4010M  path=numeric-all-match
+[23/85] OK  success=21  failed=2  alias=__lovelace08_23  bibcode=2008CQGra..25k4035B  path=numeric-all-match
+[24/85] ERR  success=21  failed=3  alias=__lovelace08_24
+[25/85] OK  success=22  failed=3  alias=__lovelace08_25  bibcode=2008PhRvD..78b4039D  path=numeric-all-match
+[26/85] OK  success=23  failed=3  alias=__lovelace08_26  bibcode=2002PhRvD..65j4038D  path=numeric-all-match
+[27/85] ERR  success=23  failed=4  alias=__lovelace08_27
+[28/85] OK  success=24  failed=4  alias=__lovelace08_28  bibcode=2004PhRvD..70j4016C  path=numeric-all-match
+[29/85] OK  success=25  failed=4  alias=__lovelace08_29  bibcode=2006PhRvD..74f4011C  path=numeric-all-match
+[30/85] OK  success=26  failed=4  alias=__lovelace08_30  bibcode=2002PhRvD..65d4020G  path=numeric-all-match
+[31/85] ERR  success=26  failed=5  alias=__lovelace08_31
+[32/85] ERR  success=26  failed=6  alias=__lovelace08_32
+[33/85] ERR  success=26  failed=7  alias=__lovelace08_33
+[34/85] ERR  success=26  failed=8  alias=__lovelace08_34
+[35/85] ERR  success=26  failed=9  alias=__lovelace08_35
+[36/85] OK  success=27  failed=9  alias=__lovelace08_36  bibcode=2007CQGra..24.1911W  path=numeric-all-match
+[37/85] OK  success=28  failed=9  alias=__lovelace08_37  bibcode=1998PhRvD..59b4015M  path=numeric-all-match
+[38/85] OK  success=29  failed=9  alias=__lovelace08_38  bibcode=2000PhRvL..85.5500M  path=numeric-all-match
+[39/85] ERR  success=29  failed=10  alias=__lovelace08_39
+[40/85] OK  success=30  failed=10  alias=__lovelace08_40  bibcode=2006PhRvD..74d1502T  path=numeric-all-match
+[41/85] ERR  success=30  failed=11  alias=__lovelace08_41
+[42/85] OK  success=31  failed=11  alias=__lovelace08_42  bibcode=2008PhRvD..77h4005B  path=numeric-all-match
+[43/85] OK  success=32  failed=11  alias=__lovelace08_43  bibcode=1979GReGr..11..227B  path=numeric-all-match
+[44/85] OK  success=33  failed=11  alias=__lovelace08_44  bibcode=1980PhRvD..21.2047B  path=numeric-all-match
+[45/85] ERR  success=33  failed=12  alias=__lovelace08_45
+[46/85] OK  success=34  failed=12  alias=__lovelace08_46  bibcode=2008CQGra..25i5020A  path=embedding
+[47/85] ERR  success=34  failed=13  alias=__lovelace08_47
+[48/85] ERR  success=34  failed=14  alias=__lovelace08_48
+[49/85] OK  success=35  failed=14  alias=__lovelace08_49  bibcode=2007CQGra..24S..59P  path=numeric-all-match
+[50/85] ERR  success=35  failed=15  alias=__lovelace08_50
+[51/85] ERR  success=35  failed=16  alias=__lovelace08_51
+[52/85] ERR  success=35  failed=17  alias=__lovelace08_52
+[53/85] OK  success=36  failed=17  alias=__lovelace08_53  bibcode=2002PhRvD..66b4047P  path=numeric-all-match
+[54/85] OK  success=37  failed=17  alias=__lovelace08_54  bibcode=2003PhRvD..67f4008T  path=numeric-all-match
+[55/85] ERR  success=37  failed=18  alias=__lovelace08_55
+[56/85] OK  success=38  failed=18  alias=__lovelace08_56  bibcode=2006PhRvD..74j4011Y  path=numeric-all-match
+[57/85] OK  success=39  failed=18  alias=__lovelace08_57  bibcode=2006PhRvD..74f4013Y  path=numeric-all-match
+[58/85] ERR  success=39  failed=19  alias=__lovelace08_58
+[59/85] OK  success=40  failed=19  alias=__lovelace08_59  bibcode=2007PhRvD..76b4008K  path=numeric-all-match
+[60/85] OK  success=41  failed=19  alias=__lovelace08_60  bibcode=2003PhRvD..68d4019B  path=numeric-all-match
+[61/85] ERR  success=41  failed=20  alias=__lovelace08_61
+[62/85] OK  success=42  failed=20  alias=__lovelace08_62  bibcode=2003CoPhC.152..253P  path=numeric-all-match
+[63/85] ERR  success=42  failed=21  alias=__lovelace08_63
+[64/85] ERR  success=42  failed=22  alias=__lovelace08_64
+[65/85] OK  success=43  failed=22  alias=__lovelace08_65  bibcode=2006PhRvD..74j4006S  path=numeric-all-match
+[66/85] OK  success=44  failed=22  alias=__lovelace08_66  bibcode=2007PhRvD..76l4038B  path=numeric-all-match
+[67/85] ERR  success=44  failed=23  alias=__lovelace08_67
+[68/85] OK  success=45  failed=23  alias=__lovelace08_68  bibcode=2006CQGra..23S.447L  path=numeric-all-match
+[69/85] OK  success=46  failed=23  alias=__lovelace08_69  bibcode=2008PhRvD..77l4051F  path=numeric-all-match
+[70/85] OK  success=47  failed=23  alias=__lovelace08_70  bibcode=1993PhRvD..47.1407B  path=numeric-all-match
+[71/85] OK  success=48  failed=23  alias=__lovelace08_71  bibcode=2001PhRvD..64d4016A  path=numeric-all-match
+[72/85] OK  success=49  failed=23  alias=__lovelace08_72  bibcode=2003PhRvD..68j4030A  path=numeric-all-match
+[73/85] OK  success=50  failed=23  alias=__lovelace08_73  bibcode=2003PhRvD..67b4018D  path=numeric-all-match
+[74/85] OK  success=51  failed=23  alias=__lovelace08_74  bibcode=2006PhRvD..74b4028S  path=numeric-all-match
+[75/85] ERR  success=51  failed=24  alias=__lovelace08_75
+[76/85] OK  success=52  failed=24  alias=__lovelace08_76  bibcode=2007CQGra..24.5935K  path=numeric-all-match
+[77/85] ERR  success=52  failed=25  alias=__lovelace08_77
+[78/85] ERR  success=52  failed=26  alias=__lovelace08_78
+[79/85] OK  success=53  failed=26  alias=__lovelace08_79  bibcode=1994PhRvD..50.3801A  path=numeric-all-match
+[80/85] ERR  success=53  failed=27  alias=__lovelace08_80
+[81/85] OK  success=54  failed=27  alias=__lovelace08_81  bibcode=2005PhRvD..72d4004A  path=numeric-all-match
+[82/85] OK  success=55  failed=27  alias=__lovelace08_82  bibcode=1973PhRvD...7..289S  path=numeric-all-match
+[83/85] OK  success=56  failed=27  alias=__lovelace08_83  bibcode=1974PhRvD...9.2749H  path=numeric-all-match
+[84/85] OK  success=57  failed=27  alias=__lovelace08_84  bibcode=1999PhRvD..59f4015M  path=numeric-all-match
+[85/85] ERR  success=57  failed=28  alias=__lovelace08_85
+Alias summary for 2008PhRvD..78h4017L: added=0  moved=0  unchanged=57  failed=28
+Processing 64 references for 2019PhRvD..99h4031O from /home/himanshu/Desktop/papers/spin_project/ads_api/owen_2019.txt
+[1/64] OK  success=1  failed=0  alias=__owen19_1  bibcode=2016PhRvL.116f1102A  path=numeric-all-match
+[2/64] OK  success=2  failed=0  alias=__owen19_2  bibcode=2016PhRvL.116x1103A  path=numeric-all-match
+[3/64] OK  success=3  failed=0  alias=__owen19_3  bibcode=2017PhRvL.118v1101A  path=numeric-all-match
+[4/64] OK  success=4  failed=0  alias=__owen19_4  bibcode=2017PhRvL.119p1101A  path=numeric-all-match
+[5/64] OK  success=5  failed=0  alias=__owen19_5  bibcode=2008itnr.book.....A  path=embedding
+[6/64] OK  success=6  failed=0  alias=__owen19_6  bibcode=2010nure.book.....B  path=embedding
+[7/64] ERR  success=6  failed=1  alias=__owen19_7
+[8/64] ERR  success=6  failed=2  alias=__owen19_8
+[9/64] OK  success=7  failed=2  alias=__owen19_9  bibcode=2003LRR.....6....6S  path=numeric-all-match
+[10/64] OK  success=8  failed=2  alias=__owen19_10  bibcode=2007ApJ...659L...5C  path=numeric-all-match
+[11/64] OK  success=9  failed=2  alias=__owen19_11  bibcode=2007PhRvD..75f4030C  path=numeric-all-match
+[12/64] OK  success=10  failed=2  alias=__owen19_12  bibcode=2006ApJ...653L..93B  path=numeric-all-match
+[13/64] OK  success=11  failed=2  alias=__owen19_13  bibcode=2007PhRvL..98i1101G  path=numeric-all-match
+[14/64] OK  success=12  failed=2  alias=__owen19_14  bibcode=2008PhRvD..77l4047B  path=arxiv
+[15/64] OK  success=13  failed=2  alias=__owen19_15  bibcode=2007PhRvD..76f1502T  path=numeric-all-match
+[16/64] OK  success=14  failed=2  alias=__owen19_16  bibcode=2008ApJ...682L..29B  path=arxiv
+[17/64] OK  success=15  failed=2  alias=__owen19_17  bibcode=2009PhRvL.102d1101H  path=arxiv
+[18/64] OK  success=16  failed=2  alias=__owen19_18  bibcode=2011PhRvL.107w1102L  path=arxiv
+[19/64] OK  success=17  failed=2  alias=__owen19_19  bibcode=2013PhRvL.111x1104M  path=arxiv
+[20/64] ERR  success=17  failed=3  alias=__owen19_20
+[21/64] OK  success=18  failed=3  alias=__owen19_21  bibcode=2016CQGra..33t4001J  path=arxiv
+[22/64] OK  success=19  failed=3  alias=__owen19_22  bibcode=2017CQGra..34v4001H  path=arxiv
+[23/64] OK  success=20  failed=3  alias=__owen19_23  bibcode=2014PhRvX...4c1006F  path=arxiv
+[24/64] OK  success=21  failed=3  alias=__owen19_24  bibcode=2016PhRvD..93f4041P  path=arxiv
+[25/64] OK  success=22  failed=3  alias=__owen19_25  bibcode=2017PhRvD..95j4023B  path=arxiv
+[26/64] OK  success=23  failed=3  alias=__owen19_26  bibcode=2015PhRvL.115l1102B  path=arxiv
+[27/64] OK  success=24  failed=3  alias=__owen19_27  bibcode=2017PhRvD..96b4058B  path=arxiv
+[28/64] OK  success=25  failed=3  alias=__owen19_28  bibcode=2014PhRvD..89j4052L  path=arxiv
+[29/64] OK  success=26  failed=3  alias=__owen19_29  bibcode=2014PhRvD..89b1501L  path=arxiv
+[30/64] OK  success=27  failed=3  alias=__owen19_30  bibcode=2015PhRvL.114n1101L  path=arxiv
+[31/64] OK  success=28  failed=3  alias=__owen19_31  bibcode=2015PhRvD..92b4022Z  path=arxiv
+[32/64] OK  success=29  failed=3  alias=__owen19_32  bibcode=2016PhRvD..93d4031L  path=arxiv
+[33/64] OK  success=30  failed=3  alias=__owen19_33  bibcode=2016PhRvD..93l4074L  path=arxiv
+[34/64] ERR  success=30  failed=4  alias=__owen19_34
+[35/64] ERR  success=30  failed=5  alias=__owen19_35
+[36/64] OK  success=31  failed=5  alias=__owen19_36  bibcode=2008PhRvD..78h4017L  path=numeric-all-match
+[37/64] OK  success=32  failed=5  alias=__owen19_37  bibcode=2015CQGra..32f5007L  path=arxiv
+[38/64] OK  success=33  failed=5  alias=__owen19_38  bibcode=2004CQGra..21.2549A  path=numeric-all-match
+[39/64] ERR  success=33  failed=6  alias=__owen19_39
+[40/64] OK  success=34  failed=6  alias=__owen19_40  bibcode=2013PhRvD..88f4045A  path=arxiv
+[41/64] ERR  success=34  failed=7  alias=__owen19_41
+[42/64] OK  success=35  failed=7  alias=__owen19_42  bibcode=2015PhRvD..92j4028O  path=arxiv
+[43/64] OK  success=36  failed=7  alias=__owen19_43  bibcode=1993PhRvD..47.1407B  path=numeric-all-match
+[44/64] OK  success=37  failed=7  alias=__owen19_44  bibcode=1999CQGra..16L...1A  path=numeric-all-match
+[45/64] OK  success=38  failed=7  alias=__owen19_45  bibcode=2001PhRvD..64d4016A  path=numeric-all-match
+[46/64] ERR  success=38  failed=8  alias=__owen19_46
+[47/64] OK  success=39  failed=8  alias=__owen19_47  bibcode=1959PhRv..113..934K  path=numeric-all-match
+[48/64] OK  success=40  failed=8  alias=__owen19_48  bibcode=1962JMP.....3..566N  path=numeric-all-match
+[49/64] OK  success=41  failed=8  alias=__owen19_49  bibcode=1973JMP....14..874G  path=embedding
+[50/64] ERR  success=41  failed=9  alias=__owen19_50
+[51/64] OK  success=42  failed=9  alias=__owen19_51  bibcode=2005PhRvD..72b4013B  path=numeric-all-match
+[52/64] OK  success=43  failed=9  alias=__owen19_52  bibcode=2012PhRvD..86h4020Z  path=arxiv
+[53/64] OK  success=44  failed=9  alias=__owen19_53  bibcode=2011PhRvL.106o1101O  path=numeric-all-match
+[54/64] OK  success=45  failed=9  alias=__owen19_54  bibcode=2011PhRvD..84l4014N  path=arxiv
+[55/64] OK  success=46  failed=9  alias=__owen19_55  bibcode=2011PhRvD..84d4037Z  path=numeric-all-match
+[56/64] ERR  success=46  failed=10  alias=__owen19_56
+[57/64] ERR  success=46  failed=11  alias=__owen19_57
+[58/64] OK  success=47  failed=11  alias=__owen19_58  bibcode=2003PhRvD..67b4018D  path=numeric-all-match
+[59/64] ERR  success=47  failed=12  alias=__owen19_59
+[60/64] ERR  success=47  failed=13  alias=__owen19_60
+[61/64] OK  success=48  failed=13  alias=__owen19_61  bibcode=1960PNAS...46..871S  path=numeric-all-match
+[62/64] OK  success=49  failed=13  alias=__owen19_62  bibcode=2007PhRvD..76h1501K  path=numeric-all-match
+[63/64] OK  success=50  failed=13  alias=__owen19_63  bibcode=2007CQGra..24.5935K  path=numeric-all-match
+[64/64] OK  success=51  failed=13  alias=__owen19_64  bibcode=2008PhRvD..77h4005B  path=arxiv
+Alias summary for 2019PhRvD..99h4031O: added=0  moved=0  unchanged=51  failed=13
+Processing 223 references for 2025CQGra..42s5017S from /home/himanshu/Desktop/papers/spin_project/ads_api/2025_catalog_paper.txt
+[1/223] OK  success=1  failed=0  alias=__sxs25_1  bibcode=2016PhRvL.116f1102A  path=arxiv
+[2/223] OK  success=2  failed=0  alias=__sxs25_2  bibcode=2016PhRvD..93l2003A  path=arxiv
+[3/223] OK  success=3  failed=0  alias=__sxs25_3  bibcode=2016PhRvL.116m1103A  path=arxiv
+[4/223] OK  success=4  failed=0  alias=__sxs25_4  bibcode=2016PhRvL.116x1102A  path=arxiv
+[5/223] OK  success=5  failed=0  alias=__sxs25_5  bibcode=2015CQGra..32g4001L  path=arxiv
+[6/223] OK  success=6  failed=0  alias=__sxs25_6  bibcode=2015CQGra..32b4001A  path=arxiv
+[7/223] OK  success=7  failed=0  alias=__sxs25_7  bibcode=2019PhRvX...9c1040A  path=arxiv
+[8/223] OK  success=8  failed=0  alias=__sxs25_8  bibcode=2021PhRvX..11b1053A  path=arxiv
+[9/223] OK  success=9  failed=0  alias=__sxs25_9  bibcode=2023PhRvX..13a1048A  path=arxiv
+[10/223] OK  success=10  failed=0  alias=__sxs25_10  bibcode=2023PhRvX..13d1039A  path=arxiv
+[11/223] OK  success=11  failed=0  alias=__sxs25_11  bibcode=2023ApJ...946...59N  path=arxiv
+[12/223] ERR  success=11  failed=1  alias=__sxs25_12
+[13/223] OK  success=12  failed=1  alias=__sxs25_13  bibcode=1938AnMat..39...65E  path=numeric-all-match
+[14/223] ERR  success=12  failed=2  alias=__sxs25_14
+[15/223] ERR  success=12  failed=3  alias=__sxs25_15
+[16/223] OK  success=13  failed=3  alias=__sxs25_16  bibcode=2014LRR....17....2B  path=arxiv
+[17/223] ERR  success=13  failed=4  alias=__sxs25_17
+[18/223] OK  success=14  failed=4  alias=__sxs25_18  bibcode=2016PhR...633....1P  path=arxiv
+[19/223] OK  success=15  failed=4  alias=__sxs25_19  bibcode=2018LRR....21....7S  path=arxiv
+[20/223] OK  success=16  failed=4  alias=__sxs25_20  bibcode=2020RPPh...83g5901L  path=arxiv
+[21/223] ERR  success=16  failed=5  alias=__sxs25_21
+[22/223] OK  success=17  failed=5  alias=__sxs25_22  bibcode=2011mmgr.book..125B  path=numeric-all-match
+[23/223] ERR  success=17  failed=6  alias=__sxs25_23
+[24/223] OK  success=18  failed=6  alias=__sxs25_24  bibcode=2014CQGra..31d3001F  path=arxiv
+[25/223] ERR  success=18  failed=7  alias=__sxs25_25
+[26/223] ERR  success=18  failed=8  alias=__sxs25_26
+[27/223] OK  success=19  failed=8  alias=__sxs25_27  bibcode=2005PhRvL..95l1101P  path=numeric-all-match
+[28/223] OK  success=20  failed=8  alias=__sxs25_28  bibcode=2006PhRvL..96k1101C  path=numeric-all-match
+[29/223] OK  success=21  failed=8  alias=__sxs25_29  bibcode=2006PhRvL..96k1102B  path=numeric-all-match
+[30/223] OK  success=22  failed=8  alias=__sxs25_30  bibcode=2009CQGra..26k4008C  path=arxiv
+[31/223] OK  success=23  failed=8  alias=__sxs25_31  bibcode=2012CQGra..29l4001A  path=arxiv
+[32/223] OK  success=24  failed=8  alias=__sxs25_32  bibcode=2013CQGra..31b5012H  path=arxiv
+[33/223] OK  success=25  failed=8  alias=__sxs25_33  bibcode=2016CQGra..33t4001J  path=arxiv
+[34/223] OK  success=26  failed=8  alias=__sxs25_34  bibcode=2025PhRvD.112d4043F  path=arxiv
+[35/223] OK  success=27  failed=8  alias=__sxs25_35  bibcode=2017CQGra..34v4001H  path=arxiv
+[36/223] OK  success=28  failed=8  alias=__sxs25_36  bibcode=2019PhRvD.100b4021H  path=arxiv
+[37/223] OK  success=29  failed=8  alias=__sxs25_37  bibcode=2020PhRvD.102j4018H  path=arxiv
+[38/223] OK  success=30  failed=8  alias=__sxs25_38  bibcode=2022PhRvD.105l4010H  path=arxiv
+[39/223] OK  success=31  failed=8  alias=__sxs25_39  bibcode=2019PhRvD.100f4003H  path=arxiv
+[40/223] OK  success=32  failed=8  alias=__sxs25_40  bibcode=2024PhRvD.109d4032H  path=arxiv
+[41/223] OK  success=33  failed=8  alias=__sxs25_41  bibcode=2025PhRvD.111j4078R  path=arxiv
+[42/223] OK  success=34  failed=8  alias=__sxs25_42  bibcode=2017PhRvD..96j4041L  path=arxiv
+[43/223] OK  success=35  failed=8  alias=__sxs25_43  bibcode=1999PhRvD..59h4006B  path=numeric-all-match
+[44/223] OK  success=36  failed=8  alias=__sxs25_44  bibcode=2000PhRvD..62f4015B  path=numeric-all-match
+[45/223] OK  success=37  failed=8  alias=__sxs25_45  bibcode=2006PhRvD..74j4005B  path=numeric-all-match
+[46/223] OK  success=38  failed=8  alias=__sxs25_46  bibcode=2000PhRvD..62h4011D  path=numeric-all-match
+[47/223] OK  success=39  failed=8  alias=__sxs25_47  bibcode=2008IJMPA..23.1130D  path=embedding
+[48/223] ERR  success=39  failed=9  alias=__sxs25_48
+[49/223] OK  success=40  failed=9  alias=__sxs25_49  bibcode=2008IJMPA..23.1130D  path=arxiv
+[50/223] OK  success=41  failed=9  alias=__sxs25_50  bibcode=2023PhRvD.108l4037R  path=arxiv
+[51/223] OK  success=42  failed=9  alias=__sxs25_51  bibcode=2016PhRvD..93d4007K  path=arxiv
+[52/223] OK  success=43  failed=9  alias=__sxs25_52  bibcode=2016PhRvD..93d4006H  path=arxiv
+[53/223] OK  success=44  failed=9  alias=__sxs25_53  bibcode=2014PhRvL.113o1101H  path=arxiv
+[54/223] OK  success=45  failed=9  alias=__sxs25_54  bibcode=2021PhRvD.103j4056P  path=arxiv
+[55/223] OK  success=46  failed=9  alias=__sxs25_55  bibcode=2020PhRvD.102f4001P  path=arxiv
+[56/223] OK  success=47  failed=9  alias=__sxs25_56  bibcode=2007CQGra..24S.689A  path=arxiv
+[57/223] OK  success=48  failed=9  alias=__sxs25_57  bibcode=2008PhRvD..77j4017A  path=arxiv
+[58/223] OK  success=49  failed=9  alias=__sxs25_58  bibcode=2011PhRvL.106x1101A  path=arxiv
+[59/223] OK  success=50  failed=9  alias=__sxs25_59  bibcode=2010PhRvD..82f4016S  path=arxiv
+[60/223] OK  success=51  failed=9  alias=__sxs25_60  bibcode=2018PhRvL.120p1102L  path=arxiv
+[61/223] OK  success=52  failed=9  alias=__sxs25_61  bibcode=2019PhRvD.100b4059K  path=arxiv
+[62/223] OK  success=53  failed=9  alias=__sxs25_62  bibcode=2020PhRvD.101b4056K  path=arxiv
+[63/223] OK  success=54  failed=9  alias=__sxs25_63  bibcode=2019PhRvD..99b4029D  path=arxiv
+[64/223] OK  success=55  failed=9  alias=__sxs25_64  bibcode=2019PhRvD.100d4003D  path=arxiv
+[65/223] OK  success=56  failed=9  alias=__sxs25_65  bibcode=2020PhRvD.101l4059T  path=arxiv
+[66/223] OK  success=57  failed=9  alias=__sxs25_66  bibcode=2020PhRvD.102f4002G  path=arxiv
+[67/223] OK  success=58  failed=9  alias=__sxs25_67  bibcode=2021CQGra..38a5006G  path=arxiv
+[68/223] OK  success=59  failed=9  alias=__sxs25_68  bibcode=2017PhRvD..95j4023B  path=arxiv
+[69/223] OK  success=60  failed=9  alias=__sxs25_69  bibcode=2017PhRvD..96b4058B  path=arxiv
+[70/223] OK  success=61  failed=9  alias=__sxs25_70  bibcode=2019PhRvR...1c3015V  path=arxiv
+[71/223] OK  success=62  failed=9  alias=__sxs25_71  bibcode=2015PhRvL.115l1102B  path=arxiv
+[72/223] OK  success=63  failed=9  alias=__sxs25_72  bibcode=2019PhRvD..99f4045V  path=arxiv
+[73/223] ERR  success=63  failed=10  alias=__sxs25_73
+[74/223] OK  success=64  failed=10  alias=__sxs25_74  bibcode=2023arXiv230613745E  path=arxiv
+[75/223] OK  success=65  failed=10  alias=__sxs25_75  bibcode=2010CQGra..27s4002P  path=numeric-all-match
+[76/223] OK  success=66  failed=10  alias=__sxs25_76  bibcode=2020JCAP...03..050M  path=arxiv
+[77/223] OK  success=67  failed=10  alias=__sxs25_77  bibcode=2026JCAP...03..081A  path=arxiv
+[78/223] OK  success=68  failed=10  alias=__sxs25_78  bibcode=2017arXiv170200786A  path=arxiv
+[79/223] OK  success=69  failed=10  alias=__sxs25_79  bibcode=2016CQGra..33c5010L  path=arxiv
+[80/223] ERR  success=69  failed=11  alias=__sxs25_80
+[81/223] ERR  success=69  failed=12  alias=__sxs25_81
+[82/223] OK  success=70  failed=12  alias=__sxs25_82  bibcode=2025JCAP...01..108A  path=arxiv
+[83/223] OK  success=71  failed=12  alias=__sxs25_83  bibcode=2020PhRvR...2b3151P  path=arxiv
+[84/223] OK  success=72  failed=12  alias=__sxs25_84  bibcode=2025LRR....28....9L  path=arxiv
+[85/223] OK  success=73  failed=12  alias=__sxs25_85  bibcode=2011CQGra..28m4002M  path=arxiv
+[86/223] OK  success=74  failed=12  alias=__sxs25_86  bibcode=2011PhRvD..84f4013B  path=arxiv
+[87/223] OK  success=75  failed=12  alias=__sxs25_87  bibcode=2013PhRvD..87b4009M  path=arxiv
+[88/223] OK  success=76  failed=12  alias=__sxs25_88  bibcode=2020PhRvD.102b4012S  path=arxiv
+[89/223] OK  success=77  failed=12  alias=__sxs25_89  bibcode=2021PhRvD.104b4051M  path=arxiv
+[90/223] OK  success=78  failed=12  alias=__sxs25_90  bibcode=2022PhRvD.106h4029M  path=arxiv
+[91/223] OK  success=79  failed=12  alias=__sxs25_91  bibcode=2024PhRvD.110j4076S  path=arxiv
+[92/223] OK  success=80  failed=12  alias=__sxs25_92  bibcode=2025zndo..15412737B  path=embedding
+[93/223] OK  success=81  failed=12  alias=__sxs25_93  bibcode=2025zndo..15415231S  path=embedding
+[94/223] OK  success=82  failed=12  alias=__sxs25_94  bibcode=2019PhRvD.100l4010W  path=arxiv
+[95/223] OK  success=83  failed=12  alias=__sxs25_95  bibcode=2021PhRvD.103b4031M  path=arxiv
+[96/223] OK  success=84  failed=12  alias=__sxs25_96  bibcode=2019CQGra..36s5006B  path=arxiv
+[97/223] OK  success=85  failed=12  alias=__sxs25_97  bibcode=2001PhRvD..64h4016S  path=numeric-all-match
+[98/223] OK  success=86  failed=12  alias=__sxs25_98  bibcode=1957PhRv..108.1063R  path=numeric-all-match
+[99/223] OK  success=87  failed=12  alias=__sxs25_99  bibcode=1970PhRvL..24..737Z  path=numeric-all-match
+[100/223] OK  success=88  failed=12  alias=__sxs25_100  bibcode=2009CQGra..26g5009R  path=arxiv
+[101/223] OK  success=89  failed=12  alias=__sxs25_101  bibcode=2025zndo..15412737B  path=embedding
+[102/223] OK  success=90  failed=12  alias=__sxs25_102  bibcode=2016PhRvD..93h4031B  path=arxiv
+[103/223] OK  success=91  failed=12  alias=__sxs25_103  bibcode=2025CQGra..42g5004P  path=arxiv
+[104/223] OK  success=92  failed=12  alias=__sxs25_104  bibcode=2013PhRvL.111x1104M  path=arxiv
+[105/223] OK  success=93  failed=12  alias=__sxs25_105  bibcode=2024GReGr..56...24P  path=arxiv
+[106/223] OK  success=94  failed=12  alias=__sxs25_106  bibcode=2021PhRvD.104l4071K  path=arxiv
+[107/223] OK  success=95  failed=12  alias=__sxs25_107  bibcode=2024CoTPh..76a5403W  path=arxiv
+[108/223] OK  success=96  failed=12  alias=__sxs25_108  bibcode=2025PhRvD.112d4058N  path=arxiv
+[109/223] OK  success=97  failed=12  alias=__sxs25_109  bibcode=2015PhRvL.115c1102S  path=arxiv
+[110/223] OK  success=98  failed=12  alias=__sxs25_110  bibcode=2025CQGra..42k7001M  path=arxiv
+[111/223] OK  success=99  failed=12  alias=__sxs25_111  bibcode=2023PhRvD.108j4007S  path=arxiv
+[112/223] OK  success=100  failed=12  alias=__sxs25_112  bibcode=2021PhRvD.103f4022I  path=arxiv
+[113/223] OK  success=101  failed=12  alias=__sxs25_113  bibcode=2022PhRvD.106l4040R  path=arxiv
+[114/223] OK  success=102  failed=12  alias=__sxs25_114  bibcode=2014IJMPD..2330014S  path=arxiv
+[115/223] OK  success=103  failed=12  alias=__sxs25_115  bibcode=2013PhRvD..87j4006B  path=arxiv
+[116/223] ERR  success=103  failed=13  alias=__sxs25_116
+[117/223] ERR  success=103  failed=14  alias=__sxs25_117
+[118/223] OK  success=104  failed=14  alias=__sxs25_118  bibcode=2008PhRvD..78l4020L  path=arxiv
+[119/223] OK  success=105  failed=14  alias=__sxs25_119  bibcode=2010PhRvD..82b4014M  path=arxiv
+[120/223] OK  success=106  failed=14  alias=__sxs25_120  bibcode=2013PhRvD..87b4035B  path=arxiv
+[121/223] OK  success=107  failed=14  alias=__sxs25_121  bibcode=2017PhRvD..95j4004C  path=arxiv
+[122/223] OK  success=108  failed=14  alias=__sxs25_122  bibcode=2024arXiv240106845T  path=arxiv
+[123/223] ERR  success=108  failed=15  alias=__sxs25_123
+[124/223] ERR  success=108  failed=16  alias=__sxs25_124
+[125/223] OK  success=109  failed=16  alias=__sxs25_125  bibcode=2021arXiv210909882E  path=arxiv
+[126/223] OK  success=110  failed=16  alias=__sxs25_126  bibcode=2022ApJ...931...22S  path=arxiv
+[127/223] ERR  success=110  failed=17  alias=__sxs25_127
+[128/223] ERR  success=110  failed=18  alias=__sxs25_128
+[129/223] OK  success=111  failed=18  alias=__sxs25_129  bibcode=2021arXiv210801167B  path=arxiv
+[130/223] ERR  success=111  failed=19  alias=__sxs25_130
+[131/223] ERR  success=111  failed=20  alias=__sxs25_131
+[132/223] OK  success=112  failed=20  alias=__sxs25_132  bibcode=1999PhRvL..82.1350Y  path=numeric-all-match
+[133/223] OK  success=113  failed=20  alias=__sxs25_133  bibcode=2003PhRvD..67d4022P  path=numeric-all-match
+[134/223] OK  success=114  failed=20  alias=__sxs25_134  bibcode=2008PhRvD..78h4017L  path=arxiv
+[135/223] ERR  success=114  failed=21  alias=__sxs25_135
+[136/223] OK  success=115  failed=21  alias=__sxs25_136  bibcode=2021PhRvD.103h4029M  path=arxiv
+[137/223] OK  success=116  failed=21  alias=__sxs25_137  bibcode=2018PhRvD..98h4032V  path=arxiv
+[138/223] OK  success=117  failed=21  alias=__sxs25_138  bibcode=2021PhRvD.104h4046C  path=arxiv
+[139/223] OK  success=118  failed=21  alias=__sxs25_139  bibcode=2018PhRvD..98j4011V  path=arxiv
+[140/223] OK  success=119  failed=21  alias=__sxs25_140  bibcode=2006PhRvD..74f4011C  path=numeric-all-match
+[141/223] OK  success=120  failed=21  alias=__sxs25_141  bibcode=2003CoPhC.152..253P  path=numeric-all-match
+[142/223] OK  success=121  failed=21  alias=__sxs25_142  bibcode=2012PhRvD..86h4033B  path=arxiv
+[143/223] OK  success=122  failed=21  alias=__sxs25_143  bibcode=2015CQGra..32x5010O  path=arxiv
+[144/223] OK  success=123  failed=21  alias=__sxs25_144  bibcode=2007CQGra..24S..59P  path=numeric-rerank
+[145/223] OK  success=124  failed=21  alias=__sxs25_145  bibcode=2011PhRvD..83j4034B  path=arxiv
+[146/223] OK  success=125  failed=21  alias=__sxs25_146  bibcode=2012arXiv1210.2958M  path=arxiv
+[147/223] OK  success=126  failed=21  alias=__sxs25_147  bibcode=2025PhRvD.111h4059H  path=arxiv
+[148/223] OK  success=127  failed=21  alias=__sxs25_148  bibcode=2025PhRvD.111b4003K  path=arxiv
+[149/223] OK  success=128  failed=21  alias=__sxs25_149  bibcode=2025CQGra..42m5011N  path=arxiv
+[150/223] OK  success=129  failed=21  alias=__sxs25_150  bibcode=1985CMaPh.100..525F  path=numeric-all-match
+[151/223] OK  success=130  failed=21  alias=__sxs25_151  bibcode=2002PhRvD..65d4029G  path=numeric-all-match
+[152/223] OK  success=131  failed=21  alias=__sxs25_152  bibcode=2005CQGra..22..425P  path=numeric-rerank
+[153/223] OK  success=132  failed=21  alias=__sxs25_153  bibcode=2006CQGra..23S.447L  path=numeric-all-match
+[154/223] ERR  success=132  failed=22  alias=__sxs25_154
+[155/223] OK  success=133  failed=22  alias=__sxs25_155  bibcode=2009PhRvD..80h4019L  path=arxiv
+[156/223] OK  success=134  failed=22  alias=__sxs25_156  bibcode=2010PhRvL.104k1101C  path=arxiv
+[157/223] OK  success=135  failed=22  alias=__sxs25_157  bibcode=2009PhRvD..80l4010S  path=arxiv
+[158/223] OK  success=136  failed=22  alias=__sxs25_158  bibcode=2000PhRvD..62h4026K  path=numeric-all-match
+[159/223] OK  success=137  failed=22  alias=__sxs25_159  bibcode=2009PhRvD..79b4003S  path=arxiv
+[160/223] OK  success=138  failed=22  alias=__sxs25_160  bibcode=2013CQGra..30k5001H  path=arxiv
+[161/223] ERR  success=138  failed=23  alias=__sxs25_161
+[162/223] OK  success=139  failed=23  alias=__sxs25_162  bibcode=2013PhRvD..88h4031O  path=arxiv
+[163/223] OK  success=140  failed=23  alias=__sxs25_163  bibcode=2006CQGra..23.6275R  path=numeric-all-match
+[164/223] OK  success=141  failed=23  alias=__sxs25_164  bibcode=2007CQGra..24.4053R  path=arxiv
+[165/223] ERR  success=141  failed=24  alias=__sxs25_165
+[166/223] OK  success=142  failed=24  alias=__sxs25_166  bibcode=1995SJSC...16..542B  path=numeric-all-match
+[167/223] OK  success=143  failed=24  alias=__sxs25_167  bibcode=2011PhRvD..83b4010L  path=arxiv
+[168/223] OK  success=144  failed=24  alias=__sxs25_168  bibcode=2009PhRvD..80h4012O  path=arxiv
+[169/223] OK  success=145  failed=24  alias=__sxs25_169  bibcode=2019PhRvD..99h4031O  path=arxiv
+[170/223] OK  success=146  failed=24  alias=__sxs25_170  bibcode=2006PhRvD..74j4006S  path=numeric-all-match
+[171/223] OK  success=147  failed=24  alias=__sxs25_171  bibcode=2015CQGra..32j5009S  path=arxiv
+[172/223] OK  success=148  failed=24  alias=__sxs25_172  bibcode=2021PhRvD.103b4039I  path=arxiv
+[173/223] ERR  success=148  failed=25  alias=__sxs25_173
+[174/223] ERR  success=148  failed=26  alias=__sxs25_174
+[175/223] OK  success=149  failed=26  alias=__sxs25_175  bibcode=2009PhRvD..80b4002F  path=arxiv
+[176/223] OK  success=150  failed=26  alias=__sxs25_176  bibcode=1996PhRvD..54.6153B  path=numeric-all-match
+[177/223] OK  success=151  failed=26  alias=__sxs25_177  bibcode=2016LRR....19....2B  path=arxiv
+[178/223] OK  success=152  failed=26  alias=__sxs25_178  bibcode=2016CQGra..33v5007H  path=arxiv
+[179/223] OK  success=153  failed=26  alias=__sxs25_179  bibcode=2020PhRvD.102b4004B  path=arxiv
+[180/223] OK  success=154  failed=26  alias=__sxs25_180  bibcode=2020PhRvD.102d4052M  path=arxiv
+[181/223] OK  success=155  failed=26  alias=__sxs25_181  bibcode=2023PhRvD.107f4013M  path=numeric-all-match
+[182/223] OK  success=156  failed=26  alias=__sxs25_182  bibcode=1973JMP....14..874G  path=embedding
+[183/223] ERR  success=156  failed=27  alias=__sxs25_183
+[184/223] ERR  success=156  failed=28  alias=__sxs25_184
+[185/223] ERR  success=156  failed=29  alias=__sxs25_185
+[186/223] OK  success=157  failed=29  alias=__sxs25_186  bibcode=2025zndo..15046691C  path=embedding
+[187/223] OK  success=158  failed=29  alias=__sxs25_187  bibcode=2016LRR....19....2B  path=arxiv
+[188/223] ERR  success=158  failed=30  alias=__sxs25_188
+[189/223] ERR  success=158  failed=31  alias=__sxs25_189
+[190/223] ERR  success=158  failed=32  alias=__sxs25_190
+[191/223] OK  success=159  failed=32  alias=__sxs25_191  bibcode=2014CSE....16e..62T  path=numeric-all-match
+[192/223] ERR  success=159  failed=33  alias=__sxs25_192
+[193/223] ERR  success=159  failed=34  alias=__sxs25_193
+[194/223] OK  success=160  failed=34  alias=__sxs25_194  bibcode=2004PhRvD..70j4016C  path=numeric-all-match
+[195/223] OK  success=161  failed=34  alias=__sxs25_195  bibcode=2010PhRvD..82l4016M  path=arxiv
+[196/223] ERR  success=161  failed=35  alias=__sxs25_196
+[197/223] OK  success=162  failed=35  alias=__sxs25_197  bibcode=2020doe..soft....3T  path=embedding
+[198/223] OK  success=163  failed=35  alias=__sxs25_198  bibcode=2014CQGra..31k5004A  path=arxiv
+[199/223] OK  success=164  failed=35  alias=__sxs25_199  bibcode=2010zndo..13993495B  path=embedding
+[200/223] OK  success=165  failed=35  alias=__sxs25_200  bibcode=2007arXiv0709.0093A  path=arxiv
+[201/223] OK  success=166  failed=35  alias=__sxs25_201  bibcode=2017arXiv170301076S  path=arxiv
+[202/223] OK  success=167  failed=35  alias=__sxs25_202  bibcode=2016arXiv161107529G  path=arxiv
+[203/223] ERR  success=167  failed=36  alias=__sxs25_203
+[204/223] ERR  success=167  failed=37  alias=__sxs25_204
+[205/223] ERR  success=167  failed=38  alias=__sxs25_205
+[206/223] ERR  success=167  failed=39  alias=__sxs25_206
+[207/223] ERR  success=167  failed=40  alias=__sxs25_207
+[208/223] OK  success=168  failed=40  alias=__sxs25_208  bibcode=2015A&C....12..181M  path=numeric-all-match
+[209/223] ERR  success=168  failed=41  alias=__sxs25_209
+[210/223] ERR  success=168  failed=42  alias=__sxs25_210
+[211/223] OK  success=169  failed=42  alias=__sxs25_211  bibcode=2024zndo..13350880B  path=embedding
+[212/223] OK  success=170  failed=42  alias=__sxs25_212  bibcode=2023zndo..10214833B  path=embedding
+[213/223] OK  success=171  failed=42  alias=__sxs25_213  bibcode=2014arXiv1409.4431B  path=arxiv
+[214/223] ERR  success=171  failed=43  alias=__sxs25_214
+[215/223] ERR  success=171  failed=44  alias=__sxs25_215
+[216/223] OK  success=172  failed=44  alias=__sxs25_216  bibcode=2022zndo...5851574A  path=embedding
+[217/223] ERR  success=172  failed=45  alias=__sxs25_217
+[218/223] ERR  success=172  failed=46  alias=__sxs25_218
+[219/223] ERR  success=172  failed=47  alias=__sxs25_219
+[220/223] ERR  success=172  failed=48  alias=__sxs25_220
+[221/223] ERR  success=172  failed=49  alias=__sxs25_221
+[222/223] ERR  success=172  failed=50  alias=__sxs25_222
+[223/223] ERR  success=172  failed=51  alias=__sxs25_223
+Alias summary for 2025CQGra..42s5017S: added=0  moved=0  unchanged=172  failed=51
+Completed alias update: success=280, failed=92
+
+Failures:
+2008PhRvD..78h4017L
+__lovelace08_6: A. R. King and J. E. Pringle, Mon. Not. R. Astron. Soc. 373, L90 (2006).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_7: A. R. King, J. E. Pringle, and J. A. Hofmann, Mon. Not. R. Astron. Soc. 385, 1621 (2008).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_24: S. Brandt and B. Brügmann, Phys. Rev. Lett. 78, 3606 (1997).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_27: G. B. Cook, Phys. Rev. D 65, 084003 (2002).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_31: P. Grandclément, E. Gourgoulhon, and S. Bonazzola, Phys. Rev. D 65, 044021 (2002).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_32: J. W. York, Phys. Rev. Lett. 82, 1350 (1999).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_33: H. P. Pfeiffer and J. W. York, Phys. Rev. D 67, 044022 (2003).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_34: H. P. Pfeiffer and J. W. York, Jr., Phys. Rev. Lett. 95, 091101 (2005).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_35: T. W. Baumgarte, N. O’Murchadha, and H. P. Pfeiffer, Phys. Rev. D 75, 044009 (2007).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_39: G. Lovelace, Ph.D. thesis, California Institute of Technology, 2007, http://etd.caltech.edu/etd/available/ etd-05232007-115433.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_41: G. B. Cook and B. F. Whiting, Phys. Rev. D 76, 041501(R) (2007).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_45: R. Arnowitt, S. Deser, and C. W. Misner, in Gravitation: An Introduction to Current Research, edited by L. Witten (Wiley, New York, 1962), pp. 227–265. LOVELACE, OWEN, PFEIFFER, AND CHU PHYSICAL REVIEW D 78, 084017 (2008)
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2008PhRvD..78h4017L
+__lovelace08_47: G. Cook, Living Rev. Relativity 3, 5 (2000), http://www. livingreviews.org/lrr-2000-5.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_48: J. W. York, Jr. and T. Piran, in Spacetime and Geometry, edited by R. A. Matzner and L. C. Shepley (University of Texas, Austin, 1982), pp. 147–176.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_50: A. Garat and R. H. Price, Phys. Rev. D 61, 124011 (2000).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_51: J. A. Valiente Kroon, Phys. Rev. Lett. 92, 041101 (2004).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_52: J. W. York, Jr., in Essays in General Relativity, edited by F. J. Tipler (Academic, New York, 1980), pp. 39–58.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_55: S. Nissanke, Phys. Rev. D 73, 124002 (2006).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_58: M. Hannam, S. Husa, B. Brügmann, J. González, and U. Sperhake, Classical Quantum Gravity 24, S15 (2007).
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2008PhRvD..78h4017L
+__lovelace08_61: G. B. Cook and J. W. York, Jr., Phys. Rev. D 41, 1077 (1990).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_63: H. P. Pfeiffer, Ph.D. thesis, Cornell University, 2003.
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2008PhRvD..78h4017L
+__lovelace08_64: M. Hannam, S. Husa, B. Brügmann, J. A. Gonzalez, and U. Sperhake, Classical Quantum Gravity 24, S15 (2007).
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2008PhRvD..78h4017L
+__lovelace08_67: L. E. Kidder, Phys. Rev. D 52, 821 (1995).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_75: R. Owen, Ph.D. thesis, California Institute of Technology, 2007, http://resolver.caltech.edu/CaltechETD:etd05252007-143511.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_77: http://www.netlib.org/lapack.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_78: E. Anderson, Z. Bai, C. Bischof, S. Blackford, J. Demmel, J. Dongarra, J. DuCroz, A. G. Hammarling, S. Hammarling, A. McKenney, and D. Sorensen, LAPACK Users’ Guide (Society for Industrial and Applied Mathematics, Philadelphia, 1999).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_80: S. R. Brandt and E. Seidel, Phys. Rev. D 52, 870 (1995).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2008PhRvD..78h4017L
+__lovelace08_85: S. Carroll, Spacetime and Geometry: An Introduction to General Relativity (Addison Wesley, New York, 2003).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_7: L. Blanchet, Living Rev. Rel. 9, 4 (2006).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_8: T. Futamase and Y. Itoh, Living Rev. Rel. 10, 2 (2007).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_20: http://www.black-holes.org/waveforms.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_34: R. Owen, Ph.D. thesis, California Institute of Technology (2007), URL http://resolver.caltech.edu/CaltechETD:etd-05252007-143511.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_35: G. B. Cook and B. F. Whiting, Phys. Rev. D 76, 041501(R) (2007).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_39: R. Owen, Phys. Rev. D 80, 084012 (2009).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_41: http://www.black-holes.org/SpEC.html.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_46: A. Ashtekar and B. Krishnan, Living Rev. Rel. 7 (2004), 10, URL http://www.livingreviews.org/lrr-2004-10.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_50: R. Penrose and W. Rindler, Spinors and Space-time, Volume 1 (Cambridge University Press, Cambridge, 1992).
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2019PhRvD..99h4031O
+__owen19_56: F. Zhang, A. Zimmerman, D. A. Nichols, Y. Chen, G. Lovelace, K. D. Matthews, R. Owen, and K. S. Thorne, Phys. Rev. D 86, 084049 (2012).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_57: D. A. Nichols, A. Zimmerman, Y. Chen, G. Lovelace, K. D. Matthews, R. Owen, and F. Zhang, Phys. Rev. D 86, 104028 (2012).
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_59: The Einstein Toolkit, https://einsteintoolkit.org.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2019PhRvD..99h4031O
+__owen19_60: L. D. Landau and E. M. Lifshitz, Classical Theory of Fields (Addison Wesley, Reading, MA, 1962), 2nd ed.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_12: Lorentz H A and Droste J 1917 Versl. K. Akad. Wet. Amsterdam 26 392 & 649
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_14: Damour T and Deruelle N 1985 Ann. Inst. Henri Poincaré 43 107 http://www.numdam.org/ item/AIHPA_1985__43_1_107_0
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_15: Damour T and Deruelle N 1986 Ann. Inst. Henri Poincaré 44 263 https://www.numdam.org/ item/AIHPA_1986__44_3_263_0/
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_17: Rothstein I Z 2014 Gen. Rel. Grav. 46 1726
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_21: Futamase T and Itoh Y 2007 Living Rev. Rel. 10 2
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_23: Schaefer G 2011 Fundam. Theor. Phys. 162 167–210 [arXiv:0910.2857]
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_25: Westpfahl K and Goller M 1979 Lett. Nuovo Cim. 26 573–576
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_26: Westpfahl K and Hoyler H 1980 Lett. Nuovo Cim. 27 581–585
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_48: Buonanno A and Sathyaprakash B S 2014 Sources of Gravitational Waves: Theory and Observations [arXiv:1410.7832]
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_73: Reitze D et al. 2019 Bull. Am. Astron. Soc. 51 035 [arXiv:1907.04833]
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_80: Taiji Scientific Collaboration et al. 2021 Communications Physics 4 34
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_81: Kawamura S et al. 2006 Class. Quant. Grav. 23 S125–S132
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_116: SXS Collaboration 2025 Waveform differences and mismatches for v3.0.0 of the SXS collaboration’s catalog of binary black hole simulations https://doi.org/10.5281/zenodo.15465745
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_117: Flanagan E E and Hughes S A 1998 Phys. Rev. D57 4566–4587 [arXiv:gr-qc/9710129]
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_123: LIGO power spectral density https://dcc.ligo.org/public/0149/T1800044/005/ T1800044-v5.pdf
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_124: LIGO power spectral density https://dcc.ligo.org/public/0149/T1800044/005/ aLIGODesign.txt
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_127: CE power spectral density https://dcc.cosmicexplorer.org/CE-T2000017/public
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_128: ET power spectral density https://apps.et-gw.eu/tds/?r=14065
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_130: LISA power spectral density https://gitlab.in2p3.fr/LISA/lisa_sensitivity_snr/-/blob/ master/Data/LISAToolBox/IMS15pm_3yr_Sens_XAE_SemiNum.txt?ref_type=heads
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_131: https://www.black-holes.org/for-researchers/spec
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_135: Cook G B and Scheel M A 1997 Phys. Rev. D 56 4775–4781
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_154: Gundlach C, Martin-Garcia J M, Calabrese G and Hinder I 2005 Class. Quant. Grav. 22 3767–3774 [arXiv:gr-qc/0504114]
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_161: Press W H, Teukolsky S A, Vetterling W T and Flannery B P 2007 Numerical Recipes: The Art of Scientific Computing 3rd ed (New York: Cambridge University Press)
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_165: Hesthaven J 2000 Applied Numerical Mathematics 33 23 – 41
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_173: Long O et al. in prep.
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_174: Huang N E, Shen Z, Long S R, Wu M C, Shih H H, Zheng Q, Yen N C, Tung C C and Liu H H 1998 Proc. R. Soc. Lond. A. 454(1971) 903–995
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_183: European Organization For Nuclear Research and OpenAIRE 2013 Zenodo https://www.zenodo. org/
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_184: Caltech Library 2024 CaltechDATA https://data.caltech.edu/
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_185: Agrawal A and Scolnick M 2023 marimo - an open-source reactive notebook for Python https://github.com/marimo-team/marimo
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_188: Song X C, Smith P, Kalyanam R, Zhu X, Adams E, Colby K, Finnegan P, Gough E, Hillery E, Irvine R, Maji A and St John J 2022 Anvil - system architecture and experiences from deployment and early user operations Practice and Experience in Advanced Research Computing 2022: Revolutionary: Computing, Connections, You PEARC ’22 (New York, NY, USA: Association for Computing Machinery) ISBN 9781450391610 https://doi.org/10.1145/3491418.3530766
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_189: Strande S, Cai H, Tatineni M, Pfeiffer W, Irving C, Majumdar A, Mishin D, Sinkovits R, Norman M, Wolter N, Cooper T, Altintas I, Kandes M, Perez I, Shantharam M, Thomas M, Sivagnanam S and Hutton T 2021 Expanse: Computing without boundaries: Architecture, deployment, and early operations experiences of a supercomputer designed for the rapid evolution in science and engineering Practice and Experience in Advanced Research Computing 2021: Evolution Across All Dimensions PEARC ’21 (New York, NY, USA: Association for Computing Machinery) ISBN 9781450382922 https://doi.org/10.1145/3437359.3465588
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_190: Boerner T J, Deems S, Furlani T R, Knuth S L and Towns J 2023 Access: Advancing innovation: Nsf’s advanced cyberinfrastructure coordination ecosystem: Services & support Practice and Experience in Advanced Research Computing 2023: Computing for the Common Good PEARC ’23 (New York, NY, USA: Association for Computing Machinery) p 173–176 ISBN 9781450399852 References https://doi.org/10.1145/3569951.3597559
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_192: Bode B, Butler M, Dunning T, Hoefler T, Kramer W, Gropp W and Hwu W m 2013 The Blue Waters super-system for super-science Contemporary High Performance Computing Chapman & Hall/CRC Computational Science (Chapman and Hall/CRC) pp 339–366 ISBN 978-1-46656834-1 https://www.taylorfrancis.com/books/e/9781466568358
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_193: Kramer W, Butler M, Bauer G, Chadalavada K and Mendes C 2015 Blue Waters Parallel I/O Storage Sub-system High Performance Parallel I/O ed Prabhat and Koziol Q (CRC Publications, Taylor and Francis Group) pp 17–32 ISBN 978-1-4665-8234-7
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_196: Seward J, Quintero F M and Snyder M 2023 BZIP2 [Computer Software] https://gitlab.com/ bzip2/bzip2/
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_203: Engelson V, Fritzson D and Fritzson P 2000 Lossless compression of high-volume numerical data from simulations Proceedings DCC 2000. Data Compression Conference
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_204: Klimenko S, Mours B, Shawhan P and Sazonov A 2001 Data compression study with the E2 data Technical Report LIGO-T010033-x0 https://dcc.ligo.org/LIGO-T010033/public
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_205: Lindstrom P and Isenburg M 2006 IEEE Transactions on Visualization and Computer Graphics 12 1245–1250
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_206: Ratanaworabhan P, Ke J and Burtscher M 2006 Fast lossless compression of scientific floating-point data Data Compression Conference (DCC’06) pp 133–142
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_207: Hübbe N and Kunkel J 2013 Comput Sci Res Dev 28 231–239
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_209: Claggett S, Azimi S and Burtscher M 2018 SPDP: An automatically synthesized lossless compression algorithm for floating-point data 2018 Data Compression Conference pp 335–
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_210: Boyle M 2017 Advances in Applied Clifford Algebras 27 2345–2374 [arXiv:1604.08139]
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_214: The HDF Group 2024 HDF5 API Reference https://support.hdfgroup.org/documentation/ hdf5/latest/group___d_c_p_l.html accessed: 2024-10-15
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_215: IEEE 2019 IEEE Std 754-2019 (Revision of IEEE 754-2008) 1–84
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_217: Huffman D A 1952 Proceedings of the IRE 40 1098–1101 ISSN 2162-6634 https://ieeexplore. ieee.org/document/4051119
+  ValueError: No confident match found. Embedding acceptance failed and numeric rerank remained ambiguous.
+
+2025CQGra..42s5017S
+__sxs25_218: Burrows M and Wheeler D 1994 A block-sorting loss less data compression algorithm https: //api.semanticscholar.org/CorpusID:2167441
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_219: Ryabko B Y 1980 Probl. Inf. Transm. 16 265–269 ISSN 0032-9460
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_220: Bentley J L, Sleator D D, Tarjan R E and Wei V K 1986 Communications of the ACM 29 320–330 ISSN 1557-7317 http://dx.doi.org/10.1145/5684.5688
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_221: Collin L 2009 XZ Utils: Free general-purpose data compression software with high compression ratio https://tukaani.org/xz/ accessed: 2023-10-01
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_222: Alakuijala J and Szabadka Z 2016 Brotli Compressed Data Format RFC 7932 https://www. rfc-editor.org/info/rfc7932
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.
+
+2025CQGra..42s5017S
+__sxs25_223: Deutsch L P 1996 GZIP file format specification version 4.3 RFC 1952 https://www.rfc-editor. org/info/rfc1952
+  ValueError: No confident match found. Top embedding score was below the numeric-rerank threshold.

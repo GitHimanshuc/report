@@ -1,0 +1,2 @@
+M. Alcubierre, Introduction to 3+1 Numerical Relativity (Oxford University Press, New York, 2008).
+T. W. Baumgarte and S. L. Shapiro, Numerical Relativity: Solving Einstein's Equations on the Computer (Cambridge University Press, New York, 2010).
