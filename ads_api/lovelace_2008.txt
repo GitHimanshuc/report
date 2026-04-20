@@ -1,0 +1,85 @@
+M. Volonteri, P. Madau, E. Quataert, and M. J. Rees, Astrophys. J. 620, 69 (2005).
+C. F. Gammie, S. L. Shapiro, and J. C. McKinney, Astrophys. J. 602, 312 (2004).
+S. L. Shapiro, Astrophys. J. 620, 59 (2005).
+J.-M. Wang, Y.-M. Chen, L. C. Ho, and R. J. McLure, Astrophys. J. 642, L111 (2006).
+J. E. McClintock, R. Shafee, R. Narayan, R. A. Remillard, S. W. Davis, and L.-X. Li, Astrophys. J. 652, 518 (2006).
+A. R. King and J. E. Pringle, Mon. Not. R. Astron. Soc. 373, L90 (2006).
+A. R. King, J. E. Pringle, and J. A. Hofmann, Mon. Not. R. Astron. Soc. 385, 1621 (2008).
+E. Berti and M. Volonteri, arXiv:0802.0025v2.
+M. Koppitz, D. Pollney, C. Reisswig, L. Rezzolla, J. Thornburg, P. Diener, and E. Schnetter, Phys. Rev. Lett. 99, 041102 (2007).
+M. Campanelli, C. O. Lousto, Y. Zlochower, and D. Merritt, Phys. Rev. Lett. 98, 231102 (2007).
+J. A. Gonzalez, M. D. Hannam, U. Sperhake, B. Brügmann, and S. Husa, Phys. Rev. Lett. 98, 231101 (2007).
+F. Herrmann, I. Hinder, D. Shoemaker, P. Laguna, and R. A. Matzner, Astrophys. J. 661, 430 (2007).
+D.-I. Choi, B. J. Kelly, W. D. Boggs, J. G. Baker, J. Centrella, and J. van Meter, Phys. Rev. D 76, 104026 (2007).
+M. Campanelli, C. O. Lousto, Y. Zlochower, and D. Merritt, Astrophys. J. Lett. 659, L5 (2007).
+B. Brügmann, J. A. González, M. Hannam, S. Husa, and U. Sperhake, Phys. Rev. D 77, 124047 (2008).
+J. G. Baker, W. D. Boggs, J. Centrella, B. J. Kelly, S. T. McWilliams, M. C. Miller, and J. R. van Meter, Astrophys. J. 668, 1140 (2007).
+J. D. Schnittman, A. Buonanno, J. R. van Meter, J. G. Baker, W. D. Boggs, J. Centrella, B. J. Kelly, and S. T. McWilliams, Phys. Rev. D 77, 044031 (2008).
+M. Campanelli, C. O. Lousto, Y. Zlochower, B. Krishnan, and D. Merritt, Phys. Rev. D 75, 064030 (2007).
+M. Campanelli, C. O. Lousto, and Y. Zlochower, Phys. Rev. D 74, 084023 (2006).
+M. Campanelli, C. O. Lousto, and Y. Zlochower, Phys. Rev. D 74, 041501(R) (2006).
+F. Herrmann, I. Hinder, D. M. Shoemaker, P. Laguna, and R. A. Matzner, Phys. Rev. D 76, 084032 (2007).
+P. Marronetti, W. Tichy, B. Brügmann, J. González, and U. Sperhake, Phys. Rev. D 77, 064010 (2008).
+E. Berti, V. Cardoso, J. A. Gonzalez, U. Sperhake, and B. Brügmann, Classical Quantum Gravity 25, 114035 (2008).
+S. Brandt and B. Brügmann, Phys. Rev. Lett. 78, 3606 (1997).
+S. Dain, C. O. Lousto, and Y. Zlochower, Phys. Rev. D 78, 024039 (2008).
+S. Dain, C. O. Lousto, and R. Takahashi, Phys. Rev. D 65, 104038 (2002).
+G. B. Cook, Phys. Rev. D 65, 084003 (2002).
+G. B. Cook and H. P. Pfeiffer, Phys. Rev. D 70, 104016 (2004).
+M. Caudill, G. B. Cook, J. D. Grigsby, and H. P. Pfeiffer, Phys. Rev. D 74, 064011 (2006).
+E. Gourgoulhon, P. Grandclément, and S. Bonazzola, Phys. Rev. D 65, 044020 (2002).
+P. Grandclément, E. Gourgoulhon, and S. Bonazzola, Phys. Rev. D 65, 044021 (2002).
+J. W. York, Phys. Rev. Lett. 82, 1350 (1999).
+H. P. Pfeiffer and J. W. York, Phys. Rev. D 67, 044022 (2003).
+H. P. Pfeiffer and J. W. York, Jr., Phys. Rev. Lett. 95, 091101 (2005).
+T. W. Baumgarte, N. O’Murchadha, and H. P. Pfeiffer, Phys. Rev. D 75, 044009 (2007).
+D. M. Walsh, Classical Quantum Gravity 24, 1911 (2007).
+R. A. Matzner, M. F. Huq, and D. Shoemaker, Phys. Rev. D 59, 024015 (1998).
+P. Marronetti and R. A. Matzner, Phys. Rev. Lett. 85, 5500 (2000).
+G. Lovelace, Ph.D. thesis, California Institute of Technology, 2007, http://etd.caltech.edu/etd/available/ etd-05232007-115433.
+K. Taniguchi, T. W. Buamgarte, J. A. Faber, and S. L. Shapiro, Phys. Rev. D 74, 041502(R) (2006).
+G. B. Cook and B. F. Whiting, Phys. Rev. D 76, 041501(R) (2007).
+I. Booth and S. Fairhurst, Phys. Rev. D 77, 084005 (2008).
+J. M. Bowen, Gen. Relativ. Gravit. 11, 227 (1979).
+J. M. Bowen and J. W. York, Jr., Phys. Rev. D 21, 2047 (1980).
+R. Arnowitt, S. Deser, and C. W. Misner, in Gravitation: An Introduction to Current Research, edited by L. Witten (Wiley, New York, 1962), pp. 227–265. LOVELACE, OWEN, PFEIFFER, AND CHU PHYSICAL REVIEW D 78, 084017 (2008)
+A. Ashtekar, J. Engle, and D. Sloan, Classical Quantum Gravity 25, 095020 (2008).
+G. Cook, Living Rev. Relativity 3, 5 (2000), http://www. livingreviews.org/lrr-2000-5.
+J. W. York, Jr. and T. Piran, in Spacetime and Geometry, edited by R. A. Matzner and L. C. Shepley (University of Texas, Austin, 1982), pp. 147–176.
+H. P. Pfeiffer, D. A. Brown, L. E. Kidder, L. Lindblom, G. Lovelace, and M. A. Scheel, Classical Quantum Gravity 24, S59 (2007).
+A. Garat and R. H. Price, Phys. Rev. D 61, 124011 (2000).
+J. A. Valiente Kroon, Phys. Rev. Lett. 92, 041101 (2004).
+J. W. York, Jr., in Essays in General Relativity, edited by F. J. Tipler (Academic, New York, 1980), pp. 39–58.
+H. P. Pfeiffer, G. B. Cook, and S. A. Teukolsky, Phys. Rev. D 66, 024047 (2002).
+W. Tichy, B. Brügmann, M. Campanelli, and P. Diener, Phys. Rev. D 67, 064008 (2003).
+S. Nissanke, Phys. Rev. D 73, 124002 (2006).
+N. Yunes, W. Tichy, B. J. Owen, and B. Brügmann, Phys. Rev. D 74, 104011 (2006).
+N. Yunes and W. Tichy, Phys. Rev. D 74, 064013 (2006).
+M. Hannam, S. Husa, B. Brügmann, J. González, and U. Sperhake, Classical Quantum Gravity 24, S15 (2007).
+B. J. Kelly, W. Tichy, M. Campanelli, and B. F. Whiting, Phys. Rev. D 76, 024008 (2007).
+E. Bonning, P. Marronetti, D. Neilsen, and R. Matzner, Phys. Rev. D 68, 044019 (2003).
+G. B. Cook and J. W. York, Jr., Phys. Rev. D 41, 1077 (1990).
+H. P. Pfeiffer, L. E. Kidder, M. A. Scheel, and S. A. Teukolsky, Comput. Phys. Commun. 152, 253 (2003).
+H. P. Pfeiffer, Ph.D. thesis, Cornell University, 2003.
+M. Hannam, S. Husa, B. Brügmann, J. A. Gonzalez, and U. Sperhake, Classical Quantum Gravity 24, S15 (2007).
+M. A. Scheel, H. P. Pfeiffer, L. Lindblom, L. E. Kidder, O. Rinne, and S. A. Teukolsky, Phys. Rev. D 74, 104006 (2006).
+M. Boyle, D. A. Brown, L. E. Kidder, A. H. Mroué, H. P. Pfeiffer, M. A. Scheel, G. B. Cook, and S. A. Teukolsky, Phys. Rev. D 76, 124038 (2007).
+L. E. Kidder, Phys. Rev. D 52, 821 (1995).
+L. Lindblom, M. A. Scheel, L. E. Kidder, R. Owen, and O. Rinne, Classical Quantum Gravity 23, S447 (2006).
+F. Foucart, L. E. Kidder, H. P. Pfeiffer, and S. A. Teukolsky, Phys. Rev. D 77, 124051 (2008).
+J. D. Brown and J. W. York, Phys. Rev. D 47, 1407 (1993).
+A. Ashtekar, C. Beetle, and J. Lewandowski, Phys. Rev. D 64, 044016 (2001).
+A. Ashtekar and B. Krishnan, Phys. Rev. D 68, 104030 (2003).
+O. Dreyer, B. Krishnan, D. Shoemaker, and E. Schnetter, Phys. Rev. D 67, 024018 (2003).
+E. Schnetter, B. Krishnan, and F. Beyer, Phys. Rev. D 74, 024028 (2006).
+R. Owen, Ph.D. thesis, California Institute of Technology, 2007, http://resolver.caltech.edu/CaltechETD:etd05252007-143511.
+M. Korzynski, Classical Quantum Gravity 24, 5935 (2007).
+http://www.netlib.org/lapack.
+E. Anderson, Z. Bai, C. Bischof, S. Blackford, J. Demmel, J. Dongarra, J. DuCroz, A. G. Hammarling, S. Hammarling, A. McKenney, and D. Sorensen, LAPACK Users’ Guide (Society for Industrial and Applied Mathematics, Philadelphia, 1999).
+P. Anninos, D. Bernstein, S. R. Brandt, D. Hobill, E. Seidel, and L. Smarr, Phys. Rev. D 50, 3801 (1994).
+S. R. Brandt and E. Seidel, Phys. Rev. D 52, 870 (1995).
+M. Alcubierre et al., Phys. Rev. D 72, 044004 (2005).
+L. Smarr, Phys. Rev. D 7, 289 (1973).
+J. B. Hartle, Phys. Rev. D 9, 2749 (1974).
+J. Massó, E. Seidel, W.-M. Suen, and P. Walker, Phys. Rev. D 59, 064015 (1999).
+S. Carroll, Spacetime and Geometry: An Introduction to General Relativity (Addison Wesley, New York, 2003).

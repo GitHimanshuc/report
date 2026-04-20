@@ -36,3 +36,7 @@ main.pdf
 mainNotes.bib
 
 temp/
+*.pyc
+.matplotlib
+database.json
+ads_api/*.csv

@@ -1,0 +1,223 @@
+Abbott B P et al. (LIGO Scientific, Virgo) 2016 Phys. Rev. Lett. 116 061102 [arXiv:1602.03837]
+Abbott B P et al. (LIGO Scientific, Virgo) 2016 Phys. Rev. D93 122003 [arXiv:1602.03839]
+Abbott B P et al. (LIGO Scientific, Virgo) 2016 Phys. Rev. Lett. 116 131103 [arXiv:1602.03838]
+Abbott B P et al. (LIGO Scientific, Virgo) 2016 Phys. Rev. Lett. 116 241102 [arXiv:1602.03840]
+Aasi J et al. (LIGO Scientific) 2015 Class. Quant. Grav. 32 074001 [arXiv:1411.4547]
+Acernese F et al. (Virgo) 2015 Class. Quant. Grav. 32 024001 [arXiv:1408.3978]
+Abbott B P et al. (LIGO Scientific, Virgo) 2019 Phys. Rev. X 9 031040 [arXiv:1811.12907]
+Abbott R et al. (LIGO Scientific, Virgo) 2021 Phys. Rev. X 11 021053 [arXiv:2010.14527]
+Abbott R et al. (KAGRA, VIRGO, LIGO Scientific) 2023 Phys. Rev. X 13 011048 [arXiv:2111.03634]
+Abbott R et al. (KAGRA, VIRGO, LIGO Scientific) 2023 Phys. Rev. X 13 041039 [arXiv:2111.03606]
+Nitz A H, Kumar S, Wang Y F, Kastha S, Wu S, Schäfer M, Dhurkunde R and Capano C D 2023 Astrophys. J. 946 59 [arXiv:2112.06878]
+Lorentz H A and Droste J 1917 Versl. K. Akad. Wet. Amsterdam 26 392 & 649
+Einstein A, Infeld L and Hoffmann B 1938 Annals Math. 39 65–100
+Damour T and Deruelle N 1985 Ann. Inst. Henri Poincaré 43 107 http://www.numdam.org/ item/AIHPA_1985__43_1_107_0
+Damour T and Deruelle N 1986 Ann. Inst. Henri Poincaré 44 263 https://www.numdam.org/ item/AIHPA_1986__44_3_263_0/
+Blanchet L 2014 Living Rev. Rel. 17 2 [arXiv:1310.1528]
+Rothstein I Z 2014 Gen. Rel. Grav. 46 1726
+Porto R A 2016 Phys. Rept. 633 1–104 [arXiv:1601.04914] References
+Schäfer G and Jaranowski P 2018 Living Rev. Rel. 21 7 [arXiv:1805.07240]
+Levi M 2020 Rept. Prog. Phys. 83 075901 [arXiv:1807.01699]
+Futamase T and Itoh Y 2007 Living Rev. Rel. 10 2
+Blanchet L 2011 Fundam. Theor. Phys. 162 125–166 [arXiv:0907.3596]
+Schaefer G 2011 Fundam. Theor. Phys. 162 167–210 [arXiv:0910.2857]
+Foffa S and Sturani R 2014 Class. Quant. Grav. 31 043001 [arXiv:1309.3474]
+Westpfahl K and Goller M 1979 Lett. Nuovo Cim. 26 573–576
+Westpfahl K and Hoyler H 1980 Lett. Nuovo Cim. 27 581–585
+Pretorius F 2005 Phys. Rev. Lett. 95 121101 [arXiv:gr-qc/0507014]
+Campanelli M, Lousto C O, Marronetti P and Zlochower Y 2006 Phys. Rev. Lett. 96 111101 [arXiv:gr-qc/0511048]
+Baker J G, Centrella J, Choi D I, Koppitz M and van Meter J 2006 Phys. Rev. Lett. 96 111102 [arXiv:gr-qc/0511103]
+Aylott B et al. 2009 Class. Quant. Grav. 26 114008 [arXiv:0905.4227]
+Ajith P et al. 2012 Class. Quant. Grav. 29 124001 [Erratum: Class. Quant. Grav.30,199401(2013)] [arXiv:1201.5319]
+Hinder I et al. 2014 Class. Quant. Grav. 31 025012 [arXiv:1307.5307]
+Jani K, Healy J, Clark J A, London L, Laguna P and Shoemaker D 2016 Class. Quant. Grav. 33 204001 [arXiv:1605.03204]
+Ferguson D et al. 2023 [arXiv:2309.00262]
+Healy J, Lousto C O, Zlochower Y and Campanelli M 2017 Class. Quant. Grav. 34 224001 [arXiv:1703.03423]
+Healy J, Lousto C O, Lange J, O’Shaughnessy R, Zlochower Y and Campanelli M 2019 Phys. Rev. D100 024021 [arXiv:1901.02553]
+Healy J and Lousto C O 2020 Phys. Rev. D 102 104018 [arXiv:2007.07910]
+Healy J and Lousto C O 2022 Phys. Rev. D 105 124010 [arXiv:2202.00018]
+Huerta E A et al. 2019 Phys. Rev. D 100 064003 [arXiv:1901.07038]
+Hamilton E et al. 2024 Phys. Rev. D 109 044032 [arXiv:2303.05419]
+Rashti A, Gamba R, Chandra K, Radice D, Daszuta B, Cook W and Bernuzzi S 2024 [arXiv:2411.11989]
+Lange J et al. 2017 Phys. Rev. D96 104041 [arXiv:1705.09833]
+Buonanno A and Damour T 1999 Phys. Rev. D 59 084006 [arXiv:gr-qc/9811091]
+Buonanno A and Damour T 2000 Phys. Rev. D 62 064015 [arXiv:gr-qc/0001013]
+Buonanno A, Chen Y and Damour T 2006 Phys. Rev. D 74 104005 [arXiv:gr-qc/0508067]
+Damour T, Jaranowski P and Schaefer G 2000 Phys. Rev. D 62 084011 [arXiv:gr-qc/0005034]
+Damour T 2001 Phys. Rev. D 64 124013 [arXiv:gr-qc/0103018]
+Buonanno A and Sathyaprakash B S 2014 Sources of Gravitational Waves: Theory and Observations [arXiv:1410.7832]
+Damour T 2008 Int. J. Mod. Phys. A 23 1130–1148 [arXiv:0802.4047]
+Ramos-Buades A, Buonanno A, Estellés H, Khalil M, Mihaylov D P, Ossokine S, Pompili L and Shiferaw M 2023 Phys. Rev. D 108 124037 [arXiv:2303.18046]
+Khan S, Husa S, Hannam M, Ohme F, Pürrer M, Jiménez Forteza X and Bohé A 2016 Phys. Rev. D93 044007 [arXiv:1508.07253]
+Husa S, Khan S, Hannam M, Pürrer M, Ohme F, Jiménez Forteza X and Bohé A 2016 Phys. Rev. D93 044006 [arXiv:1508.07250]
+Hannam M, Schmidt P, Bohé A, Haegel L, Husa S, Ohme F, Pratten G and Pürrer M 2014 Phys. Rev. Lett. 113 151101 [arXiv:1308.3271]
+Pratten G et al. 2021 Phys. Rev. D 103 104056 [arXiv:2004.06503]
+Pratten G, Husa S, Garcia-Quiros C, Colleoni M, Ramos-Buades A, Estelles H and Jaume R 2020 Phys. Rev. D 102 064001 [arXiv:2001.11412]
+Ajith P et al. 2007 Class. Quant. Grav. 24 S689–S700 [arXiv:0704.3764] References
+Ajith P et al. 2008 Phys. Rev. D 77 104017 [Erratum: Phys.Rev.D 79, 129901 (2009)] [arXiv:0710.2335]
+Ajith P et al. 2011 Phys. Rev. Lett. 106 241101 [arXiv:0909.2867]
+Santamaria L et al. 2010 Phys. Rev. D82 064016 [arXiv:1005.3306]
+London L, Khan S, Fauchon-Jones E, García C, Hannam M, Husa S, Jiménez-Forteza X, Kalaghatgi C, Ohme F and Pannarale F 2018 Phys. Rev. Lett. 120 161102 [arXiv:1708.00404]
+Khan S, Chatziioannou K, Hannam M and Ohme F 2019 Phys. Rev. D 100 024059 [arXiv:1809.10113]
+Khan S, Ohme F, Chatziioannou K and Hannam M 2020 Phys. Rev. D101 024056 [arXiv:1911.06050]
+Dietrich T, Khan S, Dudi R, Kapadia S J, Kumar P, Nagar A, Ohme F, Pannarale F, Samajdar A, Bernuzzi S, Carullo G, Del Pozzo W, Haney M, Markakis C, Pürrer M, Riemenschneider G, Setyawati Y E, Tsang K W and Van Den Broeck C 2019 Phys. Rev. D 99(2) 024029 [arXiv:1804.02235]
+Dietrich T, Samajdar A, Khan S, Johnson-McDaniel N K, Dudi R and Tichy W 2019 Phys. Rev. D 100(4) 044003 [arXiv:1905.06011]
+Thompson J E, Fauchon-Jones E, Khan S, Nitoglia E, Pannarale F, Dietrich T and Hannam M 2020 Phys. Rev. D 101 124059 [arXiv:2002.08383]
+García-Quirós C, Colleoni M, Husa S, Estellés H, Pratten G, Ramos-Buades A, Mateu-Lucena M and Jaume R 2020 Phys. Rev. D 102 064002 [arXiv:2001.10914]
+García-Quirós C, Husa S, Mateu-Lucena M and Borchers A 2021 Class. Quant. Grav. 38 015006 [arXiv:2001.10897]
+Blackman J, Field S E, Scheel M A, Galley C R, Hemberger D A, Schmidt P and Smith R 2017 Phys. Rev. D95 104023 [arXiv:1701.00550]
+Blackman J, Field S E, Scheel M A, Galley C R, Ott C D, Boyle M, Kidder L E, Pfeiffer H P and Szilágyi B 2017 Phys. Rev. D96 024058 [arXiv:1705.07089]
+Varma V, Field S E, Scheel M A, Blackman J, Gerosa D, Stein L C, Kidder L E and Pfeiffer H P 2019 Phys. Rev. Research. 1 033015 [arXiv:1905.09300]
+Blackman J, Field S E, Galley C R, Szilágyi B, Scheel M A, Tiglio M and Hemberger D A 2015 Phys. Rev. Lett. 115 121102 [arXiv:1502.07758]
+Varma V, Field S E, Scheel M A, Blackman J, Kidder L E and Pfeiffer H P 2019 Phys. Rev. D99 064045 [arXiv:1812.07865]
+Reitze D et al. 2019 Bull. Am. Astron. Soc. 51 035 [arXiv:1907.04833]
+Evans M et al. 2023 [arXiv:2306.13745]
+Punturo M et al. 2010 Class. Quant. Grav. 27 194002
+Maggiore M et al. (ET) 2020 JCAP 03 050 [arXiv:1912.02622]
+Abac A et al. 2025 [arXiv:2503.12263]
+Amaro-Seoane P et al. 2017 [arXiv:1702.00786]
+Luo J et al. (TianQin) 2016 Class. Quant. Grav. 33 035010 [arXiv:1512.02076]
+Taiji Scientific Collaboration et al. 2021 Communications Physics 4 34
+Kawamura S et al. 2006 Class. Quant. Grav. 23 S125–S132
+Ajith P et al. 2025 JCAP 01 108 [arXiv:2404.09181]
+Pürrer M and Haster C J 2020 Phys. Rev. Res. 2 023151 [arXiv:1912.10055]
+Afshordi N et al. (LISA Consortium Waveform Working Group) 2023 [arXiv:2311.01300]
+MacDonald I, Nissanke S, Pfeiffer H P and Pfeiffer H P 2011 Class. Quant. Grav. 28 134002 [arXiv:1102.5128]
+Boyle M 2011 Phys. Rev. D84 064013 [arXiv:1103.5088]
+MacDonald I, Mroue A H, Pfeiffer H P, Boyle M, Kidder L E, Scheel M A, Szilagyi B and Taylor N W 2013 Phys. Rev. D87 024009 [arXiv:1210.3007]
+Sadiq J, Zlochower Y, O’Shaughnessy R and Lange J 2020 Phys. Rev. D 102 024012 [arXiv:2001.07109] References
+Mitman K, Khera N, Iozzo D A B, Stein L C, Boyle M, Deppe N, Kidder L E, Moxon J, Pfeiffer H P, Scheel M A, Teukolsky S A and Throwe W 2021 Phys. Rev. D 104 024051 [arXiv:2105.02300]
+Mitman K et al. 2022 Phys. Rev. D 106 084029 [arXiv:2208.04356]
+Sun D, Boyle M, Mitman K, Scheel M A, Stein L C, Teukolsky S A and Varma V 2024 Phys. Rev. D 110 104076 [arXiv:2403.10278]
+Boyle M, Mitman K, Scheel M and Stein L 2025 The sxs package https://zenodo.org/doi/10. 5281/zenodo.15412737
+SXS Collaboration 2025 The SXS catalog of simulations v3.0.0 https://zenodo.org/doi/10. 5281/zenodo.15415231
+Woodford C J, Boyle M and Pfeiffer H P 2019 Phys. Rev. D 100 124010 [arXiv:1904.04842]
+Mitman K et al. 2021 Phys. Rev. D 103 024031 [arXiv:2011.01309]
+Boyle M et al. 2019 Class. Quant. Grav. 36 195006 [arXiv:1904.04831]
+Sarbach O and Tiglio M 2001 Phys. Rev. D64 084016 [arXiv:gr-qc/0104061]
+Regge T and Wheeler J A 1957 Phys. Rev. 108 1063–1069
+Zerilli F J 1970 Phys. Rev. Lett. 24 737–738
+Rinne O, Buchman L T, Scheel M A and Pfeiffer H P 2009 Class. Quant. Grav. 26 075009 [arXiv:0811.3593]
+Boyle M, Iozzo D, Stein L, Khairnar A, Rüter H, Scheel M, Varma V and Mitman K 2025 scri https://doi.org/10.5281/zenodo.15237110
+Boyle M 2016 Phys. Rev. D93 084031 [arXiv:1509.00862]
+Pretto I G, Scheel M A and Teukolsky S A 2024 [arXiv:2407.20470]
+Mroue A H et al. 2013 Phys. Rev. Lett. 111 241104 [arXiv:1304.6077]
+Pereira T and Sturani R 2024 Gen. Rel. Grav. 56 24 [arXiv:2210.07299]
+Khera N, Ashtekar A and Krishnan B 2021 Phys. Rev. D 104 124071 [arXiv:2107.09536]
+Wang Z, Zhao J and Cao Z 2024 Commun. Theor. Phys. 76 015403 [arXiv:2401.15331]
+Nobili F, Bhagwat S, Pacilio C and Gerosa D 2025 [arXiv:2504.17021]
+Szilágyi B, Blackman J, Buonanno A, Taracchini A, Pfeiffer H P, Scheel M A, Chu T, Kidder L E and Pan Y 2015 Phys. Rev. Lett. 115 031102 [arXiv:1502.04953]
+Mitman K, Stein L C, Boyle M, Deppe N, Kidder L E, Pfeiffer H P and Scheel M A 2025 [arXiv:2502.14025]
+Shaikh M A, Varma V, Pfeiffer H P, Ramos-Buades A and van de Meent M 2023 Phys. Rev. D 108 104007 [arXiv:2302.11257]
+Islam T, Varma V, Lodman J, Field S E, Khanna G, Scheel M A, Pfeiffer H P, Gerosa D and Kidder L E 2021 Phys. Rev. D 103 064022 [arXiv:2101.11798]
+Ramos-Buades A, van de Meent M, Pfeiffer H P, Rüter H R, Scheel M A, Boyle M and Kidder L E 2022 Phys. Rev. D 106 124040 [arXiv:2209.03390]
+Szilágyi B 2014 Int. J. Mod. Phys. D23 1430014 [arXiv:1405.3693]
+Boyle M 2013 Phys. Rev. D87 104006 [arXiv:1302.2919]
+SXS Collaboration 2025 Waveform differences and mismatches for v3.0.0 of the SXS collaboration’s catalog of binary black hole simulations https://doi.org/10.5281/zenodo.15465745
+Flanagan E E and Hughes S A 1998 Phys. Rev. D57 4566–4587 [arXiv:gr-qc/9710129]
+Lindblom L, Owen B J and Brown D A 2008 Phys. Rev. D78 124020 [arXiv:0809.3844]
+McWilliams S T, Kelly B J and Baker J G 2010 Phys. Rev. D82 024014 [arXiv:1004.0961]
+Baird E, Fairhurst S, Hannam M and Murphy P 2013 Phys. Rev. D 87 024035 [arXiv:1211.0546]
+Chatziioannou K, Klein A, Yunes N and Cornish N 2017 Phys. Rev. D95 104004 [arXiv:1703.03967]
+Toubiana A and Gair J R 2024 [arXiv:2401.06845]
+LIGO power spectral density https://dcc.ligo.org/public/0149/T1800044/005/ T1800044-v5.pdf
+LIGO power spectral density https://dcc.ligo.org/public/0149/T1800044/005/ aLIGODesign.txt
+Evans M et al. 2021 [arXiv:2109.09882] References
+Srivastava V, Davis D, Kuns K, Landry P, Ballmer S, Evans M, Hall E D, Read J and Sathyaprakash B S 2022 Astrophys. J. 931 22 [arXiv:2201.10668]
+CE power spectral density https://dcc.cosmicexplorer.org/CE-T2000017/public
+ET power spectral density https://apps.et-gw.eu/tds/?r=14065
+Babak S, Petiteau A and Hewitson M 2021 [arXiv:2108.01167]
+LISA power spectral density https://gitlab.in2p3.fr/LISA/lisa_sensitivity_snr/-/blob/ master/Data/LISAToolBox/IMS15pm_3yr_Sens_XAE_SemiNum.txt?ref_type=heads
+https://www.black-holes.org/for-researchers/spec
+York Jr J W 1999 Phys. Rev. Lett. 82 1350–1353 [arXiv:gr-qc/9810051]
+Pfeiffer H P and York Jr J W 2003 Phys. Rev. D67 044022 [arXiv:gr-qc/0207095]
+Lovelace G, Owen R, Pfeiffer H P and Chu T 2008 Phys. Rev. D78 084017 [arXiv:0805.4192]
+Cook G B and Scheel M A 1997 Phys. Rev. D 56 4775–4781
+Ma S, Giesler M, Scheel M A and Varma V 2021 Phys. Rev. D 103 084029 [arXiv:2102.06618]
+Varma V and Scheel M A 2018 Phys. Rev. D 98 084032 [arXiv:1808.07490]
+Chen Y, Deppe N, Kidder L E and Teukolsky S A 2021 Phys. Rev. D 104 084046 [arXiv:2108.02331]
+Varma V, Scheel M A and Pfeiffer H P 2018 Phys. Rev. D98 104011 [arXiv:1808.08228]
+Caudill M, Cook G B, Grigsby J D and Pfeiffer H P 2006 Phys. Rev. D74 064011 [arXiv:grqc/0605053]
+Pfeiffer H P, Kidder L E, Scheel M A and Teukolsky S A 2003 Comput. Phys. Commun. 152 253–273 [arXiv:gr-qc/0202096]
+Buchman L T, Pfeiffer H P, Scheel M A and Szilagyi B 2012 Phys. Rev. D86 084033 [arXiv:1206.3015]
+Ossokine S, Foucart F, Pfeiffer H P, Boyle M and Szilágyi B 2015 Class. Quant. Grav. 32 245010 [arXiv:1506.01689]
+Pfeiffer H P, Brown D A, Kidder L E, Lindblom L, Lovelace G and Scheel M A 2007 Class. Quant. Grav. 24 S59–S82 [arXiv:gr-qc/0702106]
+Buonanno A, Kidder L E, Mroue A H, Pfeiffer H P and Taracchini A 2011 Phys. Rev. D83 104034 [arXiv:1012.1549]
+Mroue A H and Pfeiffer H P 2012 [arXiv:1210.2958]
+Habib S, Scheel M A and Teukolsky S A 2025 Phys. Rev. D 111 084059 [arXiv:2410.05531]
+Knapp T, Chatziioannou K, Pfeiffer H, Scheel M A and Kidder L E 2025 Phys. Rev. D 111 024003 [arXiv:2410.02997]
+Nee P J et al. 2025 [arXiv:2503.05422]
+Friedrich H 1985 Commun. Math. Phys. 100 525–543
+Garfinkle D 2002 Phys. Rev. D65 044029 [arXiv:gr-qc/0110013]
+Pretorius F 2005 Class. Quant. Grav. 22 425–452 [arXiv:gr-qc/0407110]
+Lindblom L, Scheel M A, Kidder L E, Owen R and Rinne O 2006 Class. Quant. Grav. 23 S447–S462 [arXiv:gr-qc/0512093]
+Gundlach C, Martin-Garcia J M, Calabrese G and Hinder I 2005 Class. Quant. Grav. 22 3767–3774 [arXiv:gr-qc/0504114]
+Lindblom L and Szilagyi B 2009 Phys. Rev. D80 084019 [arXiv:0904.4873]
+Choptuik M W and Pretorius F 2010 Phys. Rev. Lett. 104 111101 [arXiv:0908.1780]
+Szilagyi B, Lindblom L and Scheel M A 2009 Phys. Rev. D80 124010 [arXiv:0909.3557]
+Kidder L E and Finn L S 2000 Phys. Rev. D62 084026 [arXiv:gr-qc/9911014]
+Scheel M A, Boyle M, Chu T, Kidder L E, Matthews K D and Pfeiffer H P 2009 Phys. Rev. D79 024003 [arXiv:0810.1767]
+Hemberger D A, Scheel M A, Kidder L E, Szilágyi B, Lovelace G, Taylor N W and Teukolsky S A 2013 Class. Quant. Grav. 30 115001 [arXiv:1211.6079]
+Press W H, Teukolsky S A, Vetterling W T and Flannery B P 2007 Numerical Recipes: The Art of Scientific Computing 3rd ed (New York: Cambridge University Press)
+Ossokine S, Kidder L E and Pfeiffer H P 2013 Phys. Rev. D88 084031 [arXiv:1304.3067] References
+Rinne O 2006 Class. Quant. Grav. 23 6275–6300 [arXiv:gr-qc/0606053]
+Rinne O, Lindblom L and Scheel M A 2007 Class. Quant. Grav. 24 4053–4078 [arXiv:0704.0782]
+Hesthaven J 2000 Applied Numerical Mathematics 33 23 – 41
+Bjørhus M 1995 SIAM J. Sci. Comput. 16 542–557
+Lovelace G, Scheel M and Szilagyi B 2011 Phys. Rev. D83 024010 [arXiv:1010.2777]
+Owen R 2009 Phys. Rev. D80 084012 [arXiv:0907.0280]
+Owen R, Fox A S, Freiberg J A and Jacques T P 2019 Phys. Rev. D99 084031 [arXiv:1708.07325]
+Scheel M A, Pfeiffer H P, Lindblom L, Kidder L E, Rinne O and Teukolsky S A 2006 Phys. Rev. D 74 104006 [arXiv:gr-qc/0607056]
+Scheel M A, Giesler M, Hemberger D A, Lovelace G, Kuper K, Boyle M, Szilágyi B and Kidder L E 2015 Class. Quant. Grav. 32 105009 [arXiv:1412.1803]
+Iozzo D A B, Boyle M, Deppe N, Moxon J, Scheel M A, Kidder L E, Pfeiffer H P and Teukolsky S A 2021 Phys. Rev. D 103 024039 [arXiv:2010.15200]
+Long O et al. in prep.
+Huang N E, Shen Z, Long S R, Wu M C, Shih H H, Zheng Q, Yen N C, Tung C C and Liu H H 1998 Proc. R. Soc. Lond. A. 454(1971) 903–995
+Favata M 2009 Phys. Rev. D 80 024002 [arXiv:0812.0069]
+Bishop N T, Gómez R, Lehner L and Winicour J 1996 Phys. Rev. D 54 6153–6165
+Bishop N T and Rezzolla L 2016 Living Rev. Rel. 19 2 [arXiv:1606.02532]
+Handmer C J, Szilágyi B and Winicour J 2016 Class. Quantum Grav. 33 225007 [arXiv:1605.04332]
+Barkett K, Moxon J, Scheel M A and Szilágyi B 2020 Phys. Rev. D 102 024004 [arXiv:1910.09677]
+Moxon J, Scheel M A and Teukolsky S A 2020 Phys. Rev. D 102 044052 [arXiv:2007.01339]
+Moxon J, Scheel M A, Teukolsky S A, Deppe N, Fischer N, Hébert F, Kidder L E and Throwe W 2023 Phys. Rev. D 107 064013 [arXiv:2110.08635]
+Geroch R P, Held A and Penrose R 1973 J. Math. Phys. 14 874–881
+European Organization For Nuclear Research and OpenAIRE 2013 Zenodo https://www.zenodo. org/
+Caltech Library 2024 CaltechDATA https://data.caltech.edu/
+Agrawal A and Scolnick M 2023 marimo - an open-source reactive notebook for Python https://github.com/marimo-team/marimo
+Chatham H, Droettboom M, Yurchak R, Choi G, Chua D, Khetarpal A, Schreiner H, Estève L, Broere B, Köppe M, Marshall J, Clauss C, Lachance W, Abramowitz M, Ignatiev A, Casati R, Tandon M, Meyer J M, Stafford J, Cherian D, Thomas I, Merol M, Bovy J, Greminger M, Kang G and Wason J 2025 Pyodide https://doi.org/10.5281/zenodo.15046691
+Bishop N T and Rezzolla L 2016 Living Rev. Relativ. 19 2 [arXiv:1606.02532]
+Song X C, Smith P, Kalyanam R, Zhu X, Adams E, Colby K, Finnegan P, Gough E, Hillery E, Irvine R, Maji A and St John J 2022 Anvil - system architecture and experiences from deployment and early user operations Practice and Experience in Advanced Research Computing 2022: Revolutionary: Computing, Connections, You PEARC ’22 (New York, NY, USA: Association for Computing Machinery) ISBN 9781450391610 https://doi.org/10.1145/3491418.3530766
+Strande S, Cai H, Tatineni M, Pfeiffer W, Irving C, Majumdar A, Mishin D, Sinkovits R, Norman M, Wolter N, Cooper T, Altintas I, Kandes M, Perez I, Shantharam M, Thomas M, Sivagnanam S and Hutton T 2021 Expanse: Computing without boundaries: Architecture, deployment, and early operations experiences of a supercomputer designed for the rapid evolution in science and engineering Practice and Experience in Advanced Research Computing 2021: Evolution Across All Dimensions PEARC ’21 (New York, NY, USA: Association for Computing Machinery) ISBN 9781450382922 https://doi.org/10.1145/3437359.3465588
+Boerner T J, Deems S, Furlani T R, Knuth S L and Towns J 2023 Access: Advancing innovation: Nsf’s advanced cyberinfrastructure coordination ecosystem: Services & support Practice and Experience in Advanced Research Computing 2023: Computing for the Common Good PEARC ’23 (New York, NY, USA: Association for Computing Machinery) p 173–176 ISBN 9781450399852 References https://doi.org/10.1145/3569951.3597559
+Towns J, Cockerill T, Dahan M, Foster I, Gaither K, Grimshaw A, Hazlewood V, Lathrop S, Lifka D, Peterson G D, Roskies R, Scott J R and Wilkins-Diehr N 2014 Computing in Science & Engineering 16 62–74
+Bode B, Butler M, Dunning T, Hoefler T, Kramer W, Gropp W and Hwu W m 2013 The Blue Waters super-system for super-science Contemporary High Performance Computing Chapman & Hall/CRC Computational Science (Chapman and Hall/CRC) pp 339–366 ISBN 978-1-46656834-1 https://www.taylorfrancis.com/books/e/9781466568358
+Kramer W, Butler M, Bauer G, Chadalavada K and Mendes C 2015 Blue Waters Parallel I/O Storage Sub-system High Performance Parallel I/O ed Prabhat and Koziol Q (CRC Publications, Taylor and Francis Group) pp 17–32 ISBN 978-1-4665-8234-7
+Cook G B and Pfeiffer H P 2004 Phys. Rev. D70 104016 [arXiv:gr-qc/0407078]
+Mroue A H, Pfeiffer H P, Kidder L E and Teukolsky S A 2010 Phys. Rev. D82 124016 [arXiv:1004.4697]
+Seward J, Quintero F M and Snyder M 2023 BZIP2 [Computer Software] https://gitlab.com/ bzip2/bzip2/
+The HDF Group and Koziol Q 2020 HDF5-Version 1.12.0 [Computer Software] https://doi. org/10.11578/dc.20180330.1
+Aasi J et al. (LIGO Scientific, Virgo, NINJA-2) 2014 Class. Quant. Grav. 31 115004 [arXiv:1401.0939]
+Boyle M 2010 GridRefinement https://doi.org/10.5281/zenodo.13993495
+Ajith P, Boyle M, Brown D A, Fairhurst S, Hannam M, Hinder I, Husa S, Krishnan B, Mercer R A, Ohme F, Ott C D, Read J S, Santamaría L and Whelan J T 2011 Data formats for numerical relativity [arXiv:0709.0093v3]
+Schmidt P, Harry I W and Pfeiffer H P 2017 [arXiv:1703.01076]
+Galley C R and Schmidt P 2016 Fast and efficient evaluation of gravitational waveforms via reduced-order spline interpolation [arXiv:1611.07529]
+Engelson V, Fritzson D and Fritzson P 2000 Lossless compression of high-volume numerical data from simulations Proceedings DCC 2000. Data Compression Conference
+Klimenko S, Mours B, Shawhan P and Sazonov A 2001 Data compression study with the E2 data Technical Report LIGO-T010033-x0 https://dcc.ligo.org/LIGO-T010033/public
+Lindstrom P and Isenburg M 2006 IEEE Transactions on Visualization and Computer Graphics 12 1245–1250
+Ratanaworabhan P, Ke J and Burtscher M 2006 Fast lossless compression of scientific floating-point data Data Compression Conference (DCC’06) pp 133–142
+Hübbe N and Kunkel J 2013 Comput Sci Res Dev 28 231–239
+Masui K, Amiri M, Connor L, Deng M, Fandino M, Höfer C, Halpern M, Hanna D, Hincks A, Hinshaw G, Parra J, Newburgh L, Shaw J and Vanderlinde K 2015 Astronomy and Computing 12 181–190
+Claggett S, Azimi S and Burtscher M 2018 SPDP: An automatically synthesized lossless compression algorithm for floating-point data 2018 Data Compression Conference pp 335–
+Boyle M 2017 Advances in Applied Clifford Algebras 27 2345–2374 [arXiv:1604.08139]
+Boyle M 2024 The quaternionic package https://doi.org/10.5281/zenodo.13350880
+Boyle M 2023 The spherical package https://doi.org/10.5281/zenodo.10214833
+Boyle M, Kidder L E, Ossokine S and Pfeiffer H P 2014 [arXiv:1409.4431]
+The HDF Group 2024 HDF5 API Reference https://support.hdfgroup.org/documentation/ hdf5/latest/group___d_c_p_l.html accessed: 2024-10-15
+IEEE 2019 IEEE Std 754-2019 (Revision of IEEE 754-2008) 1–84
+Art, Thiem D, Leo, 0x47, Gupta A, Haselgrove A, Molina D, HaydenSolo, Honeypot95, TagBot J, matago, Biron M, Rogerluo and Churavy V 2022 wildart/Evolutionary.jl: v0.11.1 References https://doi.org/10.5281/zenodo.5851574
+Huffman D A 1952 Proceedings of the IRE 40 1098–1101 ISSN 2162-6634 https://ieeexplore. ieee.org/document/4051119
+Burrows M and Wheeler D 1994 A block-sorting loss less data compression algorithm https: //api.semanticscholar.org/CorpusID:2167441
+Ryabko B Y 1980 Probl. Inf. Transm. 16 265–269 ISSN 0032-9460
+Bentley J L, Sleator D D, Tarjan R E and Wei V K 1986 Communications of the ACM 29 320–330 ISSN 1557-7317 http://dx.doi.org/10.1145/5684.5688
+Collin L 2009 XZ Utils: Free general-purpose data compression software with high compression ratio https://tukaani.org/xz/ accessed: 2023-10-01
+Alakuijala J and Szabadka Z 2016 Brotli Compressed Data Format RFC 7932 https://www. rfc-editor.org/info/rfc7932
+Deutsch L P 1996 GZIP file format specification version 4.3 RFC 1952 https://www.rfc-editor. org/info/rfc1952

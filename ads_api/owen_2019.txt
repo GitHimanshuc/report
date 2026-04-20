@@ -1,0 +1,64 @@
+B. Abbott et al. (LIGO Scientific Collaboration), Phys. Rev. Lett. 116, 061102 (2016).
+B. Abbott et al. (LIGO Scientific Collaboration), Phys. Rev. Lett. 116, 241103 (2016).
+B. Abbott et al. (LIGO Scientific Collaboration), Phys. Rev. Lett. 118, 221101 (2017).
+B. Abbott et al. (LIGO Scientific Collaboration), Phys. Rev. Lett. 119, 161101 (2017).
+M. Alcubierre, Introduction to 3+1 Numerical Relativity (Oxford University Press, New York, 2008).
+T. W. Baumgarte and S. L. Shapiro, Numerical Relativity: Solving Einstein's Equations on the Computer (Cambridge University Press, New York, 2010).
+L. Blanchet, Living Rev. Rel. 9, 4 (2006).
+T. Futamase and Y. Itoh, Living Rev. Rel. 10, 2 (2007).
+M. Sasaki and H. Tagoshi, Living Rev. Rel. 6, 6 (2003), gr-qc/0306120.
+M. Campanelli, C. O. Lousto, Y. Zlochower, and D. Merritt, Astrophys. J. Lett. 659, L5 (2007).
+M. Campanelli, C. O. Lousto, Y. Zlochower, B. Krishnan, and D. Merritt, Phys. Rev. D 75, 064030 (2007), gr-qc/0612076.
+J. G. Baker, J. Centrella, D.-I. Choi, M. Koppitz, J. R. van Meter, and M. C. Miller, Astrophys. J. 653, L93 (2006), astro-ph/0603204.
+J. A. Gonzalez, U. Sperhake, B. Brugmann, M. Hannam, and S. Husa, Phys. Rev. Lett. 98, 091101 (2007), gr-qc/0610154.
+B. Brugmann, J. A. Gonzalez, M. Hannam, S. Husa, and U. Sperhake, Phys. Rev. D 77, 124047 (2008), arXiv:0707.0135.
+W. Tichy and P. Marronetti, Phys. Rev. D 76, 061502(R) (2007).
+J. G. Baker, W. D. Boggs, J. Centrella, B. J. Kelly, S. T. McWilliams, M. C. Miller, and J. R. van Meter, Astrophys. J. 682, L29 (2008), arXiv:0802.0416.
+J. Healy, F. Herrmann, I. Hinder, D. M. Shoemaker, P. Laguna, and R. A. Matzner, Phys. Rev. Lett. 102, 041101 (2009), 0807.3292.
+C. O. Lousto and Y. Zlochower, Phys. Rev. Lett. 107, 231102 (2011), 1108.2009.
+A. H. Mroue, M. A. Scheel, B. Szilagyi, H. P. Pfeiffer, M. Boyle, D. A. Hemberger, L. E. Kidder, G. Lovelace, S. Ossokine, N. W. Taylor, et al., Phys. Rev. Lett. 111, 241104 (2013), 1304.6077.
+http://www.black-holes.org/waveforms.
+K. Jani, J. Healy, J. A. Clark, L. London, P. Laguna, and D. Shoemaker, Class. Quantum Grav. 33, 204001 (2016), arXiv:1605.03204.
+J. Healy, C. O. Lousto, Y. Zlochower, and M. Campanelli (2017), arXiv:1703.03423.
+S. E. Field, C. R. Galley, J. S. Hesthaven, J. Kaye, and M. Tiglio, Phys. Rev. X 4, 031006 (2014), arXiv:1308.3565.
+M. Purrer, Phys. Rev. D 93, 064041 (2016), arXiv:1512.02248.
+J. Blackman, S. E. Field, M. A. Scheel, C. R. Galley, D. Hemberger, P. Schmidt, and R. Smith, Phys. Rev. D 95, 104023 (2017), arXiv:1701.00550.
+J. Blackman, S. E. Field, C. R. Galley, B. Szilagyi, M. A. Scheel, M. Tiglio, and D. Hemberger, Phys. Rev. Lett. 115, 121102 (2015), arXiv:1502.07758.
+J. Blackman, S. E. Field, M. A. Scheel, C. R. Galley, C. D. Ott, M. Boyle, L. E. Kidder, H. P. Pfeiffer, and B. Szilagyi, Phys. Rev. D 96, 024058 (2017), arXiv:1705.07089.
+C. O. Lousto and Y. Zlochower (2013), 1312.5775.
+C. O. Lousto and Y. Zlochower, Phys. Rev. D 89, 021501 (2014), arXiv:1307.6237.
+C. O. Lousto and J. Healy, Phys. Rev. Lett. 114, 141101 (2015), arXiv:1410.3830.
+Y. Zlochower and C. O. Lousto, Phys. Rev. D 92, 024022 (2015), arXiv:1503.07536.
+C. O. Lousto, J. Healy, and H. Nakano, Phys. Rev. D 93, 044031 (2016), arXiv:1506.04768.
+C. O. Lousto and J. Healy, Phys. Rev. D 93, 124074 (2016), arXiv:1601.05086.
+R. Owen, Ph.D. thesis, California Institute of Technology (2007), URL http://resolver.caltech.edu/CaltechETD:etd-05252007-143511.
+G. B. Cook and B. F. Whiting, Phys. Rev. D 76, 041501(R) (2007).
+G. Lovelace, R. Owen, H. P. Pfeiffer, and T. Chu, Phys. Rev. D 78, 084017 (2008).
+G. Lovelace, M. A. Scheel, R. Owen, M. Giesler, R. Katebi, B. Szilagyi, T. Chu, N. Demos, D. A. Hemberger, L. E. Kidder, et al., Class. Quantum Grav. 32, 065007 (2014), arXiv:1411.7297.
+A. Ashtekar, J. Engle, T. Pawlowski, and C. V. D. Broeck, Class. Quantum Grav. 21, 2549 (2004).
+R. Owen, Phys. Rev. D 80, 084012 (2009).
+A. Ashtekar, M. Campiglia, and S. Shah, Phys. Rev. D 88, 064045 (2013), 1306.5697.
+http://www.black-holes.org/SpEC.html.
+S. Ossokine, M. Boyle, L. E. Kidder, H. P. Pfeiffer, M. A. Scheel, and B. Szilagyi, Phys. Rev. D 92, 104028 (2015), 1502.01747.
+J. D. Brown and J. W. York, Phys. Rev. D 47, 1407 (1993).
+A. Ashtekar, C. Beetle, and S. Fairhurst, Class. Quantum Grav. 16, L1 (1999), gr-qc/9812065.
+A. Ashtekar, C. Beetle, and J. Lewandowski, Phys. Rev. D 64, 044016 (2001), gr-qc/0103026.
+A. Ashtekar and B. Krishnan, Living Rev. Rel. 7 (2004), 10, URL http://www.livingreviews.org/lrr-2004-10.
+A. Komar, Phys. Rev. 113, 934 (1959).
+E. Newman and R. Penrose, J. Math. Phys. 3, 566 (1962), URL http://link.aip.org/link/?JMP/3/566/1.
+R. Geroch, A. Held, and R. Penrose, J. Math. Phys. 14, 874 (1973).
+R. Penrose and W. Rindler, Spinors and Space-time, Volume 1 (Cambridge University Press, Cambridge, 1992).
+C. Beetle, M. Bruni, L. M. Burko, and A. Nerozzi, Phys. Rev. D 72, 024013 (2005), URL http://link.aps.org/abstract/PRD/v72/e024013.
+F. Zhang, J. Brink, B. Szilagyi, and G. Lovelace (2012), 1208.0630.
+R. Owen, J. Brink, Y. Chen, J. D. Kaplan, G. Lovelace, K. D. Matthews, D. A. Nichols, M. A. Scheel, F. Zhang, A. Zimmerman, et al., Phys. Rev. Lett. 106, 151101 (2011).
+D. A. Nichols, R. Owen, F. Zhang, A. Zimmerman, J. Brink, et al., Phys. Rev. D 84, 124014 (2011), 1108.5486.
+A. Zimmerman, D. A. Nichols, and F. Zhang, Phys. Rev. D 84, 044037 (2011).
+F. Zhang, A. Zimmerman, D. A. Nichols, Y. Chen, G. Lovelace, K. D. Matthews, R. Owen, and K. S. Thorne, Phys. Rev. D 86, 084049 (2012).
+D. A. Nichols, A. Zimmerman, Y. Chen, G. Lovelace, K. D. Matthews, R. Owen, and F. Zhang, Phys. Rev. D 86, 104028 (2012).
+O. Dreyer, B. Krishnan, D. Shoemaker, and E. Schnetter, Phys. Rev. D 67, 024018 (2003).
+The Einstein Toolkit, https://einsteintoolkit.org.
+L. D. Landau and E. M. Lifshitz, Classical Theory of Fields (Addison Wesley, Reading, MA, 1962), 2nd ed.
+L. I. Schiff, Proceedings of the National Academy of Sciences 46, 871 (1960).
+B. Krishnan, C. O. Lousto, and Y. Zlochower, Phys. Rev. D 76, 081501(R) (2007).
+M. Korzynski, Class. Quantum Grav. 24, 5935 (2007).
+I. Booth and S. Fairhurst, Phys. Rev. D 77, 084005 (2008), arXiv:0708.2209v3.
