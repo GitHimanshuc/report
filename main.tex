@@ -45,6 +45,7 @@
 \usepackage{graphicx}% Include figure files
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
+\usepackage{aas_macros}% Resolve ADS journal macros such as \jcap in BibTeX
 \usepackage{hyperref}% add hypertext capabilities
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
@@ -105,7 +106,7 @@ The dynamics of a binary black hole systems are governed by their masses and spi
 
 %  \cite{Evans:2023euw,2017arXiv170200786A}
 
-With the new generation of gravitational wave detectors coming up \cite{2020PhRvD.101l4040C,2023arXiv230613745E___sxs25_74} we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. Unlike the rest of the simulation the spin computations are done on a single core, this means that when it is slow all the other cores are effectively wasting resources waiting for it to complete.
+With the new generation of gravitational wave detectors coming up \cite{2023arXiv230613745E___sxs25_74,2026JCAP...03..081A___sxs25_77,2017arXiv170200786A___sxs25_78} we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. While SpEC like other numerical relativity codes (CITE?) is designed to run on multiple cores, for architectural reason the spin computations are still done on a single core. This means that when the spin computations are slow all the other cores are effectively wasting resources waiting for it to complete. This is already an issue with SpEC which runs on $O(100)$ cores, but it will become a bigger issue with next generation codes like SpECTRE \cite{spectrecode} running on $O(1000)$ cores or more.
 
 In this paper Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Section \ref{sec:Future improvements and Conclusions} we talk about possible future improvements and conclude.
 

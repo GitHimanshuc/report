@@ -183,3 +183,6 @@ embedding candidate is weaker than that, the matcher stops and raises an error i
 numeric fallback.
 
 If none of these paths is confident enough, the matcher raises an error instead of forcing a match.
+
+# IMPORTANT
+ADS uses journal macros so you will need to use the sty file "./aas_macros.sty" for you latex file to compile.
