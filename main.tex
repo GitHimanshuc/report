@@ -121,7 +121,7 @@ S=\frac{1}{8 \pi} \oint_{\mathcal{H}} \phi^i s^j K_{i j} d A
 
 where  $s^j$ is the outgoing normal of $\mathcal{H}$. And $\vec{\phi}$ is an ``azimuthal" vector field, tangent to $\mathcal{H}$ which carries the information about the spin axis.
 
-It can be shown that \ref{eqn:spin angular momentum} is conserved (CITE) when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The next best thing one can use is the vector field which is closest to being a Killing vector field, in other words an approximate Killing vector. We will now describe the method used in SpEC for constructing these approximate Killing vector fields (CITE). We start from the Killing's equation for a vector field $\phi_{B}$
+It can be shown that \ref{eqn:spin angular momentum} is conserved \cite{2003PhRvD..67b4018D___lovelace08_73} when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The next best thing one can use is the vector field which is closest to being a Killing vector field, in other words an approximate Killing vector. We will now describe the method used in SpEC for constructing these approximate Killing vector fields. We start from the Killing's equation for a vector field $\phi_{B}$
 \begin{align}
 D_{(A} \phi_{B)}=0
 \end{align}
@@ -169,8 +169,9 @@ where $D^2$ is the laplacian on the apparent horizon and $\mathring{R}$ is the R
 By using Lagrange multiplier and the fact that $\phi^A \phi_A = D^A z D_A z$ we get
 \begin{align}
 I[z]:=\oint_{\mathcal{H}} z H z d A+\lambda\left(\oint_{\mathcal{H}} D^A z D_A z d A-N\right),
+\label{eqn:Optimizer with the lagrange multiplier and N}
 \end{align}
-where $N$ is still an undetermined positive constant. Fixing the value of $N$ is same as normalizing the value of the approximate Killing vector field and getting not just the direction but the magnitude of the spin. We will not be dealing with $N$ in this paper and readers can refer to \cite{lovelace_binary-black-hole_2008} for more info.
+where $N$ is still an undetermined positive constant. Fixing the value of $N$ is same as normalizing the value of the approximate Killing vector field and getting not just the axis but also the magnitude of the spin. 
 
 Minimizing this functional with respect to $z$ gives a generalized eigenvalue problem:
 \begin{align}
@@ -180,7 +181,15 @@ Minimizing this functional with respect to $z$ gives a generalized eigenvalue pr
 
 Now we can try to discretize the equation \ref{eqn:generalized eigenvalue problem} and solve it numerically. The only remaning issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. The standard way to deal with such issues is to remove the common kernel space and then solve for z. In our case this is done trivially because we are discretizing using spherical harmonics and can just remove the $Y_{00}$ mode.
 
-Once we have discretized the equation \ref{eqn:generalized eigenvalue problem} the next step involves finding the three smallest eigenvalues and the corresponding eigenvectors. To get the final spin axis and spin magnitude still involves more steps but they are not relevant for this paper and can be found in \cite{Owen:2017yaj} and \cite{lovelace_binary-black-hole_2008}.
+Once we have discretized the equation \ref{eqn:generalized eigenvalue problem} the next step involves finding the three smallest eigenvalues and the corresponding eigenvectors. We can use these eigenvectors $z$ to compute the spin axis but we still need a way to get the spin magnitude by normalizing the eigenvectors, which is equivalent to fixing the value of N in the Eq.(\ref{eqn:Optimizer with the lagrange multiplier and N}). To fix the normalization we use the equation,
+
+\begin{align}
+\oint_{\mathcal{H}}(z-\langle\langle z\rangle\rangle)^2 d A=\frac{A^3}{48 \pi^2}
+\label{eqn:normalization condition for z}
+\end{align}
+where, $\langle\langle z\rangle\rangle$ is the average of z over the surface and A is the surface area of the apparent horizon. We use this equation to normalize the three eigenvectors and then their Euclidean norm becomes our spin magnitude. Mathematically, the Eq.(\ref{eqn:normalization condition for z}) only hold for a Kerr metric where $z$ is a true rotation generator of the horizon therefore we assume that the black holes that we are evolving are approximately Kerr when using it for normalization.
+
+Using the AKV $z$ and the normalization condition Eq.(\ref{eqn:normalization condition for z}) is still the most robust way to get the spin magnitude and it is what we use by default in SpEC. Getting the spin axis is much more involved and not all the methods make use of the $z$. One of the simplest spin axis definitions is just defining it as the axis of the eigenvector with the smallest eigenvalue. But, a lot of research has gone into getting better measurements of the spin axis and various definitions along with their tradeoffs are discussed in \cite{Owen:2017yaj}.
 
 \section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
