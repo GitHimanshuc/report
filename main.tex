@@ -195,93 +195,33 @@ Using the AKV($z$) and the normalization condition Eq.(\ref{eqn:normalization co
 
 Let's call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref{eqn:generalized eigenvalue problem}) $M$ and $B$ respectively. Now we have generalized eigenvalue problem $Mx = \lambda Bx$ and getting the eigenvectors is just a matter of using a standard library like LAPACK. To understand why this became an issue we need to understand how big these matrices are and how they grow with increase in the complexity of the apparent horizons. Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other their apparent horizons are not mostly spherical and can be approximated using a small number of spherical harmonics. On the other hand when the black holes are about to merge their horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. For the simulations that we have done till now, $L$ can be as small as 15 during the inspiral but for some complex cases it can get as large as 90 near the merger. As we push to evolve more and more complex system at higher and higher resolution we expect the largest value of $L$ we need to increase further.
 
-The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_{00}$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues \footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors Lapack does a reduction of the eigensystem and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly. From the Table(\ref{table:timing_data_HPC}) we can see that the runtime cost of dggev goes from 0.07s to 13100s as L goes from 15 to 100.
+The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_{00}$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues ($L^6$ in number) \footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors Lapack does a reduction of the eigensystem and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$ as can be seen from the Fig.(\ref{fig:HPC_all_in_one}) and Fig.(\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling performance may be due to memory pressure, although we haven't checked this rigorously.
 
-This poor scaling of dggev is particularly bad for SpEC where because of the its parallelization infrastructure we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of compute resources was only going to get worse with the need to run more accurate simulations, which is why a better algorithm was required. In the next section we outline the new algorithm which now uses a iterative eigensolver ARPACK providing large speedups.
+From the Table(\ref{table:timing_data_HPC}) we can see that the runtime cost of dggev goes from 0.07s to 13100s as L goes from 15 to 100. This poor scaling of dggev is particularly bad for SpEC where because of the its parallelization infrastructure we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of compute resources was only going to get worse with the need to run more accurate simulations, which is why a better algorithm was required. In the next section we outline the new algorithm which now uses a iterative eigensolver ARPACK, this allows us to efficiently compute the three required eigenvectors providing a large speedup.
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
-A large part of why ddgev is so slow is because it has to find all the $L^3$ eigenvalues when we just need three. The efficient way to solve these kind of problems is to use iterative solvers like ARPACK.
+The sparse AKV algorithm has three major parts:
+\begin{itemize}
+    \item Assembling the matrices $M$ and $B$
+    \item Applying shift invert transform to the eigenvalue problem
+    \item Using cached LU decomposition for the action of matrix inverse
+\end{itemize}
+We will discuss each of these one by one.
 
-In SpEC we have two functions let's call them $f_M(x)$ and $f_B(x)$ that give the action of the matrices $M$ and $B$ respectively on a vector $x$. Thus, to generate the matrices we need to operate on $N$ cartesian basis vectors. This means that the time complexity of generating the matrices $M$ and $B$ is $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. In theory, we don't even need to construct these matrices when using ARPACK because it can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. This is shown in Fig.(\ref{fig: ARPACK call graph for nonsymmetric generalized case}), where we just need the functions $f_M(x)$ and $f_B(x)$ to find the eigenvectors. Note that we need to solve a linear problem($y = B^{-1} v$) to get the vector $y$ required by ARPACK, this can be done using iterative solvers like GMRES or BiCGSTAB. 
+\subsection{\label{ssec:Assembling the matrices} Assembling the matrices}
 
+In the Sec.(\ref{sec:Current AKV algorithm}) about the current AKV algorithm, we started the discussion from the point where we already have the matrices $M$ and $B$. In practice, first we have to assemble these matrices. SpEC has two functions let's call them $f_M(x)$ and $f_B(x)$ that give the action of the matrices $M$ and $B$ on a vector $x$. Thus, to generate the matrices we need to operate on $N$ cartesian basis vectors and it can get costly. From the Table(\ref{table:timing_data_HPC}) we can see that the cost of constructing the matrix is actually more than the cost of dggev for $L<25$. We expect the time complexity of generating the matrices $M$ and $B$ to be around $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. From the Figures (\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}) we can see that it lies between $O(L^{4.5})-O(L^5)$ depending on the system we are running on. This scaling behavior means that the cost of ddgev quickly overtakes the cost of constructing the matrices and becomes the main bottleneck.
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=2.2cm,
-    block/.style={draw, rectangle, rounded corners, minimum width=3.4cm, minimum height=1.2cm, align=center, thick},
-    input/.style={draw, ellipse, minimum width=2.2cm, minimum height=1.0cm, align=center, thick},
-    arrow/.style={->, thick}
-]
+It is important to consider the cost of the matrix generation because, in theory, we don't even need to construct these matrices when using ARPACK. Like many iterative algorithm ARPACK can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. Working in this matrix free manner was the original plan but it failed to work, and is described in detail in the Appendix(\ref{sec:Matrix free version of the AKV algorithm}).
 
-% Main vertical flow
-\node[input, fill=blue!10] (x) {$x$};
-
-\node[block, fill=orange!20, below of=x] (M) {$v = f_M(x)$};
-
-\node[block, fill=green!20, below of=M] (Bsolve) {$\text{Solve for } y:\; f_B(y)=v$};
-
-\node[input, fill=blue!10, below of=Bsolve] (y) {$y$};
-
-% Main arrows
-\draw[arrow] (x) -- (M);
-\draw[arrow] (M) -- (Bsolve);
-\draw[arrow] (Bsolve) -- (y);
-
-% Parallel branch for Bx
-\node[block, fill=purple!20, right=1.3cm of M] (Bapply) {$y = f_B(x)$};
-
-\node[draw=none, above=0.15cm of Bapply]{};
-
-\draw[arrow, dashed] (x.east) -- ++(0.8,0) |- (Bapply.west);
-\draw[arrow, dashed] (Bapply.south) |- (y.east);
-
-\end{tikzpicture}
-\label{fig: ARPACK call graph for nonsymmetric generalized case}
-\caption{Operations required for ARPACK in the nonsymmetric generalized case. In regular mode (solid line), ARPACK needs the action of $B^{-1} M$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_M$ to obtain $v = f_M(x) = Mx$, and then solve $f_B(y) = By = v$ for $y$. In addition, ARPACK may separately request the application of $B$, in which case we must provide $y = f_B(x) = Bx$.}
-\end{figure}
-
-As it turn out we do not want to use ARPACK in the way describe above because it will get very slow and might even fail when $L$ gets large. This is because we want to find the three smallest eigenvalues while the algorithm in ARPACK converges much faster when we solve for the largest eigenvalues. Another peculiarity of the algorithm is that it also converges faster when the eigenvalues are well separated. This can be seen in the next section where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
-
-\subsection{\label{ssec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest and the largest eigenvalues}
-
-We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
-% Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
-
-\begin{lstlisting}[language=Python, caption=Matrix generation code]
-import scipy.sparse.linalg as ss
-import numpy as np
-N = 500
-vals = np.arange(1, N + 1, dtype=np.float64)
-mat = np.diag(vals**2)
-\end{lstlisting}
-
-Now, we ask Arpack to find the largest three and the smallest three eigenvalues of this matrix,
-
-\begin{lstlisting}[language=Python, caption=ARPACK timing comparison]
-# LM: largest three
-ss.eigs(mat, k=3, which="LM")
-#19.6 ms
-
-# SM: smallest three
-ss.eigs(mat, k=3, which="SM")
-#1.93 s
-
-# Shift-invert near sigma = 0
-ss.eigs(mat, k=3, sigma=0.0, which="LM")
-#5.5 ms
-\end{lstlisting}
-
-We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient\footnote{This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size.}.
-
-% Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
+The final final version we ended up using involves constructing the full matrices $M$ and $B$ and we will assume that we have access to those in the later sections.
 
 \subsection{\label{ssec:Shift Invert transform} Shift Invert transform}
 
-Shift invert transform is a method of transforming our eigenvalue problem into another where the eigenvalues that we desire become large and well separated from its neighboring eigenvalues.
+The number of iterations needed by ARPACK to converge depends on the distribution of the eigenvalues. If we are trying to find the first few largest eigenvalues and they are well separated then the convergence is very fast. On the other hand if we are trying to find the smallest eigenvalues then the convergence is very slow and in the worst case it might not even converge. For problems like ours where we need to find the smallest eigenvalues the way to maintain good convergence is to use Shift invert transform. 
 
-Original problem:
+Shift invert transform is a method of transforming our eigenvalue problem into another where the eigenvalues that we desire become large and well separated from its neighboring eigenvalues.Original problem:
 
 \begin{equation}
     M x = \lambda B x
@@ -450,6 +390,83 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 \caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz).}
 \label{table:timing_data_PC}
 \end{table}
+
+\section{\label{sec:Matrix free version of the AKV algorithm} Matrix free version of the AKV algorithm}
+
+This is shown in Fig.(\ref{fig: ARPACK call graph for nonsymmetric generalized case}), where we just need the functions $f_M(x)$ and $f_B(x)$ to find the eigenvectors. Note that we need to solve a linear problem($y = B^{-1} v$) to get the vector $y$ required by ARPACK, this can be done using iterative solvers like GMRES or BiCGSTAB. 
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    node distance=2.2cm,
+    block/.style={draw, rectangle, rounded corners, minimum width=3.4cm, minimum height=1.2cm, align=center, thick},
+    input/.style={draw, ellipse, minimum width=2.2cm, minimum height=1.0cm, align=center, thick},
+    arrow/.style={->, thick}
+]
+
+% Main vertical flow
+\node[input, fill=blue!10] (x) {$x$};
+
+\node[block, fill=orange!20, below of=x] (M) {$v = f_M(x)$};
+
+\node[block, fill=green!20, below of=M] (Bsolve) {$\text{Solve for } y:\; f_B(y)=v$};
+
+\node[input, fill=blue!10, below of=Bsolve] (y) {$y$};
+
+% Main arrows
+\draw[arrow] (x) -- (M);
+\draw[arrow] (M) -- (Bsolve);
+\draw[arrow] (Bsolve) -- (y);
+
+% Parallel branch for Bx
+\node[block, fill=purple!20, right=1.3cm of M] (Bapply) {$y = f_B(x)$};
+
+\node[draw=none, above=0.15cm of Bapply]{};
+
+\draw[arrow, dashed] (x.east) -- ++(0.8,0) |- (Bapply.west);
+\draw[arrow, dashed] (Bapply.south) |- (y.east);
+
+\end{tikzpicture}
+\label{fig: ARPACK call graph for nonsymmetric generalized case}
+\caption{Operations required for ARPACK in the nonsymmetric generalized case. In regular mode (solid line), ARPACK needs the action of $B^{-1} M$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_M$ to obtain $v = f_M(x) = Mx$, and then solve $f_B(y) = By = v$ for $y$. In addition, ARPACK may separately request the application of $B$, in which case we must provide $y = f_B(x) = Bx$.}
+\end{figure}
+
+As it turn out we do not want to use ARPACK in the way describe above because it will get very slow and might even fail when $L$ gets large. This is because we want to find the three smallest eigenvalues while the algorithm in ARPACK converges much faster when we solve for the largest eigenvalues. Another peculiarity of the algorithm is that it also converges faster when the eigenvalues are well separated. This can be seen in the next section where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
+
+
+\section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest and the largest eigenvalues}
+
+We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
+% Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
+
+\begin{lstlisting}[language=Python, caption=Matrix generation code]
+import scipy.sparse.linalg as ss
+import numpy as np
+N = 500
+vals = np.arange(1, N + 1, dtype=np.float64)
+mat = np.diag(vals**2)
+\end{lstlisting}
+
+Now, we ask Arpack to find the largest three and the smallest three eigenvalues of this matrix,
+
+\begin{lstlisting}[language=Python, caption=ARPACK timing comparison]
+# LM: largest three
+ss.eigs(mat, k=3, which="LM")
+#19.6 ms
+
+# SM: smallest three
+ss.eigs(mat, k=3, which="SM")
+#1.93 s
+
+# Shift-invert near sigma = 0
+ss.eigs(mat, k=3, sigma=0.0, which="LM")
+#5.5 ms
+\end{lstlisting}
+
+We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient\footnote{This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size.}.
+
+% Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
 
 
 \bibliography{main,aliases}% Produces the bibliography via BibTeX.
