@@ -51,7 +51,7 @@
 %\linenumbers\relax % Commence numbering lines
 \usepackage{tikz}
 \usepackage{booktabs}
-\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit}
 
 %\usepackage[showframe,%Uncomment any one of the following lines to test 
 %%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
@@ -251,31 +251,47 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
-    node distance=2.2cm,
-    block/.style={draw, rectangle, rounded corners, minimum width=3.8cm, minimum height=1.2cm, align=center, thick},
+    node distance=1.6cm,
+    block/.style={draw, rectangle, rounded corners, minimum width=4.5cm, minimum height=1.1cm, align=center, thick},
     input/.style={draw, ellipse, minimum width=2.2cm, minimum height=1.0cm, align=center, thick},
-    arrow/.style={->, thick}
+    arrow/.style={->, thick},
+    dashedbox/.style={draw, dashed, rounded corners, inner sep=0.3cm, thick}
 ]
 
-% Main vertical flow
-\node[input, fill=blue!10] (x) {$x$};
+% One-time setup
+\node[block, fill=orange!20] (build) {Assemble matrices $M$ and $B$};
+\node[block, fill=orange!20, below of=build] (factor) {Form $M-\sigma B$ and compute its \\ LU decomposition and cache it};
 
-\node[block, fill=purple!20, below of=x] (Bapply) {$v = B x$};
+% Iterative loop
+\node[input, fill=blue!10, below=1.8cm of factor] (x) {$x$ from ARPACK};
+\node[block, fill=purple!20, below of=x] (Bapply) {$v = Bx$};
+\node[block, fill=green!20, below of=Bapply] (solve) {Solve $(M-\sigma B)y=v$ \\ using LU factors};
+\node[input, fill=blue!10, below of=solve] (y) {$y$ to ARPACK};
 
-\node[block, fill=green!20, below of=Bapply] (shiftSolve) {$\text{Solve for } y:\; (M - \sigma B)y=v$};
+% Arrows: setup
+\draw[arrow] (build) -- (factor);
+\draw[arrow] (factor) -- (x);
 
-\node[input, fill=blue!10, below of=shiftSolve] (y) {$y$};
-
-% Main arrows
+% Arrows: loop forward
 \draw[arrow] (x) -- (Bapply);
-\draw[arrow] (Bapply) -- (shiftSolve);
-\draw[arrow] (shiftSolve) -- (y);
+\draw[arrow] (Bapply) -- (solve);
+\draw[arrow] (solve) -- (y);
+
+% Loop back (iteration)
+\draw[arrow] (y.east) .. controls +(2.0,0) and +(2.0,0) .. 
+    node[midway, right] {} (x.east);
+
+% Optional dashed grouping
+\node[
+    dashedbox,
+    fit=(x)(Bapply)(solve)(y),
+    label={[rotate=90, anchor=south]left:{\textbf{ARPACK iteration loop}}}
+] {};
 
 \end{tikzpicture}
-\caption{Operations required for ARPACK in the nonsymmetric generalized case using the shift-invert transformation. In this mode, ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $B$ to obtain $v = B x$, and then solve $(M-\sigma B)y = v$ for $y$.}
+\caption{Steps in the new AKV algorithm using LU decomposition and ARPACK. We first do the one time steup which requires assemling the matrices $M$ and $B$ and computing the LU decomposition of $(M-\sigma B)$. ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $B$ to obtain $v = B x$, and then solve $(M-\sigma B)y = v$ for $y$ using the LU factors.}
 \label{fig:ARPACK_call_graph_shift_invert_generalized}
 \end{figure}
-
 
 \begin{figure}[t]
   \centering
@@ -395,54 +411,64 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 
 \section{\label{sec:Matrix free version of the AKV algorithm} Matrix free version of the AKV algorithm}
 
-This is shown in Fig.(\ref{fig: ARPACK call graph for nonsymmetric generalized case}), where we just need the functions $f_M(x)$ and $f_B(x)$ to find the eigenvectors. Note that we need to solve a linear problem($y = B^{-1} v$) to get the vector $y$ required by ARPACK, this can be done using iterative solvers like GMRES or BiCGSTAB. 
-
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
-    node distance=2.2cm,
-    block/.style={draw, rectangle, rounded corners, minimum width=3.4cm, minimum height=1.2cm, align=center, thick},
+    node distance=1.6cm,
+    block/.style={draw, rectangle, rounded corners, minimum width=4.5cm, minimum height=1.1cm, align=center, thick},
     input/.style={draw, ellipse, minimum width=2.2cm, minimum height=1.0cm, align=center, thick},
-    arrow/.style={->, thick}
+    arrow/.style={->, thick},
+    dashedbox/.style={draw, dashed, rounded corners, inner sep=0.3cm, thick}
 ]
 
-% Main vertical flow
-\node[input, fill=blue!10] (x) {$x$};
+% Iterative loop (matrix-free)
+\node[input, fill=blue!10] (x) {$x$ from ARPACK};
 
-\node[block, fill=orange!20, below of=x] (M) {$v = f_M(x)$};
+\node[block, fill=purple!20, below of=x] (Bapply) {$v = f_B(x)$};
 
-\node[block, fill=green!20, below of=M] (Bsolve) {$\text{Solve for } y:\; f_B(y)=v$};
+\node[block, fill=green!20, below of=Bapply] (solve) {Solve $(f_M - \sigma f_B)(y)=v$ \\ using an iterative solver};
 
-\node[input, fill=blue!10, below of=Bsolve] (y) {$y$};
+\node[input, fill=blue!10, below of=solve] (y) {$y$ to ARPACK};
 
-% Main arrows
-\draw[arrow] (x) -- (M);
-\draw[arrow] (M) -- (Bsolve);
-\draw[arrow] (Bsolve) -- (y);
+% Arrows: forward
+\draw[arrow] (x) -- (Bapply);
+\draw[arrow] (Bapply) -- (solve);
+\draw[arrow] (solve) -- (y);
 
-% Parallel branch for Bx
-\node[block, fill=purple!20, right=1.3cm of M] (Bapply) {$y = f_B(x)$};
+% Loop back (iteration)
+\draw[arrow] (y.east) .. controls +(2.0,0) and +(2.0,0) .. 
+    node[midway, right] {} (x.east);
 
-\node[draw=none, above=0.15cm of Bapply]{};
-
-\draw[arrow, dashed] (x.east) -- ++(0.8,0) |- (Bapply.west);
-\draw[arrow, dashed] (Bapply.south) |- (y.east);
+% Dashed grouping
+\node[
+    dashedbox,
+    fit=(x)(Bapply)(solve)(y),
+    label={[rotate=90, anchor=south]left:{\textbf{ARPACK iteration loop (matrix-free)}}}
+] {};
 
 \end{tikzpicture}
-\label{fig: ARPACK call graph for nonsymmetric generalized case}
-\caption{Operations required for ARPACK in the nonsymmetric generalized case. In regular mode (solid line), ARPACK needs the action of $B^{-1} M$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_M$ to obtain $v = f_M(x) = Mx$, and then solve $f_B(y) = By = v$ for $y$. In addition, ARPACK may separately request the application of $B$, in which case we must provide $y = f_B(x) = Bx$.}
+\caption{Matrix-free workflow for ARPACK in the generalized shift-invert case. Instead of explicitly forming $M$ and $B$, we use the functions $f_M$ and $f_B$ which are available in SpEC. At each iteration, ARPACK supplies a vector $x$, we compute $v = f_B(x)$, and then solve $(f_M - \sigma f_B)(y)=v$ using an iterative solver. The result $y = (M-\sigma B)^{-1}Bx$ is returned to ARPACK.}
+\label{fig:ARPACK_call_graph_shift_invert_matrix_free}
 \end{figure}
 
-As it turn out we do not want to use ARPACK in the way describe above because it will get very slow and might even fail when $L$ gets large. This is because we want to find the three smallest eigenvalues while the algorithm in ARPACK converges much faster when we solve for the largest eigenvalues. Another peculiarity of the algorithm is that it also converges faster when the eigenvalues are well separated. This can be seen in the next section where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
 
-The first thing that we tried was using iterative algorithms(GMRES and BiCGSTAB) to get the action of inverse. This was particularly attractive in our case because we do not start with matrices but instead construct them by repeatedly calling the functions $f_{M}(x)$ and $f_{B}(x)$. In almost all cases these iterative algorithms require a good preconditioner to converge at an acceptable rate. We tried a few preconditioners and the whole thing worked really well in the early parts but the convergence became very slow in many cases when the horizon was too deformed. Furthermore, constructing non trivial preconditioners from $f_{M}(x)$ is almost as costly as constructing the full matrix itself.
 
-As already mentioned in the section about selecting the value of $\sigma$, given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$. 
+As already mentioned in the section \ref{ssec:Assembling the matrices} the original goal was to not construct the matrices $M$ and $B$ at all and directly use the functions $f_M$ and $f_B$. This is shown in Fig.(\ref{fig:ARPACK_call_graph_shift_invert_matrix_free}), where we skip the matrix construction and the LU decomposition. 
+
+We need to solve a linear problem($(f_M - \sigma f_B)(y)=v$) to get the vector $y$ required by ARPACK, this can be done using iterative solvers like GMRES or BiCGSTAB. In almost all cases these iterative algorithms require a good preconditioner to converge at an acceptable rate. This is particularly true in our case because the condition number of the matrix $(M - \sigma B)$ is fairly big for $s\sigma=0.1$ and if we try to make $\sigma$ larger then the number of iterations required by ARPACK increases significantly, Figures \ref{fig:HPC_condition_number} and \ref{fig:LU_solve_nums_L50}. Note that we need the number of iterations required by ARPACK times the number of iterations required by the linear solver to stay below $L^4$ otherwise the whole thing will be as costly as constructing the full matrix.
+
+We tried a few simple preconditioners and the whole thing worked really well for the most part but the convergence became very slow in some edge cases when the horizon was too deformed. Given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. And while constructing the matrices is costly, the LU decomposition is a very stable and consistent algorithm even when the condition number gets large. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$.
+
+We can use the matrix free version but that requires having a good preconditioner that can be constructed cheaply. When there is not underlying structure and matrices are dense, the standard methods for constructing non trivial preconditioners from $f_{M}(x)$ are usually as costly as constructing the full matrix itself .
+
 
 \section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest and the largest eigenvalues}
 
+ARPACK converges much faster when we solve for the largest eigenvalues are well separated. This can be seen in the code below where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
+
 We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
+
 % Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
 
 \begin{lstlisting}[language=Python, caption=Matrix generation code]
@@ -469,10 +495,7 @@ ss.eigs(mat, k=3, sigma=0.0, which="LM")
 #5.5 ms
 \end{lstlisting}
 
-We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient\footnote{This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size.}.
-
-% Another byproduct of Arpack being an iterative algorithm is that it can only find the largest n and the smallest n eigenvalues of a problem. Thus, even if we want to find just the third largest eigenvalue of a system Arpack will have to first find the two largest eigenvalues. This can become a substantial cost if we are just interested in the eigenvalues closer to the middle of the spectrum and shift invert transform is a method to deal with this issue.
-
+We can see that finding the three smallest eigenvalue is much slower than finding the three largest eigenvalues (19.3ms vs 1930ms). But we can do something called Shift-invert transform which can transform the smallest eigenvalues into the largest eigenvalues making the ARPACK much more efficient. This is just an artificial example to illustrate the importance of shift invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$ we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, but this further increases with the matrix size.
 
 \bibliography{main,aliases}% Produces the bibliography via BibTeX.
 
