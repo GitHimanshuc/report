@@ -106,7 +106,7 @@ The dynamics of a binary black hole systems are governed by their masses and spi
 
 With the new generation of gravitational wave detectors coming up \cite{2023arXiv230613745E___sxs25_74,2026JCAP...03..081A___sxs25_77,2017arXiv170200786A___sxs25_78} we will need to redo a lot of our simulations at much higher resolutions. Often doing a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issue show up that were not present before. In our case one of the issue that started showing up when trying to simulate more complicated systems was the increasing wall time cost of the spin computations. While SpEC like other numerical relativity codes (CITE?) is designed to run on multiple cores, for architectural reason the spin computations are still done on a single core. This means that when the spin computations are slow all the other cores are effectively wasting resources waiting for it to complete. This is already an issue with SpEC which runs on $O(100)$ cores, but it will become a bigger issue with next generation codes like SpECTRE \cite{spectrecode} running on $O(1000)$ cores or more.
 
-The outline of this paper is as following, Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, in Section \ref{sec:Future improvements and Conclusions} we talk about possible future improvements and conclude.
+The outline of this paper is as following, Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm} we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm} we describe the new algorithm based on ARPACK, which is much faster. Finally, we talk about possible future improvements in Section \ref{sec:Future improvements} and conclude in the Section \ref{sec:Conclusion}.
 
 \section{\label{sec:AKV spin definition} AKV spin definition}
 In this section we only define the quantities relevant to understand the algorithm. Reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} and \cite{Owen:2017yaj} for more background and references. There is no unambiguous way to define spin of a dynamical black hole horizon in a bbh system. We usually settle for quasilocal spin definition which reduce to the ``expected" values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions which is constructed by using approximate killing vectors of the black hole horizons.
@@ -215,7 +215,7 @@ In the Sec.(\ref{sec:Current AKV algorithm}) about the current AKV algorithm, we
 
 It is important to consider the cost of the matrix generation because, in theory, we don't even need to construct these matrices when using ARPACK. Like many iterative algorithm ARPACK can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. Working in this matrix free manner was the original plan but it failed to work for reasons described in detail in the Appendix(\ref{sec:Matrix free version of the AKV algorithm}).
 
-The final final version we ended up using involves constructing the full matrices $M$ and $B$ and we will assume that we have access to those in the later sections.
+The final version we ended up using involves constructing the full matrices $M$ and $B$ and we will assume that we have access to those in the later sections.
 
 \subsection{\label{ssec:Shift Invert transform} Shift Invert transform}
 
@@ -280,14 +280,14 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.45\textwidth]{./images/condition_number_vs_sigma.png}
-  \caption{The figure shows how the value of sigma affects the condition number of the matrix $M-\sigma B$ for different L. The matrices were generated for a test Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Note that the conditioning number also gets worse as the number of $L$ required to represent the horizon increases. The behavior will depends on the shape of the black hole horizons but for the systems we tested having a small $\sigma$ always showed this blowup because most of the time one of the eigenvalues are close to zero.}  \label{fig:HPC_condition_number}
+  \caption{The figure shows how the value of sigma affects the condition number of the matrix $M-\sigma B$ for different L. The matrices were generated for a test Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Note that the conditioning number also gets worse as the number of $L$ required to represent the horizon increases. The behavior will depends on the shape of the black hole horizons but for the systems we tested having a small $\sigma$ always showed this blowup because most of the time one of the eigenvalues is close to zero.}  \label{fig:HPC_condition_number}
 \end{figure}
 
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.45\textwidth]{./images/LU_solve_nums_L50.png}
-  \caption{Number of LU solves required by the ARPACK to converge. This is simple Kerr-Schild spacetime with spin=(0,0,0.5) and mass=1, but we have noticed that the number of iterations required by ARPACK rarely goes beyond 30 even for much complicated systems. On the other hand not having a good enough value of $\sigma$ makes the converge very slow as we can see from the graph. For the bbh simulations we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
+  \caption{Number of LU solves required by the ARPACK to converge, note that ARPACK needs one LU solver per iterations so this graph also shows the number of iterations it needs to converge. This is simple Kerr-Schild spacetime with spin=(0,0,0.5) and mass=1, but we have noticed that the number of iterations required by ARPACK rarely goes beyond 30 even for much more complicated systems. On the other hand not having a good enough value of $\sigma$ makes the converge very slow as we can see from the graph. For the bbh simulations we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
   \label{fig:LU_solve_nums_L50}
 \end{figure}
 
@@ -299,14 +299,9 @@ Now the theoretical issue with using a LU decomposition is that it scales as $O(
 
 Note that while ARPACK requires the actions of $(M- \sigma B)^{-1}$ for each iteration it takes, we only need to do the costly LU factorization once and then cache it. Getting the action of $(M- \sigma B)^{-1}$ on a vector from a cached LU factorization is as cheap as a simple matrix vector product. From the Table \ref{table:timing_data_HPC}, we can see that the cost of doing the LU decomposition is negligible compared to the cost of constructing the matrices.
 
-\subsection{\label{sec:Timing data} Timing data}
+% \subsection{\label{sec:Timing data} Timing data}
 
-% \textbf{I got lazy and did the timing runs on my laptop. After looking at the data I realize that Lapack is around 10 times slower on my laptop when compared to wheeler. The timing data for matrix generation and Arpack is almost same on both my laptop and wheeler. This does not change the conclusions but gives the wrong impression that dggev will start taking more 30 minutes  to run much before $L \approx 80$, and that LU decomposition will overtake matrix generation to become the bottleneck very quickly. I am working on timing the same code on wheeler so that we have better data, but for now just divide the LU and dggev timings by 10 to get an idea what we will see on wheeler.}
-
-Table~\ref{table:timing_data_HPC} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. From the Fig.(\ref{fig:HPC_all_in_one}) we can see that the matrix generation dominates the overall cost in the new algorithm and roughly scales as $O(L^{4.5})$ which is not far away from the idealized expectation of $O(L^4)$.
-
-% Most probably because of different Lapack version, dggev is faster on my laptop than on wheeler while LU decomposition is 10 times faster on wheeler as expected, this can be seen by comparing tables I and II. This does not change our conclusion that using Arpack is much faster for large values of $L$.
-
+% Table~\ref{table:timing_data_HPC} shows the final timing data. The total time taken by Arpack + LU to find the eigenvalues is at least two orders of magnitude less than the time taken by dggev. Both LU decomposition and dggev scale as $O(L^6)$ but for any given $L$ the former is much faster which is why we get this speedup. From the Fig.(\ref{fig:HPC_all_in_one}) we can see that the matrix generation dominates the overall cost in the new algorithm and roughly scales as $O(L^{4.5})$ which is not far away from the idealized expectation of $O(L^4)$.
 
 \begin{table}[h!]
 \centering
@@ -328,7 +323,7 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 100 & 965 & 18 & 4.7 & 1.31e+04 \\
 \bottomrule
 \end{tabular}
-\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on Caltech HPC (Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz).}
+\caption{Timing data for matrix generation, LU decomposition, ARPACK iterations, and LAPACK's \texttt{dggev} on Caltech HPC (Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz). The column showing the ARPACK timing also includes the time taken by the LU solves required for each iteration.}
 \label{table:timing_data_HPC}
 \end{table}
 
@@ -342,18 +337,12 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 \begin{figure*}[!t]
   \centering
   \includegraphics[width=0.75\textwidth]{./images/HPC_all_in_one.png}
-  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
+  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The solid dots are the real data while the dotted line shows the best. The fits were weighted such that the measurements at higher L have more weight as they are less noisy. The labels contain the scaling we get from these fits. From the graph we can see that scaling of matrix generation and dggev is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$ respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). The current bottleneck by a large margin is the matrix generation (red line).}
   \label{fig:HPC_all_in_one}
 \end{figure*}
-\begin{figure*}[!t]
-  \centering
-  \includegraphics[width=0.75\textwidth]{./images/PC_all_in_one.png}
-  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L. The fits were weighted such that the measurements at higher L have more weight as they are less noisy.}
-  \label{fig:PC_all_in_one}
-\end{figure*}
 
 
-\section{\label{sec:Future improvements and Conclusions} Future improvements and Conclusions}
+\section{\label{sec:Future improvements} Future improvements}
 
 The simplest first possibility that may work is going back to the matrix free version and generating the full matrices every 100th step or so to use as a preconditioner. If the spin does not change very rapidly then the matrix should also change slowly and the same preconditioner could be used for multiple time steps. The main issue is that close to the merger spins will change rapidly, and there we may end up calculate the full matrices much more frequently. 
 
@@ -361,14 +350,25 @@ Another possibility is trying to get a better preconditioner using the analytica
 
 Also, the matrix generation is an embarrassingly parallel problem where we apply the functions $f_{M}$ and $f_{B}$ on unit vectors one by one to construct the matrices. For large values of $L$ we can gain good speedup by doing this in parallel.
 
-We have shown that the new algorithm based on the sparse eigensystem solver (ARPACK) and LU decomposition is close to two orders of magnitude faster than the original one based on dense eigensystem solver. But, if we add the time required to construct the matrices, which is required by both algorithm, then the speedup then the speedup is closer to an order of magnitude. We tried to use a fully matrix free algorithm but were not able to come up with preconditioners where the overall cost of the iterations and the preconditioner construction was lower than the cost of constructing the full matrix.
+
+\section{\label{sec:Conclusion} Conclusion}
+
+We have shown that the new algorithm based on the sparse eigensystem solver (ARPACK) and LU decomposition is close to two orders of magnitude faster than the original one based on dense eigensystem solver (LAPACK). But, if we add the time required to construct the matrices, which is required by both algorithm, then the speedup then the speedup is closer to an order of magnitude. We tried to use a fully matrix free algorithm but were not able to come up with preconditioners where the overall cost of the iterations and the preconditioner construction was lower than the cost of constructing the full matrix.
 
 \appendix
 \section{\label{app:Timing data PC} Timing data PC}
 
-In this section we also the same data as shown in Table \ref{table:timing_data_HPC} and Fig. \ref{fig:HPC_all_in_one} but generated on a PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). This was done to get an idea about how things scale with differences in the libraries and memory bandwidth etc. The first thing to note is that the matrix generation is much faster now while the LAPACK operations are slower. The LAPACK operations being slower is expected because HPC is using vendor optimized libraries and has access to more SIMD lanes. The matrix generation being faster on local PC is not too surprising either, because for single core jobs desktop CPUs are faster than cluster ones and have access to more memory bandwidth per core.
 
-Comparing the Fig. \ref{fig:HPC_all_in_one} and Fig. \ref{fig:PC_all_in_one} we can see that the scaling of LU decomposition and ddgev remains close to $O(L^6)$ with ddgev having a slightly worse scaling. The scaling of matrix generation and ARPACK remains mostly the same with HPC being slightly worse but that could be because of the architecture differences. The primary conclusion remains the same though, the ARPACK + LU factorization path is much faster than the LAPACK(ddgev) path and the main bottleneck now is the matrix generation.
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.75\textwidth]{./images/PC_all_in_one.png}
+  \caption{The figure shows how various parts of the algorithm scale with the highest spherical harmonic mode L when running on a consumer grade processors (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). The solid dots are the real data while the dotted line shows the best. The fits were weighted such that the measurements at higher L have more weight as they are less noisy. The labels contain the scaling we get from these fits. From the graph we can see that scaling of matrix generation and dggev is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$ respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). The current bottleneck by a large margin is the matrix generation (red line). Note that the LU decomposition is slower($\approx 10 \times$) while the matrix generation is faster($\approx 2 \times$) when compared to running on a HPC system\ref{fig:HPC_all_in_one}.}
+  \label{fig:PC_all_in_one}
+\end{figure*}
+
+In this section we also the same data as shown in Table \ref{table:timing_data_HPC} and Fig. \ref{fig:HPC_all_in_one} but generated on a PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). This was done to get an idea about how things scale with differences in the libraries and memory bandwidth etc. The first thing to note is that the matrix generation is faster(around 2 times) now while the LAPACK operations are slower (LU is around 10 times slower while dggev is around 2 times slower). The LAPACK operations being slower is expected because HPC is using vendor optimized libraries and has access to more SIMD lanes. The matrix generation being faster on local PC is not too surprising either, because for single core jobs desktop CPUs are faster than cluster ones and have access to more memory bandwidth per core. Note that the slowdown in LU factorization is much more severe than the slowdown in the dggev. We suspect this is because the LU factorization being a much more widely used algorithm is more aggressively optimized than dggev, and losing those optimizations hurts it more.
+
+The primary conclusion remains the same though, the ARPACK + LU factorization path is much faster than the LAPACK(ddgev) path and the main bottleneck now is the matrix generation. What does change is the value of L where LU decomposition will become the bottleneck, which goes from $O(1000)$ to $\approx 200$. For all practical purposes $L \approx 200$ is still too big and step size collapse will be a bigger worry at that point. Also, for all HPC systems where we do our large scale simulations we will be in the regime shown in the Fig.(\ref{fig:HPC_all_in_one}) where the matrix generation remains the bottleneck for much larger values of L.
 
 \begin{table}[h!]
 \centering
@@ -389,7 +389,7 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 90 & 274 & 79 & 2.59 & 1.03e+04 \\
 \bottomrule
 \end{tabular}
-\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz).}
+\caption{Timing data for matrix generation, ARPACK, LU decomposition, and LAPACK's \texttt{dggev} on PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz).  The column showing the ARPACK timing also includes the time taken by the LU solves required for each iteration.}
 \label{table:timing_data_PC}
 \end{table}
 
