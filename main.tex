@@ -244,14 +244,9 @@ First thing to observe is that both the problems have the same eigenvectors and 
 
 This is not an issue if we finding these in isolation because we can always change the value of $\sigma$ a little and then try again. In a long running simulation where the eigenvalues keep on changing we can not afford to suddenly have a slightly wrong eigenvectors because one of eigenvalues drifted too close to the value of $\sigma$. Fortunately, if we are using the norm described in Eq.(\ref{eqn:Norm condition to be enforced using Lagrange multiplier}) then the matrices $M$ and $B$ are going to be positive semidefinite and negative semidefinite respectively, which implies that all the eigenvalues $\lambda$ will be negative.
 
-Given we know that all our eigenvalues are going to be negative then any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$ then the eigenvalues we need will be well separated and large, making ARPACK very effecient in finding those. But, we don't want $\sigma$ to be too small because that makes the the matrix $M-\sigma B$ ill-conditioned. 
+Given we know that all our eigenvalues are going to be negative then any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$ then the eigenvalues we need will be well separated and large, making ARPACK very effecient in finding those. But, we don't want $\sigma$ to be too small because that makes the the matrix $M-\sigma B$ ill-conditioned. This means that there is an ideal value of $\sigma$ which makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Fig.(\ref{fig:HPC_condition_number}) and Fig.(\ref{fig:LU_solve_nums_L50}) show how the condition number of $(M- \sigma B)$ and the number of iterations taken by ARAPACK depends on sigma. For these two figures $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. These figures change for different shape of the apparent horizons but the same overall trend is always present. For now we have decided to go with $\sigma = 0.1$, which has worked well for the systems we have simulated.
 
 Note that not all norms lead to eigenvalue problems where all the eigenvalues are negative, for example the norm used by Cook Whiting in \cite{2007PhRvD..76d1501C___lovelace08_41} will not have this property making it hard to choose a stable and effective value of $\sigma$.
-
-This means that there is an ideal value of $\sigma$ which makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Fig.(\ref{fig:HPC_condition_number}) show how the condition number of $M-\sigma B$ depends on the value of $\sigma$, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Based on some tests that we did we decided to go with $\sigma = 0.1$, which has worked well for the systems we have simulated till now.
-
-
-In the Appendix (\ref{sec:Speed difference between finding the smallest and the largest eigenvalues}) we saw that the if we want to find the eigensystem corresponding to the smallest eigenvalues then using shift invert transform provides a much effecient way. Fig.(\ref{fig:ARPACK_call_graph_shift_invert_generalized}) show the steps involved when we use shift inverse transform in ARPACK. Note that we start by fixing a value of $\sigma$ and then require the action of $f_{B}(x)$ and $f_M(x) - \sigma f_B(x)$ on the vector $x$ given by ARPACK. We will need to use a linear solver to get the action of matrix $(M - \sigma B)^{-1}$, but the matrix $M - \sigma B$ becomes singular if $\sigma$ ends up being equal to one of the eigenvalues. Even if the $\sigma$ is not exactly equal to one the eigenvalues but still very close we get into a situation where the matrix $M -\sigma B$ becomes very ill conditioned and our linear solver fails or worse gives inaccurate results. 
 
 \begin{figure}[h]
 \centering
@@ -277,16 +272,15 @@ In the Appendix (\ref{sec:Speed difference between finding the smallest and the 
 \draw[arrow] (shiftSolve) -- (y);
 
 \end{tikzpicture}
-\label{fig:ARPACK_call_graph_shift_invert_generalized}
 \caption{Operations required for ARPACK in the nonsymmetric generalized case using the shift-invert transformation. In this mode, ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_B$ to obtain $v = f_B(x) = Bx$, and then solve $(f_M-\sigma f_B)(y) = (M-\sigma B)y = v$ for $y$.}
+\label{fig:ARPACK_call_graph_shift_invert_generalized}
 \end{figure}
 
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.45\textwidth]{./images/condition_number_vs_sigma.png}
-  \label{fig:HPC_condition_number}
-  \caption{The figure shows how the value of sigma affects the condition number of the matrix $M-\sigma B$ for different L. The matrices were generated for a test Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Note that the conditioning number also gets worse as the number of $L$ required to represent the horizon increases. The behavior will depends on the shape of the black hole horizons but for the systems we tested having a small $\sigma$ always showed this blowup because most of the time one of the eigenvalues are close to zero.}
+  \caption{The figure shows how the value of sigma affects the condition number of the matrix $M-\sigma B$ for different L. The matrices were generated for a test Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Note that the conditioning number also gets worse as the number of $L$ required to represent the horizon increases. The behavior will depends on the shape of the black hole horizons but for the systems we tested having a small $\sigma$ always showed this blowup because most of the time one of the eigenvalues are close to zero.}  \label{fig:HPC_condition_number}
 \end{figure}
 
 
