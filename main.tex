@@ -213,7 +213,7 @@ We will discuss each of these one by one.
 
 In the Sec.(\ref{sec:Current AKV algorithm}) about the current AKV algorithm, we started the discussion from the point where we already have the matrices $M$ and $B$. In practice, first we have to assemble these matrices. SpEC has two functions let's call them $f_M(x)$ and $f_B(x)$ that give the action of the matrices $M$ and $B$ on a vector $x$. Thus, to generate the matrices we need to operate on $N$ cartesian basis vectors and it can get costly. From the Table(\ref{table:timing_data_HPC}) we can see that the cost of constructing the matrix is actually more than the cost of dggev for $L<25$. We expect the time complexity of generating the matrices $M$ and $B$ to be around $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. From the Figures (\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}) we can see that it lies between $O(L^{4.5})-O(L^5)$ depending on the system we are running on. This scaling behavior means that the cost of ddgev quickly overtakes the cost of constructing the matrices and becomes the main bottleneck.
 
-It is important to consider the cost of the matrix generation because, in theory, we don't even need to construct these matrices when using ARPACK. Like many iterative algorithm ARPACK can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. Working in this matrix free manner was the original plan but it failed to work, and is described in detail in the Appendix(\ref{sec:Matrix free version of the AKV algorithm}).
+It is important to consider the cost of the matrix generation because, in theory, we don't even need to construct these matrices when using ARPACK. Like many iterative algorithm ARPACK can directly work with the functions $f_M(x)$ and $f_B(x)$ saving both memory and compute. Working in this matrix free manner was the original plan but it failed to work for reasons described in detail in the Appendix(\ref{sec:Matrix free version of the AKV algorithm}).
 
 The final final version we ended up using involves constructing the full matrices $M$ and $B$ and we will assume that we have access to those in the later sections.
 
@@ -260,9 +260,9 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 % Main vertical flow
 \node[input, fill=blue!10] (x) {$x$};
 
-\node[block, fill=purple!20, below of=x] (Bapply) {$v = f_B(x)$};
+\node[block, fill=purple!20, below of=x] (Bapply) {$v = B x$};
 
-\node[block, fill=green!20, below of=Bapply] (shiftSolve) {$\text{Solve for } y:\; (f_M - \sigma f_B)(y)=v$};
+\node[block, fill=green!20, below of=Bapply] (shiftSolve) {$\text{Solve for } y:\; (M - \sigma B)y=v$};
 
 \node[input, fill=blue!10, below of=shiftSolve] (y) {$y$};
 
@@ -272,7 +272,7 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 \draw[arrow] (shiftSolve) -- (y);
 
 \end{tikzpicture}
-\caption{Operations required for ARPACK in the nonsymmetric generalized case using the shift-invert transformation. In this mode, ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $f_B$ to obtain $v = f_B(x) = Bx$, and then solve $(f_M-\sigma f_B)(y) = (M-\sigma B)y = v$ for $y$.}
+\caption{Operations required for ARPACK in the nonsymmetric generalized case using the shift-invert transformation. In this mode, ARPACK needs the action of $(M-\sigma B)^{-1}B$ on the vector $x$ provided by ARPACK. To construct this vector, we first apply $B$ to obtain $v = B x$, and then solve $(M-\sigma B)y = v$ for $y$.}
 \label{fig:ARPACK_call_graph_shift_invert_generalized}
 \end{figure}
 
@@ -293,9 +293,11 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 
 \subsection{\label{ssec:action-of-shift-invert} Action of \texorpdfstring{$(M-\sigma B)^{-1}$}{(M-sigma B)^(-1)}}
 
-Once we have chosen a reasonable value for sigma the next big thing is how to get the action of matrix $(M-\sigma B)^{-1}$. The first thing that we tried was using iterative algorithms(GMRES and BiCGSTAB) to get the action of inverse. This was particularly attractive in our case because we do not start with matrices but instead construct them by repeatedly calling the functions $f_{M}(x)$ and $f_{B}(x)$. In almost all cases these iterative algorithms require a good preconditioner to converge at an acceptable rate. We tried a few preconditioners and the whole thing worked really well in the early parts but the convergence became very slow in many cases when the horizon was too deformed. Furthermore, constructing non trivial preconditioners from $f_{M}(x)$ is almost as costly as constructing the full matrix itself.
+A typical iteration of ARPACK solving a shift invert system is shown in the Fig.(\ref{fig:ARPACK_call_graph_shift_invert_generalized}), note that it requires us to solve a linear system $(M-\sigma B)y=\nu=B x$. For $\sigma=0.1$, ARPACK usually needs around 30 iterations to get the three smallest eigenvalue and their corresponding eigenvectors. Of course, we don't want to take the inverse of the matrix so the two options are using LU decomposition or iterative methods. For reason already mentioned in the Appendix \ref{sec:Matrix free version of the AKV algorithm} we will stay away from the iterative methods and focus on using LU decomposition for solving the linear system.
 
-As already mentioned in the section about selecting the value of $\sigma$, given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$. Note that while ARPACK requires multiple actions of $(M- \sigma B)^{-1}$ on the vectors it provides, we only need to do the costly LU factorization once and then cache it. Getting the action of $(M- \sigma B)^{-1}$ on a vector from a cached LU factorization is as cheap as a simple matrix vector product.
+Now the theoretical issue with using a LU decomposition is that it scales as $O(N^3) = O(L^6)$, whic is same as the dggev. This means scaling wise we have just pushed the problem from the dggev into the LU solve. But unlike dggev, LU factorization is much more optimized\footnote{Part of the reason is that LU decomposition makes very good use of BLAS Level 3 routines while dggev does not. And in general the number of FLOPS required to do a LU decomposition are much smaller than those required by dggev. These factors combined together means that LU decomposition much faster even if both theoretical scale as $O(N^3)$.} and runs at least two orders of magnitude faster than dggev as we can from the Table \ref{table:timing_data_HPC}. Of course, because of the way these things scale for very large values of L the cost of LU decomposition will eventually overtake the cost of the matrix generation. For the systems we are solving this will happen when $L$ becomes $O(1000)$ and at that point we will have much bigger issues like the time step collapse in our simulations.
+
+Note that while ARPACK requires the actions of $(M- \sigma B)^{-1}$ for each iteration it takes, we only need to do the costly LU factorization once and then cache it. Getting the action of $(M- \sigma B)^{-1}$ on a vector from a cached LU factorization is as cheap as a simple matrix vector product. From the Table \ref{table:timing_data_HPC}, we can see that the cost of doing the LU decomposition is negligible compared to the cost of constructing the matrices.
 
 \subsection{\label{sec:Timing data} Timing data}
 
@@ -434,6 +436,9 @@ This is shown in Fig.(\ref{fig: ARPACK call graph for nonsymmetric generalized c
 
 As it turn out we do not want to use ARPACK in the way describe above because it will get very slow and might even fail when $L$ gets large. This is because we want to find the three smallest eigenvalues while the algorithm in ARPACK converges much faster when we solve for the largest eigenvalues. Another peculiarity of the algorithm is that it also converges faster when the eigenvalues are well separated. This can be seen in the next section where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
 
+The first thing that we tried was using iterative algorithms(GMRES and BiCGSTAB) to get the action of inverse. This was particularly attractive in our case because we do not start with matrices but instead construct them by repeatedly calling the functions $f_{M}(x)$ and $f_{B}(x)$. In almost all cases these iterative algorithms require a good preconditioner to converge at an acceptable rate. We tried a few preconditioners and the whole thing worked really well in the early parts but the convergence became very slow in many cases when the horizon was too deformed. Furthermore, constructing non trivial preconditioners from $f_{M}(x)$ is almost as costly as constructing the full matrix itself.
+
+As already mentioned in the section about selecting the value of $\sigma$, given the nature of our problem we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. Thus, we decided to eat the cost of constructing the full matrices $M$ and $B$ and then used LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$. 
 
 \section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest and the largest eigenvalues}
 
