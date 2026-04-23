@@ -188,7 +188,7 @@ def iter_alias_entries(database: dict, *, truncate_long_author_lists: bool) -> l
         for alias in aliases:
             if not isinstance(alias, str) or not alias.strip():
                 continue
-            output_key = f"{bibcode}_{alias}"
+            output_key = f"{alias[2:]}"
             output_entries.append(
                 prepare_bibtex_entry(
                     bibtex,
