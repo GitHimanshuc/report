@@ -66,11 +66,14 @@
 \newcommand{\correct}[1]{\sethlcolor{red}\hl{#1}}
 \newcommand{\todo}[1]{\sethlcolor{yellow}\hl{#1}}
 
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\usepackage[normalem]{ulem} %for \sout
+
 \begin{document}
 
 \preprint{APS/123-QED}
 
-\title{Using Arpack instead of Lapack to find spins of a BH system}% Force line breaks with \\
+\title{Finding black hole spins efficiently during a numerical binary evolution}% Force line breaks with \\
 % \thanks{A footnote to the article title}%
 
 \author{Himanshu Chaudhary}
@@ -81,8 +84,8 @@
 \author{Mark Scheel}
 \affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
 \author{Saul Teukolsky}
-\affiliation{Cornell Center for Astrophysics and Planetary Science, Cornell University, Ithaca, New York 14853, USA}
 \affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
+\affiliation{Cornell Center for Astrophysics and Planetary Science, Cornell University, Ithaca, New York 14853, USA}
 
 \collaboration{SXS Collaboration}%\noaffiliation
 
@@ -91,7 +94,7 @@
 
 \begin{abstract}
 
-The dynamics of a binary black hole system are governed by its masses and spins. For a binary system, it is not possible to define these quantities in an unambiguous way. But we have a lot of reasonable definitions that reduce to the expected values in the limit of infinite separation. For the simulations done in SpEC, one of the spin definitions we use is AKV (Approximate Killing Vector) spins, which, as the name suggests, are constructed using the approximate Killing vectors of the apparent horizons. Finding these approximate killing vectors requires solving a generalized eigenvalue problem, which scales as O($L^6$), where L is the highest spherical harmonic mode used to represent the apparent horizon. This scaling means that the cost of computing AKV spins becomes very high as we simulate more complex systems at higher resolutions. In this paper, we describe a new algorithm that uses iterative eigenvalue solvers and runs much faster than the current algorithm using a dense solver.
+The dynamics of a binary black hole system depend on its masses and spins. For such a system, it is not possible to define these quantities in an unambiguous way; however, we have several reasonable definitions that reduce to the expected values in the limit of infinite separation. For the simulations done in the SpEC code, \red{\sout{one of} OK?} the spin definition we use is AKV (Approximate Killing Vector) spins. As the name suggests, these are constructed using the approximate Killing vectors of the apparent horizons. Finding these approximate Killing vectors requires solving a generalized eigenvalue problem, which scales as O($L^6$), where $L$ is the highest spherical harmonic mode used to represent the apparent horizon. This scaling means that the cost of computing AKV spins becomes very high as we simulate \red{\sout{more complex}} systems at higher resolutions\red{, especially systems with high spins or mass rations}. In this paper, we describe a new algorithm for finding spins that uses an iterative eigenvalue solver and runs much faster than the current algorithm, which uses a dense solver. \red{reword, since all eigenvalue solvers of degree higher than 4 are iterative.}
 
 
 \end{abstract}
@@ -104,100 +107,97 @@ The dynamics of a binary black hole system are governed by its masses and spins.
 
 \section{\label{sec:Introduction} Introduction}
 
-The accuracy of Numerical Relativity(NR) simulations till now has been good enough for the gravitational wave detections \cite{GWTC4.0,sxs25_2,sxs25_1,sxs25_3,sxs25_4} made by LIGO-Virgo-KAGRA(LVK)\cite{sxs25_5,sxs25_6} collaboration. With the new generation of gravitational-wave detectors coming online \cite{sxs25_74,sxs25_77,sxs25_78}, we will need to redo many of our simulations at much higher resolutions. Often, running a simulation at higher resolutions is just a matter of using more computing resources, but often a lot of other issues show up that were not present before. In our case, one of the issues that started showing up when trying to simulate more complicated systems was the increasing wall-time cost of spin computations. While SpEC, like other numerical relativity codes, is designed to run on multiple cores, the spin computations are still performed on a single core for architectural reasons. This means that when the spin computations are slow, all the other cores are effectively wasting resources waiting for it to complete. This is already an issue with SpEC, which runs on $O(100)$ cores, but it will become a bigger issue with next-generation codes like SpECTRE \cite{spectrecode} running on $O(1000)$ cores or more.
+Until now, the accuracy of Numerical Relativity(NR) simulations has been good enough for the gravitational wave detections \cite{GWTC4.0,sxs25_2,sxs25_1,sxs25_3,sxs25_4} made by LIGO-Virgo-KAGRA(LVK)\cite{sxs25_5,sxs25_6} collaboration. However, with the new generation of gravitational-wave detectors coming online \cite{sxs25_74,sxs25_77,sxs25_78}, we will need to redo many of our simulations at much higher resolutions. Often, running a simulation at a higher resolution is just a matter of using more computing resources, but other issues may show up that were not present before. In the case of the SpEC code, one of the issues that started showing up when trying to simulate more complicated systems was the increasing wall-time cost of spin computations. While SpEC, like other numerical relativity codes, is designed to run on multiple cores, the spin computations are still performed on a single core for \red{\sout{architectural} algorithmic} reasons. This means that when the spin computation is slow, all the other cores are effectively wasting resources waiting for it to complete. This is already an issue with SpEC, which runs on $O(100)$ cores, but it will become a bigger issue with next-generation codes like SpECTRE \cite{spectrecode} running on many thousands of cores.
 
-The outline of this paper is as follows. Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm}, we briefly describe the current algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm}, we describe the new algorithm based on ARPACK, which is much faster. Finally, we talk about possible future improvements in Section \ref{sec:Future improvements} and conclude in Section \ref{sec:Conclusion}.
+The outline of this paper is as follows. Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm}, we briefly describe the existing algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm}, we describe the new algorithm \red{\sout{based on ARPACK}}, which is much faster. Finally, we discuss possible future improvements in Section \ref{sec:Future improvements} and present conclusions in Section \ref{sec:Conclusion}.
 
 \section{\label{sec:AKV spin definition} AKV spin definition}
-In this section, we only define the quantities relevant to understanding the algorithm. The reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} and \cite{Owen:2017yaj} for more background and references. There is no unambiguous way to define the spin of a dynamical black hole horizon in a BBH system. We usually settle for a quasilocal spin definition which reduces to the ``expected" values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions, which is constructed by using approximate Killing vectors of the black hole horizons.
+In this section, we only define the quantities relevant to understanding the algorithm. The reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} and Ref.~\cite{Owen:2017yaj} for more background and references.
 
-We start by setting up the conventions used throughout the paper. We work in the standard 3+1 decomposition \cite{NR_Baumgarte,NR_shibata,NR_Alcubierre}, with spatial slice denoted by $\Sigma$. The spatial metric, extrinsic curvature, and the two-dimensional apparent horizon are denoted by $g_{ij}$, $K_{ij}$, and $\mathcal{H}$, respectively. Lower case Latin letter index the spatial tensors and upper case Latin letter index the tensors on the two-dimensional horizon surface. We also put a ring on top of the geometric quantities related to $\mathcal{H}$ to separate them from the geometric quantities on the spatial slice $\Sigma$.
+There is no unambiguous way to define the spin of a dynamical black hole horizon in a BBH system. We usually settle for a quasilocal spin definition that reduces to the expected values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions, which is constructed by using approximate Killing vectors of the black hole horizons.
 
-In NR the standard definition \cite{lovelace08_73} of spin angular momentum ($S$) in given by, 
+We start by setting up the conventions used throughout the paper. We work in the standard 3+1 decomposition \cite{NR_Baumgarte,NR_shibata,NR_Alcubierre}, with spatial slice denoted by $\Sigma$. The spatial metric, extrinsic curvature, and the two-dimensional apparent horizon are denoted by $g_{ij}$, $K_{ij}$, and $\mathcal{H}$, respectively. Lower case Latin letters index the spatial tensors and upper case Latin letters index the tensors on the two-dimensional horizon surface. We also put a ring on top of the geometric quantities related to $\mathcal{H}$ to separate them from the geometric quantities on the spatial slice $\Sigma$.
+
+In NR, the standard definition \cite{lovelace08_73} of spin angular momentum is given by 
 \begin{align}
 S=\frac{1}{8 \pi} \oint_{\mathcal{H}} \phi^i s^j K_{i j} d A
 \label{eqn:spin angular momentum}
 \end{align}
+where  $s^j$ is the outgoing normal of $\mathcal{H}$. Here $\vec{\phi}$ is an ``azimuthal" vector field, tangent to $\mathcal{H}$, which carries the information about the spin axis.
 
-where  $s^j$ is the outgoing normal of $\mathcal{H}$. And $\vec{\phi}$ is an ``azimuthal" vector field, tangent to $\mathcal{H}$, which carries the information about the spin axis.
-
-It can be shown that Eq.(\ref{eqn:spin angular momentum}) is conserved \cite{lovelace08_73} when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole, this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The next best thing one can use is the vector field that is closest to being a Killing vector field, in other words, an approximate Killing vector. We will now describe the method used in SpEC for constructing these approximate Killing vector fields. We start from the Killing's equation for a vector field $\phi_{B}$
+It can be shown that Eq.(\ref{eqn:spin angular momentum}) is conserved \cite{lovelace08_73} when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole, this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The next best thing one can use is the vector field that is closest to being a Killing vector field---in other words, an approximate Killing vector. We will now describe the method used in SpEC for constructing these approximate Killing vector fields. We start from Killing's equation for a vector field $\phi_{B}$
 \begin{align}
 D_{(A} \phi_{B)}=0
 \end{align}
-
 This condition can be split into two conditions: first, that the field has no expansion
 \begin{align}
 \Theta:= \mathring{g}^{A B} D_A \phi_B=0
 \end{align}
-
 and second, that it has no shear
 \begin{align}
 \sigma_{A B}:=D_{(A} \phi_{B)}-\frac{1}{2} \mathring{g}_{A B} \Theta=0
 \label{eqn:shear in terms of phi}
 \end{align}
-
-where $\mathring{g}_{AB}$ is the metric on the apparent horizon and $D_A$ is the torsion-free covariant derivative associated with that metric. If $\vec{\phi}$ is not a Killing vector field, then we can't satisfy both of these conditions at once, so we will choose a $\vec{\phi}$ which is expansion-free and has the smallest possible shear. Any expansion-free vector field tangent to the apparent horizon can be written as
+where $\mathring{g}_{AB}$ is the metric on the apparent horizon and $D_A$ is the \red{\sout{torsion-free}} covariant derivative associated with that metric. If $\vec{\phi}$ is not a Killing vector field, then we cannot satisfy both of these conditions at once, so we will choose a $\vec{\phi}$ that is expansion-free and has the smallest possible shear. Any expansion-free vector field tangent to the apparent horizon can be written as
 \begin{align}
     \phi^{A} = \epsilon^{AB}  D_{B} z,
     \label{eqn:phi in terms of z}
 \end{align}
-
 where $z$ is some smooth function and $\epsilon^{AB}$ is the Levi-Civita tensor. The problem of finding the approximate Killing vector then reduces to finding the $z$ that gives the smallest shear, or equivalently, minimizes the norm $|\sigma|^2$:
 \begin{align}
 \|\sigma\|^2:=\oint_{\mathcal{H}} \sigma_{B C} \sigma^{B C} d A .
 \end{align}
 
-Using the Eq.(\ref{eqn:shear in terms of phi}) and Eq.(\ref{eqn:phi in terms of z}) then integrating by parts we get
+Using Eqs.(\ref{eqn:shear in terms of phi}) and (\ref{eqn:phi in terms of z}) and integrating by parts, we get
 \begin{align}
 \|\sigma\|^2=\oint_{\mathcal{H}} z H z d A.
 \label{eqn:shear norm in terms of H and z}
 \end{align}
-
-$H$ is
+Here $H$ is
 \begin{align}
 H z=D^4 z+\mathring{R} D^2 z+D^4 \mathring{R} D_A z
 \label{eqn:equations for H in terms of laplacians}
 \end{align}
-
-where $D^2$ is the laplacian on the apparent horizon and $\mathring{R}$ is the Ricci scalar. If we try to minimize Eq.(\ref{eqn:shear norm in terms of H and z}) with respect to $z$, we obtain the trivial solution that $z$ is constant and $\vec{\phi}$ is zero. To avoid this we will require the minimized $\vec{\phi}$ has a positive norm,
+where $D^2$ is the Laplacian on the apparent horizon and $\mathring{R}$ is the Ricci scalar. If we try to minimize Eq.(\ref{eqn:shear norm in terms of H and z}) with respect to $z$, we obtain the trivial solution that $z$ is constant and $\vec{\phi}$ is zero. To avoid this, we will require that the minimized $\vec{\phi}$ has a positive norm,
 \begin{align}
 \oint_{\mathcal{H}} \phi^A \phi_A d A
 \label{eqn:Norm condition to be enforced using Lagrange multiplier}
 \end{align}
-
-By using Lagrange multiplier and the fact that $\phi^A \phi_A = D^A z D_A z$ we get
+Using a Lagrange multiplier $\lambda$ and the fact that $\phi^A \phi_A = D^A z D_A z$, we get
 \begin{align}
 I[z]:=\oint_{\mathcal{H}} z H z d A+\lambda\left(\oint_{\mathcal{H}} D^A z D_A z d A-N\right),
 \label{eqn:Optimizer with the lagrange multiplier and N}
 \end{align}
-where $N$ is still an undetermined positive constant. Fixing the value of $N$ is equivalent to normalizing the approximate Killing vector field, which determines not only the spin axis but also the magnitude of the spin.
+where $N$ is a still-undetermined positive constant. Fixing the value of $N$ is equivalent to normalizing the approximate Killing vector field, which determines not only the spin axis but also the magnitude of the spin.
 
-Minimizing this functional with respect to $z$ gives a generalized eigenvalue problem:
+Minimizing the functional (\ref{eqn:Optimizer with the lagrange multiplier and N}) with respect to $z$ gives a generalized eigenvalue problem:
 \begin{align}
   H z = \lambda D^2 z
   \label{eqn:generalized eigenvalue problem}
 \end{align}
+We can try to discretize Eq.(\ref{eqn:generalized eigenvalue problem}) and solve it numerically. The only remaining issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. The standard way to deal with such issues is to remove the common kernel space and then solve for $z$. In our case, this is trivial because we are discretizing using spherical harmonics and can just remove the $Y_{00}$ mode.
 
-Now we can try to discretize Eq.(\ref{eqn:generalized eigenvalue problem}) and solve it numerically. The only remaining issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. The standard way to deal with such issues is to remove the common kernel space and then solve for $z$. In our case, this is trivial because we are discretizing using spherical harmonics and can just remove the $Y_{00}$ mode.
-
-Once we have discretized Eq.~(\ref{eqn:generalized eigenvalue problem}), the next step is to find the three smallest eigenvalues and their corresponding eigenvectors. We can use these eigenvectors $z$ to compute the spin axis. However, we still need to determine the spin magnitude by normalizing the eigenvectors, which is equivalent to fixing the value of $N$ in Eq.~(\ref{eqn:Optimizer with the lagrange multiplier and N}). To fix this normalization, we use
+Once we have discretized Eq.~(\ref{eqn:generalized eigenvalue problem}), the next step is to find the three smallest eigenvalues and their corresponding eigenvectors. \red{Explain why the three smallest?} We can use these eigenvectors $z$ to compute the spin axis. However, we still need to determine the spin magnitude by normalizing the eigenvectors, which is equivalent to fixing the value of $N$ in Eq.~(\ref{eqn:Optimizer with the lagrange multiplier and N}). To fix this normalization, we use
 
 \begin{align}
 \oint_{\mathcal{H}}(z-\langle\langle z\rangle\rangle)^2 d A=\frac{A^3}{48 \pi^2}
 \label{eqn:normalization condition for z}
 \end{align}
-where $\langle\langle z\rangle\rangle$ is the average of $z$ over the surface, and $A$ is the surface area of the apparent horizon. We use this equation to normalize the three eigenvectors, after which their Euclidean norms give the spin magnitude. Mathematically, Eq.~(\ref{eqn:normalization condition for z}) holds only for a Kerr metric, where $z$ is a true rotation generator of the horizon. Therefore, when using it for normalization, we assume that the black holes being evolved are approximately Kerr.
+where $\langle\langle z\rangle\rangle$ is the average of $z$ over the surface and $A$ is the surface area of the apparent horizon. We use this equation to normalize the three eigenvectors, after which their Euclidean norms give the spin magnitude. Mathematically, Eq.~(\ref{eqn:normalization condition for z}) holds only for a Kerr metric, where $z$ is a true rotation generator of the horizon. Therefore, when using it for normalization, we are assuming that the black holes being evolved are approximately Kerr.
 
-Using the AKV($z$) and the normalization condition Eq.(\ref{eqn:normalization condition for z}) is still the most robust way to get the spin magnitude, and it is what we use by default in SpEC. Determining the spin axis is much more involved, and not all definitions are based on the $z$. Various definitions of spin axis along with their tradeoffs are discussed in \cite{Owen:2017yaj}. Now that we have some understanding of why we need to solve a generalized eigenvalue problem, in the next section, we will describe the current algorithm and why it became problematic for complex systems.
+Using the AKV $z$ and the normalization condition Eq.(\ref{eqn:normalization condition for z}) is still the most robust way \red{is the most robust way we have found? way known?} to get the spin magnitude, and it is what we use by default in SpEC. Determining the spin axis is much more complicated, and not all definitions are based on $z$. Various definitions of spin axis along with their tradeoffs are discussed in \cite{Owen:2017yaj}.
+
+Now that we have some understanding of why we need to solve a generalized eigenvalue problem, we next describe the current algorithm and explain why it becomes problematic for complex systems.
 
 \section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
-Let's call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref{eqn:generalized eigenvalue problem}) $M$ and $B$, respectively. Now we have a generalized eigenvalue problem $Mx = \lambda Bx$, and getting the eigenvectors is just a matter of using a standard library like LAPACK. To understand why this became an issue, we need to understand how big these matrices are and how they grow with an increase in the complexity of the apparent horizons. Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other, their apparent horizons are mostly spherical and can be approximated using a small number of spherical harmonics. On the other hand, when the black holes are about to merge, the horizons become very distorted, and we need a larger number of spherical harmonics to approximate the horizon. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. For the simulations that we have done so far, $L$ can be as small as 15 during the inspiral, but in some complex cases it can get as large as 90 near the merger. As we push to evolve more and more complex systems at higher and higher resolution, we expect the largest value of $L$ we need to increase further.
+Call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref{eqn:generalized eigenvalue problem}) $M$ and $B$, respectively. Now we have a generalized eigenvalue problem $Mx = \lambda Bx$, and the obvious way to get the eigenvectors is to use a standard library like LAPACK. To understand why this becomes an issue, we need to understand how big these matrices are and how they grow with an increase in the complexity of the apparent horizons.
 
-The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. We have a $-1$ because we ignore the $Y_{00}$ as describe in the Sec.(\ref{sec:AKV spin definition}), the $L-1$ comes from the fact that we will need to take second order derivatives and that pollutes the two highest modes. We only need the eigenvectors corresponding to the three smallest eigenvalues but using LAPACK's dense solvers (dggev) means we always compute all eigenvalues ($L^6$ in number) \footnote{There are variations of Lapack's dggev that can find just the eigenvectors corresponding to the smallest three eigenvalues but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of Lapack's dggev solver $O(N^3)$ or equivalently $O(L^6)$, this is the reason why the cost of dggev is irrelevant for most the inspiral until we get close to merger where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$ as can be seen from the Fig.(\ref{fig:HPC_all_in_one}) and Fig.(\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling performance may be due to memory pressure, although we haven't rigorously verified this.
+Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other, their apparent horizons are mostly spherical and can be approximated using a small number of spherical harmonics. On the other hand, when the black holes are about to merge, the horizons become very distorted, and we need a larger number of spherical harmonics to approximate them. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. For the simulations that we have done so far, $L$ can be as small as 15 during the inspiral, but in some complex cases it can get as large as 90 near the merger. As we push to evolve more and more complex systems at higher and higher resolution, we expect the largest value of $L$ we need to increase even further.
 
-From the Table(\ref{table:timing_data_HPC}), we can see that the runtime cost of dggev goes from 0.07s to 13100s as L goes from 15 to 100. This poor scaling of dggev is particularly problematic for SpEC because, due to its parallelization infrastructure, we have to run dggev on a single core. There were simulations where a single core doing the spin calculations was taking over 30 minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of computing resources was only going to get worse with the need to run more accurate simulations, which is why a better algorithm was required. In the next section, we outline the new algorithm that uses the iterative eigensolver ARPACK to efficiently compute the three required eigenvectors, providing a large speedup.
+The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. The reason for $L-1$ is that even though we have $L+1$ modes, we take second derivatives and that pollutes the two highest modes. The term $-1$ is because we ignore $Y_{00}$, as described in Sec.(\ref{sec:AKV spin definition}). We only need the eigenvectors corresponding to the three smallest eigenvalues, but using LAPACK's dense solver (\texttt{dggev}) means we always compute all eigenvalues (\red{\sout{$L^6$} $O(L^2)$} in number) \footnote{There are variations of Lapack's \texttt{dggev} that can find just the eigenvectors corresponding to the smallest three eigenvalues, but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap, which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of Lapack's \texttt{dggev} solver is $O(N^3)$, or equivalently $O(L^6)$. This is the reason why the cost of \texttt{dggev} is irrelevant for most of the inspiral until we get close to merger, where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$, as can be seen from Figs.(\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling may be due to memory pressure, although we have not rigorously verified this.
+
+From the Table(\ref{table:timing_data_HPC}), we see that the runtime cost of \texttt{dggev} goes from 0.07s to 13100s as $L$ goes from 15 to 100. This poor scaling of \texttt{dggev} is particularly problematic for SpEC since, because of its parallelization infrastructure, we have to run \texttt{dggev} on a single core. There were simulations where a single core doing the spin calculations was taking over 30 minutes while the rest of the cores were wasting resources waiting for it to finish. This waste of computing resources was only going to get worse with the need to run more accurate simulations, which is why a better algorithm was required. In the next section, we outline the new algorithm that uses the iterative eigensolver ARPACK to efficiently compute the three required eigenvectors, providing a large speedup.
 
 This poor scaling of \texttt{dggev} is particularly problematic for SpEC because, due to its parallelization infrastructure, we have to run \texttt{dggev} on a single core.
 
