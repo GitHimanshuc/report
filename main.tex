@@ -62,9 +62,12 @@
 %]{geometry}
 
 \usepackage{soul} % for highlighting
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \newcommand{\correct}[1]{\sethlcolor{red}\hl{#1}}
 \newcommand{\todo}[1]{\sethlcolor{yellow}\hl{#1}}
+\newcommand{\Mark}[1]{{\color{Cerulean}{#1}}}
+\newcommand{\Note}[1]{{\color{blue}[{#1}]}}
+\newcommand{\Rob}[1]{{\color{orange}{#1}}}
 
 \newcommand{\red}[1]{{\color{red}{#1}}}
 \usepackage[normalem]{ulem} %for \sout
@@ -94,7 +97,14 @@
 
 \begin{abstract}
 
-The dynamics of a binary black hole system depend on its masses and spins. For such a system, it is not possible to define these quantities in an unambiguous way; however, we have several reasonable definitions that reduce to the expected values in the limit of infinite separation. Approximate Killing Vector (AKV) spin is one of the spin definitions we use in our numerical relativity code SpEC. As the name suggests, these are constructed using the approximate Killing vectors of the apparent horizons. Finding these approximate Killing vectors requires solving a generalized eigenvalue problem, which scales as O($L^6$), where $L$ is the highest spherical harmonic mode used to represent the apparent horizon. This scaling means that the cost of computing AKV spins becomes very high as we simulate systems at higher resolutions, especially systems with high spins or mass ratios. In this paper, we describe a new algorithm for computing AKV spins that is much faster than the current algorithm.
+The dynamics of a binary black hole system depend on its masses and spins.
+For \Mark{\sout{such a system} a binary at finite separation}, it is not possible to define these quantities in an unambiguous way; however,
+\Mark{\sout{we have} there are}
+several reasonable definitions that reduce to the expected values in the limit of infinite separation.
+Approximate Killing Vector (AKV) spin is one of the spin definitions we use in our numerical relativity code SpEC.
+\Mark{\sout{As the name suggests, these are constructed using the approximate Killing vectors of the apparent horizons. Finding these approximate Killing vectors requires solving a generalized eigenvalue problem} AKV spin requires finding approximate Killing vectors on an apparent horizon, which reduces to a generalized eigenvalue problem of size}\Mark{\sout{, which scales as}} O($L^2$), \Mark{and a direct solve has time complexity $\mathcal{O}(L^6)$,}
+where $L$ is the highest spherical harmonic mode used to represent the apparent horizon.
+This scaling means that the cost of computing AKV spins becomes very high as we simulate systems at higher resolutions, especially systems with high spins or mass ratios. \Mark{\sout{In this paper, w} W}e describe a new algorithm for computing AKV spins that is much faster than the current algorithm.
 
 \end{abstract}
 
@@ -106,38 +116,107 @@ The dynamics of a binary black hole system depend on its masses and spins. For s
 
 \section{\label{sec:Introduction} Introduction}
 
-Until now, the accuracy of Numerical Relativity (NR) simulations has been good enough for the gravitational wave detections \cite{GWTC4.0,sxs25_2,sxs25_1,sxs25_3,sxs25_4} made by LIGO-Virgo-KAGRA (LVK) \cite{sxs25_5,sxs25_6} collaboration. However, with the new generation of gravitational-wave detectors coming online \cite{sxs25_74,sxs25_77,sxs25_78}, we will need to redo many of our simulations at much higher resolutions. Often, running a simulation at a higher resolution is just a matter of using more computing resources, but other issues may show up that were not present before. In the case of the SpEC code, one of the issues that started showing up when trying to simulate more complicated systems was the increasing wall-time cost of spin computations. While SpEC, like other numerical relativity codes, is designed to run on multiple cores, the spin computations are still performed on a single core for algorithmic reasons. This means that when the spin computation is slow, all the other cores are effectively wasting resources waiting for it to complete. This is already an issue with SpEC, which runs on $O(100)$ cores, but it will become a bigger issue with next-generation codes like SpECTRE \cite{spectrecode} running on many thousands of cores.
+Until now, the accuracy of Numerical Relativity (NR) simulations has been good enough for the gravitational wave detections \cite{GWTC4.0,sxs25_2,sxs25_1,sxs25_3,sxs25_4} made by the LIGO-Virgo-KAGRA (LVK) \cite{sxs25_5,sxs25_6} collaboration.
+However, with the new generation of gravitational-wave detectors coming online \cite{sxs25_74,sxs25_77,sxs25_78},
+\Mark{\sout{we will need to redo many of our simulations at much higher resolutions} many NR simulations will need to be redone at higher resolution
+  so that NR error remains negligible for data analysis}. \Note{MS: ref?}
+\Note{MS: Say something about BBHs and say something about
+  why NR is important for data analysis.}
+
+\Mark{In NR, the masses and spins of black holes are not input
+  parameters, but instead they are time-dependent output parameters
+  that are measured from the numerical solution of Einstein's
+  equations. In practice, achieving some chosen masses and spins even
+  at the initial time of the simulation involves guessing ``bare''
+  masses and spins, solving the Einstein constraint equations,
+  measuring the masses and spins, adjusting the bare values, and
+  iterating until the measured values match the desired
+  ones. \Note{MS: ref}}
+
+\Mark{When running the code SpEC \Note{MS: ref} for binary black hole
+  (BBH) simulations at high resolution, we noticed a dramatic
+  slowdown that we ultimately traced to the algorithm that computes
+  the spin of each dynamical black hole. This algorithm, which
+  computes the approximate Killing vector (AKV) spin (see Section
+  \Note{MS:bla} and ref \Note{MS: ref}), involves solving a
+  generalized eigenvalue problem on an apparent horizon.  The apparent
+  horizon is represented as a surface of angularly-dependent
+  coordinate radius $r_{\mathrm{AH}}(\theta,\phi)=\sum_{\ell,m} S_{\ell m}
+  Y_{\ell m}(\theta,\phi)$, where $Y_{\ell m}$ are spherical harmonics,
+  $S_{\ell m}$ are coefficients,
+  and where the sum goes up to some value $L$ that depends on the
+  resolution.  The reason for the slowdown is that the AKV eigenvalue
+  problem involves a matrix of size $\mathcal{O}(L^6)$ \Note{MS:
+    please specify if the matrix has $L^6$ elements, or is $L^6
+    \times L^6$: wording is ambiguous here and in the abstract}, and
+  for high resolution, $L$ can grow to 100 or more, especially for
+  large spins or extreme mass ratios.  The AKV method is
+  solved on a single core, since it was (incorrectly) assumed to be a
+  small computational cost compared to the remainder of the BBH
+  evolution.  Although it should be possible to parallelize the
+  algorithm, especially for next-generation codes like SpECTRE
+  \cite{spectrecode} with better parallelism infrastructure than SpEC,
+  improving the basic algorithm is preferable to allocating more
+  computational resources that are needed elsewhere.}
+\Mark{\sout{ Often, running a simulation at a higher resolution is
+    just a matter of using more computing resources, but other issues
+    may show up that were not present before. In the case of the SpEC
+    code, one of the issues that started showing up when trying to
+    simulate more complicated systems was the increasing wall-time
+    cost of spin computations. While SpEC, like other numerical
+    relativity codes, is designed to run on multiple cores, the spin
+    computations are still performed on a single core for algorithmic
+    reasons. This means that when the spin computation is slow, all
+    the other cores are effectively wasting resources waiting for it
+    to complete. This is already an issue with SpEC, which runs on
+    $O(100)$ cores, but it will become a bigger issue with
+    next-generation codes like SpECTRE \cite{spectrecode} running on
+    many thousands of cores.}}
 
 The outline of this paper is as follows. Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm}, we briefly describe the existing algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm}, we describe the new algorithm, which is much faster. Finally, we discuss possible future improvements in Section \ref{sec:Future improvements} and present conclusions in Section \ref{sec:Conclusion}.
 
 \section{\label{sec:AKV spin definition} AKV spin definition}
-In this section, we only define the quantities relevant to understanding the algorithm. The reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} and Ref.~\cite{Owen:2017yaj} for more background and references.
+In this section, we \Mark{\sout{only define the quantities relevant to understanding} only briefly describe} the algorithm. The reader should refer to Appendix A of \cite{lovelace_binary-black-hole_2008} and Ref.~\cite{Owen:2017yaj} for more background and references.
 
-There is no unambiguous way to define the spin of a dynamical black hole horizon in a BBH system. We usually settle for a quasilocal spin definition that reduces to the expected values in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions, which is constructed by using approximate Killing vectors of the black hole horizons.
+There is no unambiguous way to define the spin of a dynamical black hole horizon in a BBH system. We usually \Mark{\sout{settle for} compute} a quasilocal spin definition that reduces to the expected \Mark{well-defined} value in the limit of infinite separation. AKV spin ($\chi_{AKV}$) is one of these quasilocal spin definitions, which is constructed by using approximate Killing vectors of the black hole horizons.
 
-We start by setting up the conventions used throughout the paper. We work in the standard 3+1 decomposition \cite{NR_Baumgarte,NR_shibata,NR_Alcubierre}, with spatial slice denoted by $\Sigma$. The spatial metric, extrinsic curvature, and the two-dimensional apparent horizon are denoted by $g_{ij}$, $K_{ij}$, and $\mathcal{H}$, respectively. Lower-case Latin letters index the spatial tensors, and upper-case Latin letters index the tensors on the two-dimensional horizon surface. We also put a ring on top of the geometric quantities related to $\mathcal{H}$ to separate them from the geometric quantities on the spatial slice $\Sigma$.
+We start by setting up the conventions used throughout the paper. We
+work in the standard 3+1 decomposition
+\cite{NR_Baumgarte,NR_shibata,NR_Alcubierre}, with spatial slice
+denoted by $\Sigma$. The spatial metric, extrinsic curvature, and the
+two-dimensional apparent horizon are denoted by $g_{ij}$, $K_{ij}$,
+and $\mathcal{H}$, respectively. Lower-case Latin letters index the
+spatial tensors, and upper-case Latin letters index the tensors on the
+two-dimensional horizon surface. We also put a \Mark{\sout{ring on top
+    of} circle above} the geometric quantities related to
+$\mathcal{H}$ to separate them from the geometric quantities on the
+spatial slice $\Sigma$.
 
 In NR, the standard definition \cite{lovelace08_73} of spin angular momentum is given by 
 \begin{align}
 S=\frac{1}{8 \pi} \oint_{\mathcal{H}} \phi^i s^j K_{i j} d A
 \label{eqn:spin angular momentum}
 \end{align}
-where  $s^j$ is the outgoing normal of $\mathcal{H}$. Here $\vec{\phi}$ is an ``azimuthal" vector field, tangent to $\mathcal{H}$, which carries the information about the spin axis.
+where  $s^j$ is the outgoing \Rob{unit} normal of $\mathcal{H}$. Here $\vec{\phi}$ is an ``azimuthal" vector field, tangent to $\mathcal{H}$, which carries the information about the spin axis.
 
 It can be shown that Eq.(\ref{eqn:spin angular momentum}) is conserved \cite{lovelace08_73} when $\vec{\phi}$ is a Killing vector of the dynamical horizon world tube. For an isolated Kerr black hole, this Killing vector defines the spin axis of the horizon, but there is no reason why such a Killing vector field should exist for the horizon of a black hole in a binary system. The next best thing one can use is the vector field that is closest to being a Killing vector field---in other words, an approximate Killing vector. We will now describe the method used in SpEC for constructing these approximate Killing vector fields. We start from Killing's equation for a vector field $\phi_{B}$
 \begin{align}
-D_{(A} \phi_{B)}=0
+D_{(A} \phi_{B)}=0,
 \end{align}
-This condition can be split into two conditions: first, that the field has no expansion
+\Mark{where $D$ is the spatial covariant derivative on the two-dimensional horizon surface.}
+This condition can be split into two conditions: first, that the field has no expansion \Rob{[RO: I think ``divergence'' would be a better word here than ``expansion.'' Expansion implies evolution along a null congruence. (I might have said expansion in the old papers, but I regret it.)]}
 \begin{align}
 \Theta:= \mathring{g}^{A B} D_A \phi_B=0
 \end{align}
-and second, that it has no shear
+\Mark{, where $\mathring{g}_{A B}$ is the metric on the horizon surface.
+  \sout{and second, that it } . The second condition is that the field
+  } has no shear
 \begin{align}
-\sigma_{A B}:=D_{(A} \phi_{B)}-\frac{1}{2} \mathring{g}_{A B} \Theta=0
+\sigma_{A B}:=D_{(A} \phi_{B)}-\frac{1}{2} \mathring{g}_{A B} \Theta=0.
 \label{eqn:shear in terms of phi}
 \end{align}
-where $\mathring{g}_{AB}$ is the metric on the apparent horizon and $D_A$ is the covariant derivative associated with that metric. If $\vec{\phi}$ is not a Killing vector field, then we cannot satisfy both of these conditions at once, so we will choose a $\vec{\phi}$ that is expansion-free and has the smallest possible shear. Any expansion-free vector field tangent to the apparent horizon can be written as
+\Mark{\sout{where $\mathring{g}_{AB}$ is the metric on the apparent horizon and $D_A$ is the covariant derivative associated with that metric.}}
+If $\vec{\phi}$ is not a Killing vector field, then we cannot satisfy both of these conditions at once, so we will choose a $\vec{\phi}$ that is expansion-free and has the smallest possible shear. Any expansion-free vector field tangent to the apparent horizon can be written as
 \begin{align}
     \phi^{A} = \epsilon^{AB}  D_{B} z,
     \label{eqn:phi in terms of z}
@@ -176,7 +255,7 @@ Minimizing the functional (\ref{eqn:Optimizer with the lagrange multiplier and N
 \end{align}
 We can try to discretize Eq.(\ref{eqn:generalized eigenvalue problem}) and solve it numerically. The only remaining issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. The standard way to deal with such issues is to remove the common kernel space and then solve for $z$. In our case, this is trivial because we are discretizing using spherical harmonics and can just remove the $Y_{00}$ mode.
 
-From Eq.~(\ref{eqn:shear norm in terms of H and z}) and Eq.~(\ref{eqn:generalized eigenvalue problem}) we can see that the amount of shear is proportional to the magnitude of $\lambda$. Therefore, once we have discretized Eq.~(\ref{eqn:generalized eigenvalue problem}), the next step is to find the three eigenvalues with the smallest magnitude and their corresponding eigenvectors. We can use these eigenvectors $z$ to compute the spin axis. However, we still need to determine the spin magnitude by normalizing the eigenvectors, which is equivalent to fixing the value of $N$ in Eq.~(\ref{eqn:Optimizer with the lagrange multiplier and N}). To fix this normalization, we use
+From Eq.~(\ref{eqn:shear norm in terms of H and z}) and Eq.~(\ref{eqn:generalized eigenvalue problem}) we can see that the amount of shear is proportional to the magnitude of $\lambda$. Therefore, once we have discretized Eq.~(\ref{eqn:generalized eigenvalue problem}), the next step is to find the three eigenvalues with the smallest magnitude and their corresponding eigenvectors. We can use these eigenvectors $z$ to compute the spin \Rob{about the corresponding} axis \Rob{[RO: Also, it might make more sense to the reader to refer to $z$ as an ``eigenfunction," rather than an ``eigenvector,'' since it's being treated like a scalar in this context.]}. However, we still need to determine the spin magnitude by normalizing the eigenvectors, which is equivalent to fixing the value of $N$ in Eq.~(\ref{eqn:Optimizer with the lagrange multiplier and N}). To fix this normalization, we use
 
 \begin{align}
 \oint_{\mathcal{H}}(z-\langle\langle z\rangle\rangle)^2 d A=\frac{A^3}{48 \pi^2}
@@ -184,7 +263,7 @@ From Eq.~(\ref{eqn:shear norm in terms of H and z}) and Eq.~(\ref{eqn:generalize
 \end{align}
 where $\langle\langle z\rangle\rangle$ is the average of $z$ over the surface and $A$ is the surface area of the apparent horizon. We use this equation to normalize the three eigenvectors, after which their Euclidean norms give the spin magnitude. Mathematically, Eq.~(\ref{eqn:normalization condition for z}) holds only for a Kerr metric, where $z$ is a true rotation generator of the horizon. Therefore, when using it for normalization, we are assuming that the black holes being evolved are approximately Kerr.
 
-Using the AKV $z$ and the normalization condition Eq.(\ref{eqn:normalization condition for z}) is the most robust way we know to get the spin magnitude, and it is what we use by default in SpEC. Determining the spin axis is much more complicated, and not all definitions are based on $z$. Various definitions of spin axis along with their tradeoffs are discussed in \cite{Owen:2017yaj}.
+Using the AKV \Rob{potential} $z$ and the normalization condition Eq.(\ref{eqn:normalization condition for z}) is the most robust way we know to get the spin magnitude, and it is what we use by default in SpEC. Determining the spin axis is much more complicated, and not all definitions are based on $z$. Various definitions of spin axis along with their tradeoffs are discussed in \cite{Owen:2017yaj}.
 
 Now that we have some understanding of why we need to solve a generalized eigenvalue problem, we next describe the current algorithm and explain why it becomes problematic for complex systems.
 
@@ -194,11 +273,46 @@ Call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref
 
 Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other, their apparent horizons are mostly spherical and can be approximated using a small number of spherical harmonics. On the other hand, when the black holes are about to merge, the horizons become very distorted, and we need a larger number of spherical harmonics to approximate them. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. For the simulations that we have done so far, $L$ can be as small as 15 during the inspiral, but in some complex cases it can get as large as 90 near the merger. As we push to evolve more and more complex systems at higher and higher resolution, we expect the largest value of $L$ we need to increase even further.
 
-The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. The reason for $L-1$ is that even though we have $L+1$ modes, we take second derivatives and that pollutes the two highest modes. The term $-1$ is because we ignore $Y_{00}$, as described in Sec.(\ref{sec:AKV spin definition}). We only need the eigenvectors corresponding to the three smallest eigenvalues, but using LAPACK's dense solver (\texttt{dggev}) means we always compute all eigenvalues ($L^2$ in number) \footnote{There are variations of LAPACK's \texttt{dggev} that can find just the eigenvectors corresponding to the smallest three eigenvalues, but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap, which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of Lapack's \texttt{dggev} solver is $O(N^3)$, or equivalently $O(L^6)$. This is the reason why the cost of \texttt{dggev} is irrelevant for most of the inspiral until we get close to merger, where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$, as can be seen from Figs.(\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling may be due to memory pressure, although we have not rigorously verified this.
+The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. The reason for $L-1$ is that even though we have $L+1$ modes, we take second derivatives and that pollutes the two highest modes. The term $-1$ is because we ignore $Y_{00}$, as described in Sec.(\ref{sec:AKV spin definition}). We only need the eigenvectors corresponding to the three smallest eigenvalues, but using LAPACK's dense solver (\texttt{dggev}) means we always compute all eigenvalues ($L^2$ in number)
+\Note{MS: footnotes are confusingly mixed into the references.  If this behavior is required by CQG, then please don't use footnotes because it is impossible to tell the difference between a footnote and a reference in the text. If this behavior is not required by CQG, then please fix the footnotes so they appear at the bottom of the page}.
+\footnote{There are variations of LAPACK's \texttt{dggev} that can find just the eigenvectors corresponding to the smallest three eigenvalues, but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap, which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of Lapack's \texttt{dggev} solver is $O(N^3)$, or equivalently $O(L^6)$. This is the reason why the cost of \texttt{dggev} is irrelevant for most of the inspiral until we get close to merger, where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$, as can be seen from Figs.(\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}). \Note{MS: Why are those figures many pages away from here so the reader has to search for them?} We suspect that the slightly worse scaling may be due to memory pressure \Mark{since the
+  matrix has $\mathcal{O}(L^4)$ elements}, although we have not rigorously verified this.
 
-From Table(\ref{table:timing_data_HPC}), we see that the runtime cost of \texttt{dggev} goes from 0.07s to 13100s as $L$ goes from 15 to 100. This poor scaling of \texttt{dggev} is particularly problematic for SpEC since, because of its parallelization infrastructure, we have to run \texttt{dggev} on a single core. For some simulations, each such spin calculation takes over 30 minutes, while the rest of the cores waste resources waiting for it to finish. This waste of computing resources will only get worse with the need to run more accurate simulations. In the next section, we outline a new algorithm that uses the iterative eigensolver ARPACK to efficiently compute the three required eigenvectors, providing a large speedup.
+From Table(\ref{table:timing_data_HPC}) \Note{MS: why make the poor reader hunt for the table? Put it here.}, we see that the runtime cost of \texttt{dggev} goes from 0.07s to 13100s as $L$ goes from 15 to 100.
+\Mark{\sout{This poor scaling of \texttt{dggev} is particularly problematic for SpEC since, because of its parallelization infrastructure, we have to run \texttt{dggev} on a single core.}} \Note{MS: ddgev is a single-core algorithm in any code I think.  There are other matrix algorithms that are multi-core, and we could use these in SpEC if we needed to. For example the stuff in Petsc which is already used in the SpEC elliptic solver.} For some simulations, each such spin calculation took over 30 minutes \Mark{on a single core, tying up that core} while the rest of the cores wasted resources waiting for it to finish. This waste of computing resources would only get worse with the need to run more accurate simulations. In the next section, we outline a new algorithm that uses the iterative eigensolver ARPACK to efficiently compute the three required eigenvectors, providing a large speedup.
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
+
+\Note{MS: This section needs to be reorganized. The basic problem is
+  that you are introducing things that you are not explaining, and
+  then making the reader jump back and forth to find explanations.  In
+  a paper, you are telling a story, so you need to start the story
+  from the beginning so the reader can follow.  Here's my
+  recommendation: First, remove the sentence and bullet points at the
+  beginning because the reader won't understand them. Then, in order:}
+\begin{itemize}
+\item \Note{MS: Motivation: Explain that we will use ARPACK, because we only need the smallest three eigenvalues, and ARPACK has an algorithm that will compute only a subset of eigenvalues instead of all of them. Say something about the theoretical computational complexity of ARPACK, motivating why we want to try this in the first place.}
+\item \Note{MS: Problem: Explain that ARPACK works best when finding the largest well-separated eigenvalues and not the smallest ones, and has trouble if you ask for the smallest eigenvalues (and maybe a short explanation of why this is true).}
+\item \Note{MS: Then introduce the shift invert transform as a way of reformulating the problem so that ARPACK can find the largest eigenvalues of a different problem. The first time that sigma appears, say ``where sigma is a new parameter that can be chosen freely'' immediately, rather than waiting a few sentences to say this. Then do the long discussion about the choice of sigma that you already have.}
+\item \Note{MS: Now add a subsection ``Cost of assembling the
+  matrices'' (don't call it ``assembling the matrices'').  Start that
+  subsection with ``Recall that matrices M and B represent the
+  discretization of the operators H and $D^2$ that appear in Eq. 11.
+  It is not straightforward to derive explicit formulas for M and B,
+  but instead we have functions $f_M(z)$ and $f_B(z)$ that give the
+  action of M and B on a vector z.  For example, $f_M(z)$ evaluates
+  Eq. 8.  In many iterative matrix algorithms including those in
+  ARPACK, it is possible to work directly with functions $f_M(z)$ and
+  $f_B(z)$ and never explicitly construct the matrices, thus saving
+  memory and computation. While this matrix-free approach was our
+  original plan with ARPACK, it failed for reasons described in detail
+  in Appendix B. Therefore we construct the matrices explicitly, which
+  can be costly because it involves calling $f_M(z)$ and $f_B(z)$ many
+  times, each time for a vector z where a single component is 1 and
+  others are zero.'' Then add the stuff about the cost of constructing
+  the matrices.}
+  \item \Note{MS: Now add the section ``Cost of $(M-\sigma B)^{-1}$'' (don't call it ``Action of  $(M-\sigma B)^{-1}$'').}
+\end{itemize}
 
 The sparse AKV algorithm has three major parts:
 \begin{itemize}
@@ -238,7 +352,7 @@ where
 The first thing to observe is that both problems have the same eigenvectors, while the corresponding eigenvalues are related via Eq.(\ref{eqn:shift_invert_evals_relation}). From Eq.(\ref{eqn:shift_invert_evals_relation}), we see that among the new eigenvalues \ref{eqn:shift_inverted_equation}, $\nu$ is largest for the values of $\lambda$ that are closest to $\sigma$. So if we want to find the three smallest eigenvalues, we should just set $\sigma = 0$ and solve the eigensystem (\ref{eqn:shift_inverted_equation}). This will work until one of the eigenvalues gets too close to $\sigma$, and then the condition number of the matrix $M-\sigma B$ will diverge. One could consider shifting the value of $\sigma$ a little away from zero, but then we will find the three eigenvalues closest to $\sigma$ and not the three smallest eigenvalues.
 
 This is not an issue if we are finding these eigenvectors in isolation, because we can always adjust the value of $\sigma$ slightly and then try again. In a long-running simulation where the eigenvalues keep changing, we cannot afford to suddenly have slightly wrong eigenvectors because one of the eigenvalues drifts too close to the value of $\sigma$. Fortunately, since we are using the norm described in Eq.(\ref{eqn:Norm condition to be enforced using Lagrange multiplier}), the matrices $M$ and $B$ are positive semidefinite and negative semidefinite, respectively, which implies that the generalized eigenvalues $\lambda$ are non-positive.
-Thus any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$, then the eigenvalues we need will be well separated and large, making ARPACK very efficient in finding them. But we do not want $\sigma$ to be too small because that makes the matrix $M-\sigma B$ ill-conditioned. This means that there is an ideal value of $\sigma$ that makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Figs.(\ref{fig:HPC_condition_number}) and (\ref{fig:LU_solve_nums_L50}) show how the condition number of $(M- \sigma B)$ and the number of iterations taken by ARAPACK depend on $\sigma$. For these two figures, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. These figures change for different shapes of the apparent horizons, but the same overall trend is always present. For now, we have decided to choose $\sigma = 0.1$, which has worked well for the systems we have simulated.
+Thus any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$, then the eigenvalues we need will be well separated and large, making ARPACK very efficient in finding them. But we do not want $\sigma$ to be too small because that makes the matrix $M-\sigma B$ ill-conditioned. This means that there is an ideal value of $\sigma$ that makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Figs.(\ref{fig:HPC_condition_number}) and (\ref{fig:LU_solve_nums_L50}) show how the condition number of $(M- \sigma B)$ and the number of iterations taken by ARPACK depend on $\sigma$. For these two figures, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. These figures change for different shapes of the apparent horizons, but the same overall trend is always present. For now, we have decided to choose $\sigma = 0.1$, which has worked well for the systems we have simulated.
 
 Note that not all norms lead to eigenvalue problems where all the eigenvalues are negative. For example, the norm used by Cook and Whiting \cite{lovelace08_41} will not have this property, making it hard to choose a stable and effective value for $\sigma$.
 
@@ -297,19 +411,55 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.45\textwidth]{./images/LU_solve_nums_L50.png}
-  \caption{Number of LU solves required by ARPACK to converge. Note that ARPACK needs one LU solve per iteration, so this also represents the number of iterations to converge. Although this figure is for the same simple Kerr-Schild spacetime as Fig.(\ref{fig:HPC_condition_number}, the number of iterations rarely goes beyond 30 even for much more complicated systems. On the other hand, not having a good enough value of $\sigma$ makes the convergence very slow, as we can see from the graph. For the BBH simulations, we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
+  \caption{Number of LU solves required by ARPACK to converge.
+    \Note{MS: shouldn't this figure be titled ``Number of iterations for ARPACK to converge?"  The number of LU solves is just a consequence.} Note that ARPACK needs one LU solve per iteration, so this also represents the number of iterations to converge. Although this figure is for the same simple Kerr-Schild spacetime as Fig.(\ref{fig:HPC_condition_number}, the number of iterations rarely goes beyond 30 even for much more complicated systems. On the other hand, not having a good enough value of $\sigma$ makes the convergence very slow, as we can see from the graph. For the BBH simulations, we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
   \label{fig:LU_solve_nums_L50}
 \end{figure}
 
 \subsection{\label{ssec:action-of-shift-invert} Action of \texorpdfstring{$(M-\sigma B)^{-1}$}{(M-sigma B)^(-1)}}
 
-A typical iteration of ARPACK solving a shift-invert system is shown in Fig.(\ref{fig:ARPACK_call_graph_shift_invert_generalized}). Note that it requires us to solve a linear system $(M-\sigma B)y=\nu=B x$. For $\sigma=0.1$, ARPACK usually needs around 30 iterations to get the three smallest eigenvalue and their corresponding eigenvectors. Of course, we do not want to take the inverse of the matrix, so the two options are using LU decomposition or iterative methods. For reasons already mentioned in Appendix \ref{sec:Matrix-free version of the AKV algorithm}, we will stay away from the iterative methods and focus on using LU decomposition for solving the linear system.
+\Note{MS: I don't understand the figure.  In particular I don't
+  understand the ``x from ARPACK'' and ``y to ARPACK''.
+  You need to explain exactly what ARPACK
+  takes as input for each iteration and what it produces as output,
+  for the simple case $Mx=\lambda Bx$ (I'm guessing ARPACK provides a
+  guess for $x$, and you are supposed to compute $Mx$ and $Bx$ and
+  give both of these to ARPACK and it returns a better guess for $x$?
+  Is that correct? Then if so, why are you giving only $y$ to ARPACK
+  and not $y$ and $v$? Or for $Mx=\lambda Bx$ are you supposed to give
+  $B^{-1}Mx$ to each iteration of ARPACK?).
+  I tried to fix this by my addition to the next paragraph
+  below; please fix it if I got it wrong.}
+\Note{MS: Another thing that is
+  confusing is that you use both variables $\nu$ and $v$, which look
+  almost the same and can be confused with each other, and I think
+  you confuse them too when you use $\nu$ instead of $v$ in the
+  next paragraph. I suggest completely eliminating $v$.
+  Since $v$ is just $B x$, your
+  flowchart can replace the pink and green boxes with a single box
+  ``Solve $(M-\sigma B) y = Bx$ for $y$''.}
+
+\Mark{When ARPACK solves a sparse eigenvalue problem, for example $Mx=\lambda x$, it does so iteratively.  On each iteration, ARPACK provides a trial eigenvector $x$ to the user, the user code computes $Mx$ and sends it to ARPACK, and then ARPACK updates its trial eigenvector for the next iteration. Similarly, for the shift-invert system, ARPACK still provides a trial eigenvector $x$ to the user, the user code computes $(M-\sigma B)^{-1}Bx$ and sends it to ARPACK, and ARPACK updates $x$ until convergence.}
+A typical iteration of ARPACK solving a shift-invert system is shown in Fig.(\ref{fig:ARPACK_call_graph_shift_invert_generalized}). Note that it requires us to solve a linear system $(M-\sigma B)y=\nu=B x$. For $\sigma=0.1$, ARPACK usually needs around 30 iterations to get the three smallest eigenvalues and their corresponding eigenvectors. Of course, we do not want to take the inverse of the matrix \Mark{explicitly}, so two options are \Mark{solving the linear system} using LU decomposition or \Mark{using} iterative methods. For reasons \Mark{\sout{already}} mentioned in Appendix \ref{sec:Matrix-free version of the AKV algorithm}, we will stay away from the iterative methods and focus on using LU decomposition for solving the linear system.
 
 Now the theoretical issue with using LU decomposition is that it scales as $O(N^3) = O(L^6)$, which is the same as \texttt{dggev}. This means that scaling-wise, we have just pushed the problem from \texttt{dggev} to the LU solve. But unlike \texttt{dggev}, LU factorization is much more optimized\footnote{Part of the reason is that LU decomposition makes very good use of BLAS Level 3 routines while \texttt{dggev} does not. And in general, the number of flops required to do an LU decomposition is much smaller than that required by \texttt{dggev}. Thus, in practice, LU decomposition is much faster, even if both theoretically scale as $O(N^3)$.}, and runs at least two orders of magnitude faster than \texttt{dggev}, as we can see from Table \ref{table:timing_data_HPC}.
 
-Of course, because of the $O(L^6)$ scaling for very large $L$, the cost of LU decomposition will eventually overtake the cost of matrix generation. For the systems we are solving, this will happen only when $L\sim O(1000)$, well beyond any conceivable application. And at that point, we would have much bigger issues, like the tiny time step that would be required in the simulations.
+Of course, because of the $O(L^6)$ scaling for very large $L$, the
+cost of LU decomposition will eventually overtake the cost of matrix
+generation. For the systems we are solving, this will happen only when
+$L\sim O(1000)$, well beyond \Mark{\sout{any conceivable application}
+  our expected use cases}.\Mark{\sout{ And at that point, we would have much
+bigger issues, like the tiny time step that would be required in the
+simulations.}}
 
-Note that while ARPACK requires the actions of $(M- \sigma B)^{-1}$ for each iteration it takes, we only need to do the costly LU factorization once and then cache it. Getting the action of $(M- \sigma B)^{-1}$ on a vector from a cached LU factorization is as cheap as a simple matrix-vector product. From Table \ref{table:timing_data_HPC}, we can see that the cost of doing the LU decomposition is negligible compared to the cost of constructing the matrices.
+Note that while ARPACK requires the actions of $(M- \sigma B)^{-1}$
+for each iteration it takes, we only need to do the costly LU
+factorization once and then cache it. Getting the action of $(M-
+\sigma B)^{-1}$ on a vector from a cached LU factorization is as cheap
+as a simple matrix-vector product. From Table
+\ref{table:timing_data_HPC}, we can see that the cost of doing the LU
+decomposition is negligible compared to the cost of constructing the
+matrices.
 
 \begin{table}[h!]
 \centering
@@ -374,9 +524,9 @@ We have shown that the new algorithm based on the sparse eigensystem solver (ARP
   \label{fig:PC_all_in_one}
 \end{figure*}
 
-In this section, we show the same data as in Table \ref{table:timing_data_HPC} and Fig. \ref{fig:HPC_all_in_one}, but generated on a PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). This was done to get an idea about how things scale with differences in the libraries and memory bandwidth, etc. The first thing to note is that matrix generation is around twice as fast now, while LAPACK operations are slower (LU is around 10 times slower and \texttt{dggev} is around 2 times slower). The LAPACK operations being slower is expected because HPC is using vendor-optimized libraries and has access to more SIMD lanes. The matrix generation being faster on a local PC is not too surprising either, because for single-core jobs, desktop CPUs are faster than cluster ones and have access to more memory bandwidth per core. Note that the slowdown in LU factorization is much more severe than the slowdown in  \texttt{dggev}. We suspect this is because the LU factorization, being a much more widely used algorithm, is more aggressively optimized than \texttt{dggev}, and losing those optimizations hurts it more.
+In this section, we show the same data as in Table \ref{table:timing_data_HPC} and Fig. \ref{fig:HPC_all_in_one}, but generated on a PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). This was done to get an idea about how things scale with differences in the libraries and memory bandwidth, etc. The first thing to note is that matrix generation is around twice as fast now, while LAPACK operations are slower (LU is around 10 times slower and \texttt{dggev} is around 2 times slower). The LAPACK operations being slower is expected because HPC is using vendor-optimized libraries and has access to more SIMD lanes. The matrix generation being faster on a local PC is not too surprising either, because for single-core jobs, desktop CPUs are faster than cluster ones and have access to more memory bandwidth per core. Note that the slowdown in LU factorization is much more severe than the slowdown in \texttt{dggev} \Note{MS: LU scales like $L^{6.10}$ but DGGEV scales like $L^{6.80}$ so why do you say LU is worse?}. We suspect this is because the LU factorization, being a much more widely used algorithm, is more aggressively optimized than \texttt{dggev}, and losing those optimizations hurts it more.
 
-The primary conclusion remains the same, though. The ARPACK + LU factorization path is much faster than the LAPACK (\texttt{ddgev}) path, and the main bottleneck now is the matrix generation. What does change is the value of $L$ where LU decomposition becomes the bottleneck. This goes from $O(1000)$ to $\approx 200$. For all practical purposes, $L \approx 200$ is still too big, and step size collapse will be a bigger worry at that point. For all current HPC systems, we will be in the regime shown in Fig.(\ref{fig:HPC_all_in_one}), where the matrix generation remains the bottleneck for much larger values of $L$.
+The primary conclusion remains the same, though. The ARPACK + LU factorization path is much faster than the LAPACK (\texttt{ddgev}) path, and the main bottleneck now is the matrix generation. What does change is the value of $L$ where LU decomposition becomes the bottleneck. This goes from $O(1000)$ to $\approx 200$. For all practical purposes, $L \approx 200$ is still too big, and step size collapse \Note{MS: big jump here!  You never explained anything about what step size collapse is and why it is worse. I would remove this.} will be a bigger worry at that point. For all current HPC systems, we will be in the regime shown in Fig.(\ref{fig:HPC_all_in_one}), where the matrix generation remains the bottleneck for much larger values of $L$.
 
 \begin{table}[h!]
 \centering
@@ -444,22 +594,25 @@ $L$ & Mat gen (s) & LU (s) & Arpack (s) & dggev (s) \\
 \label{fig:ARPACK_call_graph_shift_invert_matrix_free}
 \end{figure}
 
-As already mentioned in section \ref{ssec:Assembling the matrices}, the original goal was not to construct the matrices $M$ and $B$ at all and directly use the functions $f_M$ and $f_B$. This is shown in Fig.(\ref{fig:ARPACK_call_graph_shift_invert_matrix_free}), where we skip the matrix construction and the LU decomposition. 
+As already mentioned in section \ref{ssec:Assembling the matrices}, the original goal was not to construct the matrices $M$ and $B$ at all and directly use the functions $f_M$ and $f_B$. This is shown in Fig.(\ref{fig:ARPACK_call_graph_shift_invert_matrix_free}), where we skip the matrix construction and the LU decomposition.  \Note{MS: as before, please remove $v$ which is really unneeded.}
 
 We need to solve the linear problem $(f_M - \sigma f_B)y=v$ to get the vector $y$ required by ARPACK. This can be done using iterative solvers like GMRES or BiCGSTAB. In almost all cases, these iterative algorithms require a good preconditioner to converge at an acceptable rate. This is particularly true in our case because the condition number of the matrix $(M - \sigma B)$ is fairly big for $\sigma=0.1$, and if we try to make $\sigma$ larger, then the number of iterations required by ARPACK increases significantly, as shown in Figs. \ref{fig:HPC_condition_number} and \ref{fig:LU_solve_nums_L50}. Note that we need the number of iterations required by ARPACK times the number of iterations required by the linear solver to stay below $L^4$. Otherwise, the whole algorithm will be as costly as constructing the full matrix.
 
 We tried a few simple preconditioners, and the algorithm worked very well most of the time. However, the convergence became very slow in some edge cases when the horizon was very deformed. Since the spin computation is ideally only a small part of a very large simulation, we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. And while constructing the matrices is costly, the LU decomposition is a very stable and consistent algorithm even when the condition number gets large. Thus, we decided to swallow the cost of constructing the full matrices $M$ and $B$ and then use LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$.
 
-To use the matrix-free version in practice requires having a good preconditioner that can be constructed cheaply. When there is no underlying structure and matrices are dense, the standard methods for constructing non-trivial preconditioners from $f_{M}(x)$ are usually as costly as constructing the full matrix itself.
+To use the matrix-free version in practice requires having a good preconditioner that can be constructed cheaply. When there is no underlying structure and matrices are dense \Note{MS: are the matrices dense?}, the standard methods for constructing non-trivial preconditioners from $f_{M}(x)$ are usually as costly as constructing the full matrix itself.
 
 
 \section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest and the largest eigenvalues}
 
 ARPACK converges much faster when we solve for the largest eigenvalues, and they are well separated. This can be seen in the code below, where we construct an artificial matrix and use ARPACK to find the largest and the smallest eigenvalues.
 
-We generate a diagonal matrix with entries $1,4,9,16, \ldots, N^2$.
+We generate a diagonal matrix with entries \Mark{\sout{$1,4,9,16, \ldots, N^2$}
+  $1,4,9,16, \ldots, 500^2$}.
 
 % Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
+
+\Note{MS: I don't think these listings add anything to the paper. Listing 1 is already redundant with my change above that tells you what $N$ is.  Listing 2 can be replaced by a table giving the 3 timings for each case.}
 
 \begin{lstlisting}[language=Python, caption=Matrix generation code]
 import scipy.sparse.linalg as ss
