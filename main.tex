@@ -1,100 +1,43 @@
-% ****** Start of file main.tex ******
-%
-%   This file is part of the APS files in the REVTeX 4.2 distribution.
-%   Version 4.2a of REVTeX, December 2014
-%
-%   Copyright (c) 2014 The American Physical Society.
-%
-%   See the REVTeX 4 README file for restrictions and more information.
-%
-% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
-% as well as the rest of the prerequisites for REVTeX 4.2
-%
-% See the REVTeX 4 README file
-% It also requires running BibTeX. The commands are as follows:
-%
-%  1)  latex main.tex
-%  2)  bibtex main
-%  3)  latex main.tex
-%  4)  latex main.tex
-%
-\documentclass[%
- reprint,
- superscriptaddress,
-%groupedaddress,
-%unsortedaddress,
-%runinaddress,
-%frontmatterverbose, 
-%preprint,
-%preprintnumbers,
-%nofootinbib,
-%nobibnotes,
-%bibnotes,
- amsmath,amssymb,
- aps,
-%pra,
-%prb,
-%rmp,
-%prstab,
-%prstper,
-%floatfix,
-]{revtex4-2}
+% IOP version of the manuscript, ported from main.tex.
+\documentclass{iopjournal}
 
-
-\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath,amssymb}
 \usepackage{listings}
-\usepackage{graphicx}% Include figure files
-\usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
 \usepackage{aas_macros}% Resolve ADS journal macros such as \jcap in BibTeX
-\usepackage{hyperref}% add hypertext capabilities
-%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
-%\linenumbers\relax % Commence numbering lines
 \usepackage{tikz}
 \usepackage{booktabs}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit}
-
-%\usepackage[showframe,%Uncomment any one of the following lines to test 
-%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
-%%text={7in,10in},centering,
-%%margin=1.5in,
-%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
-%%height=10in,a5paper,hmargin={3cm,0.8in},
-%]{geometry}
-
 \usepackage{soul} % for highlighting
+\usepackage[normalem]{ulem} %for \sout
+
+\graphicspath{{./images/}}
+
+\definecolor{Cerulean}{RGB}{0,123,167}
 \newcommand{\correct}[1]{\sethlcolor{red}\hl{#1}}
 \newcommand{\todo}[1]{\sethlcolor{yellow}\hl{#1}}
 \newcommand{\Mark}[1]{{\color{Cerulean}{#1}}}
 \newcommand{\Me}[1]{{\color{green}{#1}}}
 \newcommand{\Note}[1]{{\color{blue}[{#1}]}}
 \newcommand{\Rob}[1]{{\color{orange}{#1}}}
-
 \newcommand{\red}[1]{{\color{red}{#1}}}
-\usepackage[normalem]{ulem} %for \sout
 
 \begin{document}
 
-\preprint{APS/123-QED}
+\articletype{Paper}
 
-\title{Finding black hole spins efficiently during a numerical binary evolution}% Force line breaks with \\
-% \thanks{A footnote to the article title}%
+\title{Finding black hole spins efficiently during a numerical binary evolution}
 
-\author{Himanshu Chaudhary}
+\author{Himanshu Chaudhary$^{1,*}$, Rob Owen$^2$, Mark A. Scheel$^1$ and Saul A. Teukolsky$^{1,3}$}
+
+\affil{$^1$Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
+\affil{$^2$Department of Physics and Astronomy, Oberlin College}
+\affil{$^3$Cornell Center for Astrophysics and Planetary Science, Cornell University, Ithaca, New York 14853, USA}
+\affil{$^*$Author to whom any correspondence should be addressed.}
+
 \email{hchaudha@caltech.edu}
-\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}%
-\author{Rob Owen}
-\affiliation{Department of Physics and Astronomy, Oberlin College}
-\author{Mark A. Scheel}
-\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
-\author{Saul A. Teukolsky}
-\affiliation{Theoretical Astrophysics 350-17, California Institute of Technology, Pasadena, CA, 91125, USA}
-\affiliation{Cornell Center for Astrophysics and Planetary Science, Cornell University, Ithaca, New York 14853, USA}
 
-\collaboration{SXS Collaboration}%\noaffiliation
-
-\date{\today}% It is always \today, today,
-             %  but any date may be explicitly specified
+\keywords{binary black holes, numerical relativity, black hole spin, approximate Killing vectors, eigensolvers}
 
 \begin{abstract}
 
@@ -107,11 +50,6 @@ This scaling means that the cost of computing AKV spins becomes very high as we 
 
 \end{abstract}
 
-%\keywords{Suggested keywords}%Use showkeys class option if keyword
-                              %display desired
-\maketitle
-
-%\tableofcontents
 
 \section{\label{sec:Introduction} Introduction}
 
@@ -250,18 +188,18 @@ Call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref
 
 Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other, their apparent horizons are mostly spherical and can be approximated using a small number of spherical harmonics. On the other hand, when the black holes are about to merge, the horizons become very distorted, and we need a larger number of spherical harmonics to approximate them. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. For the simulations that we have done so far, $L$ can be as small as 15 during the inspiral, but in some complex cases it can get as large as 90 near the merger. As we push to evolve more and more complex systems at higher and higher resolution, we expect the largest value of $L$ we need to increase even further.
 
-\begin{figure*}[!t]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.75\textwidth]{./images/HPC_all_in_one.png}
   \caption{Scaling of various parts of the algorithm with the highest spherical harmonic mode $L$. The runs were performed on a high-performance CPU cluster. The solid dots are the real data, while the dotted lines show the best fits. The fits were weighted such that the measurements at higher $L$ have more weight as they are less noisy. The legends include the scaling from these fits. We see that the scaling of matrix generation and \texttt{dggev} is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$, respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). By a large margin, the current bottleneck is matrix generation (red line).}
   \label{fig:HPC_all_in_one}
-\end{figure*}
+\end{figure}
 
 The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. The reason for $L-1$ is that even though we have $L+1$ modes, we take second derivatives and that pollutes the two highest modes. The term $-1$ is because we ignore $Y_{00}$, as described in Sec.(\ref{sec:AKV spin definition}). We only need the eigenvectors corresponding to the three smallest eigenvalues, but using LAPACK's dense solver (\texttt{dggev}) means we always compute all eigenvalues ($L^2$ in number)
 \Note{MS: footnotes are confusingly mixed into the references.  If this behavior is required by CQG, then please don't use footnotes because it is impossible to tell the difference between a footnote and a reference in the text. If this behavior is not required by CQG, then please fix the footnotes so they appear at the bottom of the page}.
 \footnote{There are variations of LAPACK's \texttt{dggev} that can find just the eigenvectors corresponding to the smallest three eigenvalues, but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap, which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of LAPACK's \texttt{dggev} solver is $O(N^3)$, or equivalently $O(L^6)$. This is the reason why the cost of \texttt{dggev} is irrelevant for most of the inspiral until we get close to merger, where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$, as can be seen from Figs.(\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling may be due to memory pressure since the matrix has $\mathcal{O}(L^4)$ elements, although we have not rigorously verified this.
 
-\begin{table}[h!]
+\begin{table}[h]
 \centering
 \begin{tabular}{c c c c c}
 \toprule
@@ -457,18 +395,18 @@ We have shown that the new algorithm based on the sparse eigensystem solver (ARP
 \section{\label{app:Timing data PC} Timing data PC}
 
 
-\begin{figure*}[!t]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.75\textwidth]{./images/PC_all_in_one.png}
   \caption{Scaling of various parts of the algorithm with the highest spherical harmonic mode $L$. The runs were performed on a consumer-grade processor (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). Labels and conclusions are the same as for Fig.(\ref{fig:HPC_all_in_one}). Note that the LU decomposition is $\approx 10 \times\text{slower}$ while the matrix generation is $\approx 2 \times\text{faster}$ when compared to running on an HPC system, as shown in Fig.(\ref{fig:HPC_all_in_one}).}
   \label{fig:PC_all_in_one}
-\end{figure*}
+\end{figure}
 
 In this section, we show the same data as in Table \ref{table:timing_data_HPC} and Fig. \ref{fig:HPC_all_in_one}, but generated on a PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). This was done to get an idea about how things scale with differences in the libraries and memory bandwidth, etc. The first thing to note is that matrix generation is around twice as fast now, while LAPACK operations are slower (LU is around 10 times slower and \texttt{dggev} is around 2 times slower). The LAPACK operations being slower is expected because HPC is using vendor-optimized libraries and has access to more SIMD lanes. The matrix generation being faster on a local PC is not too surprising either, because for single-core jobs, desktop CPUs are faster than cluster ones and have access to more memory bandwidth per core.
 
 The primary conclusion remains the same, though. The ARPACK + LU factorization path is much faster than the LAPACK (\texttt{dggev}) path, and the main bottleneck now is the matrix generation. What does change is the value of $L$ where LU decomposition becomes the bottleneck. This goes from $O(1000)$ to $\approx 200$. For all practical purposes, $L \approx 200$ is still too big. For all current HPC systems, we will be in the regime shown in Fig.(\ref{fig:HPC_all_in_one}), where the matrix generation remains the bottleneck for much larger values of $L$.
 
-\begin{table}[h!]
+\begin{table}[h]
 \centering
 \begin{tabular}{c c c c c}
 \toprule
@@ -548,7 +486,7 @@ We generate a diagonal matrix with entries $1,4,9,16, \ldots, 500^2$.
 
 % Note that the small eigenvalues are clumped together while the large eigenvalue are well separated. 
 
-\begin{table}[h!]
+\begin{table}[h]
 \centering
 \begin{tabular}{c c}
 \toprule
@@ -565,7 +503,9 @@ Shift-invert near $\sigma=0$ & 5.5 ms \\
 
 We see that finding the three smallest eigenvalues is much slower than finding the three largest eigenvalues (19.6ms vs 1930ms). But if we use the shift-invert transform, which essentially transforms the smallest eigenvalues into the largest ones, ARPACK becomes much more efficient. This is just an artificial example to illustrate the importance of the shift-invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$, we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, with the speedup continuing to increase with the matrix size.
 
-\bibliography{main,aliases}% Produces the bibliography via BibTeX.
+\section*{References}
+\bibliographystyle{unsrt}
+\bibliography{main,aliases}
 
 
 \end{document}
