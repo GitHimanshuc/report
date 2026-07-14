@@ -7,6 +7,7 @@
 \usepackage{aas_macros}% Resolve ADS journal macros such as \jcap in BibTeX
 \usepackage{tikz}
 \usepackage{booktabs}
+\usepackage{subcaption}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit}
 \usepackage{soul} % for highlighting
 \usepackage[normalem]{ulem} %for \sout
@@ -83,12 +84,6 @@ large spins or extreme mass ratios.  The AKV method is
 solved on a single core, since it was (incorrectly) assumed to be a
 small computational cost compared to the remainder of the BBH
 evolution.
-
-\Me{Although it should be possible to parallelize the
-algorithm, especially for next-generation codes like SpECTRE
-\cite{spectrecode} with better parallelism infrastructure than SpEC,
-improving the basic algorithm is preferable to allocating more
-computational resources that are needed elsewhere.}
 
 The outline of this paper is as follows. Section \ref{sec:AKV spin definition} has some mathematical background about how the AKV spins are defined. Then, in Section \ref{sec:Current AKV algorithm}, we briefly describe the existing algorithm and why it slows down rapidly as the systems being evolved get complicated. In Section \ref{sec:Sparse AKV algorithm}, we describe the new algorithm, which is much faster. Finally, we discuss possible future improvements in Section \ref{sec:Future improvements} and present conclusions in Section \ref{sec:Conclusion}.
 
@@ -195,9 +190,7 @@ Apparent horizons in SpEC are represented using spherical harmonics. When the bl
   \label{fig:HPC_all_in_one}
 \end{figure}
 
-The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. The reason for $L-1$ is that even though we have $L+1$ modes, we take second derivatives and that pollutes the two highest modes. The term $-1$ is because we ignore $Y_{00}$, as described in Sec.(\ref{sec:AKV spin definition}). We only need the eigenvectors corresponding to the three smallest eigenvalues, but using LAPACK's dense solver (\texttt{dggev}) means we always compute all eigenvalues ($L^2$ in number)
-\Note{MS: footnotes are confusingly mixed into the references.  If this behavior is required by CQG, then please don't use footnotes because it is impossible to tell the difference between a footnote and a reference in the text. If this behavior is not required by CQG, then please fix the footnotes so they appear at the bottom of the page}.
-\footnote{There are variations of LAPACK's \texttt{dggev} that can find just the eigenvectors corresponding to the smallest three eigenvalues, but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap, which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of LAPACK's \texttt{dggev} solver is $O(N^3)$, or equivalently $O(L^6)$. This is the reason why the cost of \texttt{dggev} is irrelevant for most of the inspiral until we get close to merger, where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$, as can be seen from Figs.(\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling may be due to memory pressure since the matrix has $\mathcal{O}(L^4)$ elements, although we have not rigorously verified this.
+The number of rows in $M$ and $B$ matrices is $N = (L-1)^2 -1$. The reason for $L-1$ is that even though we have $L+1$ modes, we take second derivatives and that pollutes the two highest modes. The term $-1$ is because we ignore $Y_{00}$, as described in Sec.(\ref{sec:AKV spin definition}). We only need the eigenvectors corresponding to the three smallest eigenvalues, but using LAPACK's dense solver (\texttt{dggev}) means we always compute all eigenvalues ($L^2$ in number) \footnote{There are variations of LAPACK's \texttt{dggev} that can find just the eigenvectors corresponding to the smallest three eigenvalues, but they provide very little speedup as explained at https://www.netlib.org/lapack/lug/node70.html. In short, before finding the eigenvectors, LAPACK does a reduction of the eigensystem, and this ends up being the most costly operation. Once the reduction is done finding the eigenvectors itself is comparatively cheap, which means that finding just a few eigenvectors is not significantly faster than finding all of them.}. The theoretical time complexity of LAPACK's \texttt{dggev} solver is $O(N^3)$, or equivalently $O(L^6)$. This is the reason why the cost of \texttt{dggev} is irrelevant for most of the inspiral until we get close to merger, where it starts to increase rapidly. In our simulations, we have found the scaling to be closer to $O(L^7)$, as can be seen from Figs.(\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}). We suspect that the slightly worse scaling may be due to memory pressure since the matrix has $\mathcal{O}(L^4)$ elements, although we have not rigorously verified this.
 
 \begin{table}[h]
 \centering
@@ -229,7 +222,7 @@ For some simulations, each such spin calculation took over 30 minutes on a singl
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
-From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK.
+From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK. To find an eigenpair ARAPCK just needs a series of matrix vector products until it converges to the required solution. Because we only need three eigenpairs, theoretically the computational complexity of using ARPACK is $O(L^4)$ which is much better than the computational complexity of \texttt{dggev} ($O(L^6)$).
 
 In the following sections we will first discuss issues that ARPACK has in trying to find the eigenvalues with very small magnitude and how to resolve them. Then we will discuss the cost of assembling the matrices $M$ and $B$. Finally, we will discuss the cost of getting the action of the inverse of these matrices required by ARPACK.
 
@@ -277,13 +270,13 @@ After a shift-invert transform:
     (M - \sigma B)^{-1} B x = \nu x , 
     \label{eqn:shift_inverted_equation}
 \end{equation}  
-where
+where $\sigma$ is a free parameter we can choose, and
 \begin{equation}
-    \nu = \frac{1}{\lambda - \sigma},
+    \nu = \frac{1}{\lambda - \sigma}.
     \label{eqn:shift_invert_evals_relation}
 \end{equation}
 
-and $\sigma$ is a free parameter we can choose. The first thing to observe is that both problems have the same eigenvectors, while the corresponding eigenvalues are related via Eq.(\ref{eqn:shift_invert_evals_relation}). From Eq.(\ref{eqn:shift_invert_evals_relation}), we see that among the new eigenvalues \ref{eqn:shift_inverted_equation}, $\nu$ is largest for the values of $\lambda$ that are closest to $\sigma$. So if we want to find the three smallest eigenvalues, we should just set $\sigma = 0$ and solve the eigensystem (\ref{eqn:shift_inverted_equation}). This will work until one of the eigenvalues gets too close to $\sigma$, and then the condition number of the matrix $M-\sigma B$ will diverge. One could consider shifting the value of $\sigma$ a little away from zero, but then we will find the three eigenvalues closest to $\sigma$ and not the three smallest eigenvalues.
+The first thing to observe is that both problems have the same eigenvectors, while the corresponding eigenvalues are related via Eq.(\ref{eqn:shift_invert_evals_relation}). From Eq.(\ref{eqn:shift_invert_evals_relation}), we see that among the new eigenvalues \ref{eqn:shift_inverted_equation}, $\nu$ is largest for the values of $\lambda$ that are closest to $\sigma$. So if we want to find the three smallest eigenvalues, we should just set $\sigma = 0$ and solve the eigensystem (\ref{eqn:shift_inverted_equation}). This will work until one of the eigenvalues gets too close to $\sigma$, and then the condition number of the matrix $M-\sigma B$ will diverge. One could consider shifting the value of $\sigma$ a little away from zero, but then we will find the three eigenvalues closest to $\sigma$ and not the three smallest eigenvalues.
 
 This is not an issue if we are finding these eigenvectors in isolation, because we can always adjust the value of $\sigma$ slightly and then try again. In a long-running simulation where the eigenvalues keep changing, we cannot afford to suddenly have slightly wrong eigenvectors because one of the eigenvalues drifts too close to the value of $\sigma$. Fortunately, since we are using the norm described in Eq.(\ref{eqn:Norm condition to be enforced using Lagrange multiplier}), the matrices $M$ and $B$ are positive semidefinite and negative semidefinite, respectively, which implies that the generalized eigenvalues $\lambda$ are non-positive.
 Thus any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$, then the eigenvalues we need will be well separated and large, making ARPACK very efficient in finding them. But we do not want $\sigma$ to be too small because that makes the matrix $M-\sigma B$ ill-conditioned. This means that there is an ideal value of $\sigma$ that makes the smallest eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Figs.(\ref{fig:HPC_condition_number}) and (\ref{fig:LU_solve_nums_L50}) show how the condition number of $(M- \sigma B)$ and the number of iterations taken by ARPACK depend on $\sigma$. For these two figures, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. These figures change for different shapes of the apparent horizons, but the same overall trend is always present. For now, we have decided to choose $\sigma = 0.1$, which has worked well for the systems we have simulated.
@@ -335,26 +328,29 @@ Note that not all norms lead to eigenvalue problems where all the eigenvalues ar
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.45\textwidth]{./images/condition_number_vs_sigma.png}
-  \caption{Dependence of the condition number of the matrix $M-\sigma B$ on $\sigma$ for different $L$. The matrices were generated for a test Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. Note that the condition number also gets worse as the number of modes $L$ required to represent the horizon increases. The behavior will depend on the shape of the black hole horizons, but for the systems we tested, having a small $\sigma$ always showed this blowup because most of the time one of the eigenvalues is close to zero.}  \label{fig:HPC_condition_number}
-\end{figure}
-
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.45\textwidth]{./images/LU_solve_nums_L50.png}
-  \caption{Number of ARPACK iterations required to converge.
-    Since ARPACK needs one LU solve per iteration, this also represents the number of LU solves. Although this figure is for the same simple Kerr-Schild spacetime as Fig.(\ref{fig:HPC_condition_number}), the number of iterations rarely goes beyond 30 even for much more complicated systems. On the other hand, not having a good enough value of $\sigma$ makes the convergence very slow, as we can see from the graph. For the BBH simulations, we use $\sigma=0.1$, which we have found has a good balance between the number of iterations required by ARPACK and the condition number of the matrix $M -\sigma B$.}
-  \label{fig:LU_solve_nums_L50}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{./images/condition_number_vs_sigma.png}
+    \caption{Condition number of $M-\sigma B$ as a function of $\sigma$ for several values of $L$. The conditioning worsens as $L$ increases.}
+    \label{fig:HPC_condition_number}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{./images/LU_solve_nums_L50.png}
+    \caption{Number of ARPACK iterations required for convergence at $L=50$. Each ARPACK iteration requires one LU solve.}
+    \label{fig:LU_solve_nums_L50}
+  \end{subfigure}
+  \caption{Trade-off in choosing the shift $\sigma$. Both panels use matrices generated from a Kerr-Schild horizon with mass 1 and spin $(0,0,0.5)$. Small values of $\sigma$ make $M-\sigma B$ poorly conditioned, whereas large values increase the number of ARPACK iterations. Although the quantitative behavior depends on the horizon geometry, the same general trend appears in the systems we tested. We use $\sigma=0.1$, which provides a good balance between conditioning and convergence.}
+  \label{fig:sigma_dependence}
 \end{figure}
 
 \subsection{\label{ssec:Cost of assembling the matrices} Cost of assembling the matrices}
 
-Recall that matrices $M$ and $B$ represent the discretization of the operators $H$ and $D^2$ that appear in Eq.(\ref{eqn:generalized eigenvalue problem}). It is not straightforward to derive explicit formulas for $M$ and $B$, but SpEC has two functions, $f_M(x)$ and $f_B(x)$, that give the action of the matrices $M$ and $B$ on a vector $x$. To generate the matrices, we need to operate on $N$ Cartesian basis vectors, which can be costly. From Table(\ref{table:timing_data_HPC}), we see that the cost of constructing the matrix is actually more than the cost of \texttt{dggev} for $L<25$. We expect the time complexity of generating the matrices $M$ and $B$ to be around $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. From Figs. (\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}), we see that the cost lies between $O(L^{4.5})-O(L^5)$ depending on the system we are running on. This scaling behavior means that the cost of \texttt{dggev} quickly overtakes the cost of constructing the matrices, becoming the main bottleneck.
+Recall that matrices $M$ and $B$ represent the discretization of the operators $H$ and $D^2$ that appear in Eq.(\ref{eqn:generalized eigenvalue problem}). It is not straightforward to derive explicit formulas for $M$ and $B$, but SpEC has two functions, $f_M(x)$ and $f_B(x)$, that give the action of the matrices $M$ and $B$ on a vector $x$. To generate the matrices, we need to operate on $N$ Cartesian basis vectors, which can be costly. 
 
-It is important to consider the cost of the matrix generation because, in theory, we do not even need to construct these matrices when using ARPACK. Like many iterative algorithms, ARPACK can work directly with the functions $f_M(x)$ and $f_B(x)$, saving both memory and computation. Working in this matrix-free manner was our original plan, but it failed for reasons described in detail in Appendix (\ref{sec:Matrix-free version of the AKV algorithm}).
+It is important to consider the cost of the matrix generation because, in theory, we do not even need to construct these matrices when using ARPACK. From Table(\ref{table:timing_data_HPC}), we see that the cost of constructing the matrix is actually more than the cost of \texttt{dggev} for $L<25$. We expect the time complexity of generating the matrices $M$ and $B$ to be around $O(N^2)$, one $N$ because we need to act on $N$ basis vectors and another $N$ because the cost of functions $f_M(x)$ and $f_B(x)$ is $O(N)$. From Figs. (\ref{fig:HPC_all_in_one}) and (\ref{fig:PC_all_in_one}), we see that the cost lies between $O(L^{4.5})-O(L^5)$ depending on the system we are running on. This scaling behavior means that the cost of \texttt{dggev} quickly overtakes the cost of constructing the matrices, becoming the main bottleneck.
 
-The final version we ended up using involves constructing the full matrices $M$ and $B$, and we will assume that we have access to those in the later sections.
+Like many iterative algorithms, ARPACK can work directly with the functions $f_M(x)$ and $f_B(x)$, saving both memory and computation. Working in this matrix-free manner was our original plan, but it failed for reasons described in detail in Appendix (\ref{sec:Matrix-free version of the AKV algorithm}). The final version we ended up using involves constructing the full matrices $M$ and $B$, and we will assume that we have access to those in the later sections.
 
 \subsection{\label{ssec:action-of-shift-invert} Cost of \texorpdfstring{$(M-\sigma B)^{-1}$}{(M-sigma B)^(-1)}}
 
@@ -384,8 +380,7 @@ The simplest first possible improvement to try would be to get the matrix-free v
 
 Another possibility is to try to get a better preconditioner using the analytical properties of matrices, which will allow us to work in a matrix-free manner, avoiding the cost of building the matrices $M$ and $B$. The construction of the matrices requires $L^2$ calls to the functions $f_M$ and $f_B$, which is the bottleneck in the new algorithm. When using a matrix-free version, we need to use an iterative linear solver like GMRES, which will call these functions multiple times to get the action of $(M-\sigma B)^{-1}$. In our testing, we have found that with $\sigma = 0.1$, ARPACK typically requires fewer than 30 iterations to converge. For each ARPACK iteration, we need the linear solver to converge in less than $O(L)$ iterations (otherwise it will be faster to generate the full matrix), which is very hard to do without a good preconditioner. 
 
-Note that the matrix generation is an embarrassingly parallel problem where we apply the functions $f_{M}$ and $f_{B}$ on unit vectors one by one to construct the matrices. For large values of $L$, we can gain a good speedup by doing this in parallel.
-
+Note that the matrix generation is an embarrassingly parallel problem where we apply the functions $f_{M}$ and $f_{B}$ on unit vectors one by one to construct the matrices. For large values of $L$, we can gain a good speedup by doing this in parallel, especially for next-generation codes like SpECTRE \cite{spectrecode} with better parallelism infrastructure than SpEC.
 
 \section{\label{sec:Conclusion} Conclusion}
 
