@@ -222,40 +222,9 @@ For some simulations, each such spin calculation took over 30 minutes on a singl
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
-From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK. To find an eigenpair ARAPCK just needs a series of matrix vector products until it converges to the required solution. Because we only need three eigenpairs, theoretically the computational complexity of using ARPACK is $O(L^4)$ which is much better than the computational complexity of \texttt{dggev} ($O(L^6)$).
+From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK. To find an eigenpair ARPACK just needs a series of matrix vector products until it converges to the required solution. Because we only need three eigenpairs, theoretically the computational complexity of using ARPACK is $O(L^4)$ which is much better than the computational complexity of \texttt{dggev} ($O(L^6)$).
 
 In the following sections we will first discuss issues that ARPACK has in trying to find the eigenvalues with very small magnitude and how to resolve them. Then we will discuss the cost of assembling the matrices $M$ and $B$. Finally, we will discuss the cost of getting the action of the inverse of these matrices required by ARPACK.
-
-\Note{MS: This section needs to be reorganized. The basic problem is
-  that you are introducing things that you are not explaining, and
-  then making the reader jump back and forth to find explanations.  In
-  a paper, you are telling a story, so you need to start the story
-  from the beginning so the reader can follow.  Here's my
-  recommendation: First, remove the sentence and bullet points at the
-  beginning because the reader won't understand them. Then, in order:}
-\begin{itemize}
-\item \Note{MS: Motivation: Explain that we will use ARPACK, because we only need the smallest three eigenvalues, and ARPACK has an algorithm that will compute only a subset of eigenvalues instead of all of them. Say something about the theoretical computational complexity of ARPACK, motivating why we want to try this in the first place.}
-\item \Note{MS: Problem: Explain that ARPACK works best when finding the largest well-separated eigenvalues and not the smallest ones, and has trouble if you ask for the smallest eigenvalues (and maybe a short explanation of why this is true).}
-\item \Note{MS: Then introduce the shift invert transform as a way of reformulating the problem so that ARPACK can find the largest eigenvalues of a different problem. The first time that sigma appears, say ``where sigma is a new parameter that can be chosen freely'' immediately, rather than waiting a few sentences to say this. Then do the long discussion about the choice of sigma that you already have.}
-\item \Note{MS: Now add a subsection ``Cost of assembling the
-  matrices'' (don't call it ``assembling the matrices'').  Start that
-  subsection with ``Recall that matrices M and B represent the
-  discretization of the operators H and $D^2$ that appear in Eq. 11.
-  It is not straightforward to derive explicit formulas for M and B,
-  but instead we have functions $f_M(z)$ and $f_B(z)$ that give the
-  action of M and B on a vector z.  For example, $f_M(z)$ evaluates
-  Eq. 8.  In many iterative matrix algorithms including those in
-  ARPACK, it is possible to work directly with functions $f_M(z)$ and
-  $f_B(z)$ and never explicitly construct the matrices, thus saving
-  memory and computation. While this matrix-free approach was our
-  original plan with ARPACK, it failed for reasons described in detail
-  in Appendix B. Therefore we construct the matrices explicitly, which
-  can be costly because it involves calling $f_M(z)$ and $f_B(z)$ many
-  times, each time for a vector z where a single component is 1 and
-  others are zero.'' Then add the stuff about the cost of constructing
-  the matrices.}
-  \item \Note{MS: Now add the section ``Cost of $(M-\sigma B)^{-1}$'' (don't call it ``Action of  $(M-\sigma B)^{-1}$'').}
-\end{itemize}
 
 \subsection{\label{ssec:Shift Invert transform} Shift Invert transform}
 
