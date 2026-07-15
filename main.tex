@@ -181,14 +181,14 @@ Now that we have some understanding of why we need to solve a generalized eigenv
 
 \section{\label{sec:Current AKV algorithm} Current AKV algorithm}
 
-Call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref{eqn:generalized eigenvalue problem}) $M$ and $B$, respectively. Now we have a generalized eigenvalue problem $Mx = \lambda Bx$, and the obvious way to get the eigenvectors is to use a standard library like LAPACK. To understand why this becomes an issue, we need to understand how big these matrices are and how they grow with an increase in the complexity of the apparent horizons.
+Call the matrices formed by discretizing the operators $H$ and $D^2$ in Eq.(\ref{eqn:generalized eigenvalue problem}) $M$ and $B$, respectively. Now we have a generalized eigenvalue problem $Mx = \lambda Bx$, and the obvious way to get the eigenvectors is to use a standard library like LAPACK \cite{lapack_users_guide}. To understand why this becomes an issue, we need to understand how big these matrices are and how they grow with an increase in the complexity of the apparent horizons.
 
 Apparent horizons in SpEC are represented using spherical harmonics. When the black holes are far away from each other, their apparent horizons are mostly spherical and can be approximated using a small number of spherical harmonics. On the other hand, when the black holes are about to merge, the horizons become very distorted, and we need a larger number of spherical harmonics to approximate them. We will denote the highest spherical harmonic used in representing the apparent horizon as $L$. For the simulations that we have done so far, $L$ can be as small as 15 during the inspiral, but in some complex cases it can get as large as 90 near the merger. As we push to evolve more and more complex systems at higher and higher resolution, we expect the largest value of $L$ we need to increase even further.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.75\textwidth]{./images/HPC_all_in_one.png}
-  \caption{Scaling of various parts of the algorithm with the highest spherical harmonic mode $L$. The runs were performed on a high-performance CPU cluster. The solid dots are the real data, while the dotted lines show the best fits. The fits were weighted such that the measurements at higher $L$ have more weight as they are less noisy. The legends include the scaling from these fits. We see that the scaling of matrix generation and \texttt{dggev} is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$, respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). By a large margin, the current bottleneck is matrix generation (red line).}
+  \caption{Scaling of various parts of the algorithm with the highest spherical harmonic mode $L$. The runs were performed on a high-performance CPU cluster. The solid dots are the real data, while the dotted lines show the best fits. The figure was generated with Matplotlib \cite{matplotlib_2007}. The fits were weighted such that the measurements at higher $L$ have more weight as they are less noisy. The legends include the scaling from these fits. We see that the scaling of matrix generation and \texttt{dggev} is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$, respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). By a large margin, the current bottleneck is matrix generation (red line).}
   \label{fig:HPC_all_in_one}
 \end{figure}
 
@@ -447,7 +447,7 @@ To use the matrix-free version in practice requires having a good preconditioner
 
 \section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest-magnitude and the largest eigenvalues}
 
-ARPACK converges much faster when we solve for the largest eigenvalues, and they are well separated. This can be seen in Table \ref{table:arpack_toy_timing}, where we construct an artificial matrix and use ARPACK to find the largest and the smallest-magnitude eigenvalues.
+ARPACK converges much faster when we solve for the largest eigenvalues, and they are well separated. This can be seen in Table \ref{table:arpack_toy_timing}, where we construct an artificial matrix and use SciPy's ARPACK interface \cite{scipy_2020} to find the largest and the smallest-magnitude eigenvalues.
 
 We generate a diagonal matrix with entries $1,4,9,16, \ldots, 500^2$.
 
