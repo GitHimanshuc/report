@@ -113,7 +113,7 @@ It can be shown that Eq.(\ref{eqn:spin angular momentum}) is conserved \cite{lov
 \begin{align}
 D_{(A} \phi_{B)}=0,
 \end{align}
-where $D$ is the spatial covariant derivative on the two-dimensional horizon surface.
+where $D$ is the covariant derivative compatible with the metric $\mathring{g}_{A B}$ on the two-dimensional horizon surface.
 This condition can be split into two conditions: first, that the field has no divergence
 \begin{align}
 \Theta:= \mathring{g}^{A B} D_A \phi_B=0
@@ -222,7 +222,7 @@ $L$ & Mat gen (s) & LU (s) & ARPACK (s) & \texttt{dggev} (s) \\
 From Table(\ref{table:timing_data_HPC}), we see that the runtime cost of \texttt{dggev} goes from 0.07s to 13100s as $L$ goes from 15 to 100.
 For some simulations, each such spin calculation took over 30 minutes on a single core, tying up that core while the rest of the cores wasted resources waiting for it to finish. This waste of computing resources would only get worse with the need to run more accurate simulations. In the next section, we outline a new algorithm that uses the iterative eigensolver ARPACK to efficiently compute the three required eigenvectors, providing a large speedup.
 
-\section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
+\section{\label{sec:Sparse AKV algorithm} ARPACK-based AKV algorithm}
 
 From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest-magnitude eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK. To find an eigenpair ARPACK just needs a series of matrix-vector products until it converges to the required solution. Because we only need three eigenpairs, theoretically the computational complexity of using ARPACK is $O(L^4)$ which is much better than the computational complexity of \texttt{dggev} ($O(L^6)$).
 
@@ -230,9 +230,9 @@ In the following sections we will first discuss issues that ARPACK has in trying
 
 \subsection{\label{ssec:Shift Invert transform} Shift-invert transform}
 
-The number of iterations needed by ARPACK to converge depends on the distribution of the eigenvalues. If we are trying to find the first few largest eigenvalues and they are well separated, then the convergence is very fast. On the other hand, if we are trying to find the smallest-magnitude eigenvalues, convergence is very slow, and it might not even converge for some systems. For problems like ours, where we need to find the smallest-magnitude eigenvalues, the way to maintain good convergence is to use the shift-invert transform.
+The number of iterations needed by ARPACK to converge depends on the distribution of the eigenvalues. If we are trying to find the first few largest-magnitude eigenvalues and they are well separated, then the convergence is very fast. On the other hand, if we are trying to find the smallest-magnitude eigenvalues, convergence is very slow, and it might not even converge for some systems. For problems like ours, where we need to find the smallest-magnitude eigenvalues, the way to maintain good convergence is to use the shift-invert transform.
 
-The shift-invert transform is a method for transforming our eigenvalue problem into another in which the desired eigenvalues become large and well separated from their neighbors. The original problem is
+The shift-invert transform is a method for transforming our eigenvalue problem into another in which the desired eigenvalues become large in magnitude and well separated from their neighbors. The original problem is
 \begin{equation}
     M x = \lambda B x
 \end{equation}
@@ -247,10 +247,10 @@ where $\sigma$ is a free parameter we can choose, and
     \label{eqn:shift_invert_evals_relation}
 \end{equation}
 
-The first thing to observe is that both problems have the same eigenvectors, while the corresponding eigenvalues are related via Eq.(\ref{eqn:shift_invert_evals_relation}). From Eq.(\ref{eqn:shift_invert_evals_relation}), we see that among the new eigenvalues \ref{eqn:shift_inverted_equation}, $\nu$ is largest for the values of $\lambda$ that are closest to $\sigma$. So if we want to find the three smallest-magnitude eigenvalues, we should just set $\sigma = 0$ and solve the eigensystem (\ref{eqn:shift_inverted_equation}). This will work until one of the eigenvalues gets too close to $\sigma$, and then the condition number of the matrix $M-\sigma B$ will diverge. One could consider shifting the value of $\sigma$ a little away from zero, but then we will find the three eigenvalues closest to $\sigma$ and not the three smallest-magnitude eigenvalues.
+The first thing to observe is that both problems have the same eigenvectors, while the corresponding eigenvalues are related via Eq.(\ref{eqn:shift_invert_evals_relation}). From Eq.(\ref{eqn:shift_invert_evals_relation}), we see that among the new eigenvalues \ref{eqn:shift_inverted_equation}, $|\nu|$ is largest for the values of $\lambda$ that are closest to $\sigma$. So if we want to find the three smallest-magnitude eigenvalues, we should just set $\sigma = 0$ and ask ARPACK for the largest-magnitude transformed eigenvalues. This will work until one of the eigenvalues gets too close to $\sigma$, and then the condition number of the matrix $M-\sigma B$ will diverge. One could consider shifting the value of $\sigma$ a little away from zero, but then we will find the three eigenvalues closest to $\sigma$ and not the three smallest-magnitude eigenvalues.
 
 This is not an issue if we are finding these eigenvectors in isolation, because we can always adjust the value of $\sigma$ slightly and then try again. In a long-running simulation where the eigenvalues keep changing, we cannot afford to suddenly have slightly wrong eigenvectors because one of the eigenvalues drifts too close to the value of $\sigma$. Fortunately, since we are using the norm described in Eq.(\ref{eqn:Norm condition to be enforced using Lagrange multiplier}), the matrices $M$ and $B$ are positive semidefinite and negative semidefinite, respectively, which implies that the generalized eigenvalues $\lambda$ are non-positive.
-Thus any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$, then the eigenvalues we need will be well separated and large, making ARPACK very efficient in finding them. But we do not want $\sigma$ to be too small because that makes the matrix $M-\sigma B$ ill-conditioned. This means that there is an ideal value of $\sigma$ that makes the transformed eigenvalues corresponding to the smallest-magnitude eigenvalues as big as possible without making the matrix $M - \sigma B$ too ill-conditioned. Figs.(\ref{fig:HPC_condition_number}) and (\ref{fig:LU_solve_nums_L50}) show how the condition number of $(M- \sigma B)$ and the number of iterations taken by ARPACK depend on $\sigma$. For these two figures, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. These figures change for different shapes of the apparent horizons, but the same overall trend is always present. For now, we have decided to choose $\sigma = 0.1$, which has worked well for the systems we have simulated.
+Thus any positive value of $\sigma$ will always give us the correct results. If we choose a small value for $\sigma$, then the eigenvalues we need will be well separated and large in magnitude, making ARPACK very efficient in finding them. But we do not want $\sigma$ to be too small because that makes the matrix $M-\sigma B$ ill-conditioned. This means that there is an ideal value of $\sigma$ that makes the magnitude of the transformed eigenvalues corresponding to the smallest-magnitude eigenvalues as large as possible without making the matrix $M - \sigma B$ too ill-conditioned. Figs.(\ref{fig:HPC_condition_number}) and (\ref{fig:LU_solve_nums_L50}) show how the condition number of $(M- \sigma B)$ and the number of iterations taken by ARPACK depend on $\sigma$. For these two figures, $M$ and $B$ were generated using the horizon of a Kerr-Schild metric with spin equal to (0,0,0.5) and mass equal to 1. These figures change for different shapes of the apparent horizons, but the same overall trend is always present. For now, we have decided to choose $\sigma = 0.1$, which has worked well for the systems we have simulated.
 
 Note that not all norms lead to eigenvalue problems where all the eigenvalues are negative. For example, the norm used by Cook and Whiting \cite{lovelace08_41} will not have this property, making it hard to choose a stable and effective value for $\sigma$.
 
@@ -396,6 +396,7 @@ $L$ & Mat gen (s) & LU (s) & ARPACK (s) & \texttt{dggev} (s) \\
 \label{table:timing_data_PC}
 \end{table}
 
+\clearpage
 \section{\label{sec:Matrix-free version of the AKV algorithm} Matrix-free version of the AKV algorithm}
 
 
@@ -445,9 +446,10 @@ We tried a few simple preconditioners, and the algorithm worked very well most o
 To use the matrix-free version in practice requires having a good preconditioner that can be constructed cheaply. When there is no underlying structure and the matrices are dense, the standard methods for constructing non-trivial preconditioners from $f_{M}(x)$ are usually as costly as constructing the full matrix itself.
 
 
-\section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest-magnitude and the largest eigenvalues}
+\clearpage
+\section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest-magnitude and the largest-magnitude eigenvalues}
 
-ARPACK converges much faster when we solve for the largest eigenvalues, and they are well separated. This can be seen in Table \ref{table:arpack_toy_timing}, where we construct an artificial matrix and use SciPy's ARPACK interface \cite{scipy_2020} to find the largest and the smallest-magnitude eigenvalues.
+ARPACK converges much faster when we solve for the largest-magnitude eigenvalues, and they are well separated. This can be seen in Table \ref{table:arpack_toy_timing}, where we construct an artificial matrix and use SciPy's ARPACK interface \cite{scipy_2020} to find the largest-magnitude and the smallest-magnitude eigenvalues.
 
 We generate a diagonal matrix with entries $1,4,9,16, \ldots, 500^2$.
 
@@ -459,7 +461,7 @@ We generate a diagonal matrix with entries $1,4,9,16, \ldots, 500^2$.
 \toprule
 ARPACK mode & Runtime \\
 \midrule
-Largest three eigenvalues & 19.6 ms \\
+Three largest-magnitude eigenvalues & 19.6 ms \\
 Three smallest-magnitude eigenvalues & 1.93 s \\
 Shift-invert near $\sigma=0$ & 5.5 ms \\
 \bottomrule
@@ -468,9 +470,9 @@ Shift-invert near $\sigma=0$ & 5.5 ms \\
 \label{table:arpack_toy_timing}
 \end{table}
 
-We see that finding the three smallest-magnitude eigenvalues is much slower than finding the three largest eigenvalues (19.6ms vs 1930ms). But if we use the shift-invert transform, which essentially transforms the smallest-magnitude eigenvalues into the largest ones, ARPACK becomes much more efficient. This is just an artificial example to illustrate the importance of the shift-invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$, we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, with the speedup continuing to increase with the matrix size.
+We see that finding the three smallest-magnitude eigenvalues is much slower than finding the three largest-magnitude eigenvalues (19.6ms vs 1930ms). But if we use the shift-invert transform, which essentially transforms the smallest-magnitude eigenvalues into the largest-magnitude ones, ARPACK becomes much more efficient. This is just an artificial example to illustrate the importance of the shift-invert transform and the speedups that one can achieve. In our case, for a black hole with spin $(0,0,0.5)$, we get a speedup of around 5 times for $L = 15$ and around 10 times for $L=55$, with the speedup continuing to increase with the matrix size.
 
-\section*{References}
+\clearpage
 \bibliographystyle{unsrt}
 \bibliography{main,aliases}
 
