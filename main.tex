@@ -38,7 +38,7 @@
 
 \email{hchaudha@caltech.edu}
 
-\keywords{binary black holes, numerical relativity, black hole spin, approximate Killing vectors, eigensolvers}
+\keywords{binary black holes, numerical relativity, black hole spin}
 
 \begin{abstract}
 
@@ -54,7 +54,7 @@ This scaling means that the cost of computing AKV spins becomes very high as we 
 
 \section{\label{sec:Introduction} Introduction}
 
-The LIGO-Virgo-KAGRA (LVK) \cite{sxs25_5,sxs25_6} needs good gravitational wave models to detect and analyze the signals from binary black hole (BBH) mergers \cite{GWTC4.0,sxs25_2,sxs25_1,sxs25_3,sxs25_4}. The only first-principles way to produce gravitational wave models for the full inspiral, merger, and ringdown is numerical relativity (NR)\cite{NR_Baumgarte,NR_shibata,NR_Alcubierre}, which solves Einstein’s equations directly on a computer. NR simulations are very expensive and slow, which limits their direct use for data analysis. Instead NR simulations are used as a source of ground truth to construct and calibrate other models like surrogate models \cite{sxs25_68,sxs25_71,sxs25_72,sxs25_69,sxs25_70} and Effective-One-Body (EOB) models \cite{sxs25_43,sxs25_44,sxs25_45,sxs25_46,sxs25_47,sxs25_49,sxs25_50}, which are then used for detection and data analysis. Until now, the accuracy of Numerical Relativity (NR) simulations has been sufficient for the gravitational-wave detections made by the LVK collaboration. However, with the new generation of gravitational-wave detectors coming online \cite{sxs25_74,sxs25_77,sxs25_78}, many NR simulations will need to be redone at higher resolution to keep the NR error negligible in data analysis.
+The LIGO-Virgo-KAGRA (LVK) \cite{sxs25_5,sxs25_6} needs good gravitational wave models to detect and analyze the signals from binary black hole (BBH) mergers \cite{GWTC4.0,sxs25_2,sxs25_1,sxs25_3,sxs25_4}. The only first-principles way to produce gravitational wave models for the full inspiral, merger, and ringdown is numerical relativity (NR)\cite{NR_Baumgarte,NR_shibata,NR_Alcubierre}, which solves Einstein’s equations directly on a computer. NR simulations are very expensive and slow, which limits their direct use for data analysis. Instead NR simulations are used as a source of ground truth to construct and calibrate other models like surrogate models \cite{sxs25_68,sxs25_71,sxs25_72,sxs25_69,sxs25_70} and Effective-One-Body (EOB) models \cite{sxs25_43,sxs25_44,sxs25_45,sxs25_46,sxs25_49,sxs25_50}, which are then used for detection and data analysis. Until now, the accuracy of Numerical Relativity (NR) simulations has been sufficient for the gravitational-wave detections made by the LVK collaboration. However, with the new generation of gravitational-wave detectors coming online \cite{sxs25_74,sxs25_77,sxs25_78}, many NR simulations will need to be redone at higher resolution to keep the NR error negligible in data analysis.
 
 In NR, the masses and spins of black holes are not input
 parameters, but instead they are time-dependent output parameters
@@ -330,8 +330,9 @@ Now the theoretical issue with using LU decomposition is that it scales as $O(N^
 
 Of course, because of the $O(L^6)$ scaling for very large $L$, the
 cost of LU decomposition will eventually overtake the cost of matrix
-generation. For the systems we are solving, this will happen only when
-$L\sim O(1000)$, well beyond our expected use cases.
+generation. Extrapolating the measured scaling, for the systems we are
+solving this will happen only when $L \approx 10^3$, well beyond our
+expected use cases.
 
 Note that while ARPACK requires the actions of $(M- \sigma B)^{-1}$
 for each iteration it takes, we only need to do the costly LU
@@ -368,7 +369,7 @@ We have shown that the new algorithm based on the sparse eigensystem solver (ARP
 
 In this section, we show the same data as in Table \ref{table:timing_data_HPC} and Fig. \ref{fig:HPC_all_in_one}, but generated on a PC (Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz). This was done to get an idea about how things scale with differences in the libraries and memory bandwidth, etc. The first thing to note is that matrix generation is around twice as fast now, while LAPACK operations are slower (LU is around 10 times slower and \texttt{dggev} is around 2 times slower). The LAPACK operations being slower is expected because HPC is using vendor-optimized libraries and has access to more SIMD lanes. The matrix generation being faster on a local PC is not too surprising either, because for single-core jobs, desktop CPUs are faster than cluster ones and have access to more memory bandwidth per core.
 
-The primary conclusion remains the same, though. The ARPACK + LU factorization path is much faster than the LAPACK (\texttt{dggev}) path, and the main bottleneck now is the matrix generation. What does change is the value of $L$ where LU decomposition becomes the bottleneck. This goes from $O(1000)$ to $\approx 200$. For all practical purposes, $L \approx 200$ is still too big. For all current HPC systems, we will be in the regime shown in Fig.(\ref{fig:HPC_all_in_one}), where the matrix generation remains the bottleneck for much larger values of $L$.
+The primary conclusion remains the same, though. The ARPACK + LU factorization path is much faster than the LAPACK (\texttt{dggev}) path, and the main bottleneck now is the matrix generation. What does change is the value of $L$ where LU decomposition becomes the bottleneck. Extrapolating the measured scaling, this goes from $L\approx 10^3$ to $L \approx 200$. For all practical purposes, $L \approx 200$ is still too big. For all current HPC systems, we will be in the regime shown in Fig.(\ref{fig:HPC_all_in_one}), where the matrix generation remains the bottleneck for much larger values of $L$.
 
 \begin{table}[h]
 \centering
@@ -437,7 +438,7 @@ As already mentioned in section \ref{ssec:Cost of assembling the matrices}, the 
 
 We need to solve the linear problem $(f_M - \sigma f_B)y=f_B(x)$ to get the vector $y$ required by ARPACK. This can be done using iterative solvers like GMRES or BiCGSTAB. In almost all cases, these iterative algorithms require a good preconditioner to converge at an acceptable rate. This is particularly true in our case because the condition number of the matrix $(M - \sigma B)$ is fairly big for $\sigma=0.1$, and if we try to make $\sigma$ larger, then the number of iterations required by ARPACK increases significantly, as shown in Figs. \ref{fig:HPC_condition_number} and \ref{fig:LU_solve_nums_L50}. Note that we need the number of iterations required by ARPACK times the number of iterations required by the linear solver to stay below $N\sim L^2$. Otherwise, the whole algorithm will be as costly as constructing the full matrix.
 
-We tried a few simple preconditioners, and the algorithm worked very well most of the time. However, the convergence became very slow in some edge cases when the horizon was very deformed. Since the spin computation is ideally only a small part of a very large simulation, we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. And while constructing the matrices is costly, the LU decomposition is a very stable and consistent algorithm even when the condition number gets large. Thus, we decided to swallow the cost of constructing the full matrices $M$ and $B$ and then use LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$.
+We tried a few simple preconditioners, and the algorithm worked very well most of the time. However, the convergence became very slow in some edge cases when the horizon was very deformed. Since the spin computation is ideally only a small part of a very large simulation, we would rather have a stable but slightly inefficient algorithm over a mostly stable but fast algorithm. And while constructing the matrices is costly, using LU decomposition gives ARPACK robust convergence and predictable runtime even when the condition number gets large. Thus, we decided to swallow the cost of constructing the full matrices $M$ and $B$ and then use LU factorization to efficiently apply the action of $(M- \sigma B)^{-1}$.
 
 To use the matrix-free version in practice requires having a good preconditioner that can be constructed cheaply. When there is no underlying structure and the matrices are dense, the standard methods for constructing non-trivial preconditioners from $f_{M}(x)$ are usually as costly as constructing the full matrix itself.
 
