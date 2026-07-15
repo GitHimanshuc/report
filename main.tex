@@ -44,7 +44,7 @@
 
 The dynamics of a binary black hole system depend on its masses and spins.
 For a binary at finite separation, it is not possible to define these quantities in an unambiguous way; however, there are several reasonable definitions that reduce to the expected values in the limit of infinite separation.
-Approximate Killing Vector (AKV) spin is one of the spin definitions we use in our numerical relativity code SpEC.
+Approximate Killing vector (AKV) spin is one of the spin definitions we use in our numerical relativity code SpEC.
 AKV spin requires finding approximate Killing vectors on an apparent horizon, which reduces to a generalized eigenvalue problem of size O($L^2$), and a direct solve has time complexity $\mathcal{O}(L^6)$,
 where $L$ is the highest spherical harmonic mode used to represent the apparent horizon.
 This scaling means that the cost of computing AKV spins becomes very high as we simulate systems at higher resolutions, especially systems with high spins or mass ratios. We describe a new algorithm for computing AKV spins that is much faster than the current algorithm.
@@ -165,6 +165,8 @@ Minimizing the functional (\ref{eqn:Optimizer with the lagrange multiplier and N
 \end{align}
 We can try to discretize Eq.(\ref{eqn:generalized eigenvalue problem}) and solve it numerically. The only remaining issue is that both $H$ and $D^2$ still share a kernel where $z$ is a constant, which makes this eigenvalue problem singular. The standard way to deal with such issues is to remove the common kernel space and then solve for $z$. In our case, this is trivial because we are discretizing using spherical harmonics and can just remove the $Y_{00}$ mode.
 
+On a metrically round two-sphere, the scalar potentials associated with rotational Killing vector fields are the three $\ell=1$ spherical harmonics. After removing the constant $Y_{00}$ mode, we therefore retain the three least-shear eigenvectors, which provide a natural generalization of this three-dimensional rotation subspace to a deformed horizon. Although only the first eigenvector strictly minimizes the shear, the three least-shear eigenvectors together define the preferred subspace of generalized rotation generators.
+
 From Eq.~(\ref{eqn:shear norm in terms of H and z}) and Eq.~(\ref{eqn:generalized eigenvalue problem}) we can see that the amount of shear is proportional to the magnitude of $\lambda$. Therefore, once we have discretized Eq.~(\ref{eqn:generalized eigenvalue problem}), the next step is to find the three smallest-magnitude eigenvalues and their corresponding eigenfunctions. We can use these eigenfunctions $z$ to compute the spin about the corresponding axis. However, we still need to determine the spin magnitude by normalizing the eigenfunctions, which is equivalent to fixing the value of $\mathcal{N}$ in Eq.~(\ref{eqn:Optimizer with the lagrange multiplier and N}). To fix this normalization, we use
 
 \begin{align}
@@ -222,11 +224,11 @@ For some simulations, each such spin calculation took over 30 minutes on a singl
 
 \section{\label{sec:Sparse AKV algorithm} Sparse AKV algorithm}
 
-From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest-magnitude eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK. To find an eigenpair ARPACK just needs a series of matrix vector products until it converges to the required solution. Because we only need three eigenpairs, theoretically the computational complexity of using ARPACK is $O(L^4)$ which is much better than the computational complexity of \texttt{dggev} ($O(L^6)$).
+From the previous Section~\ref{sec:Current AKV algorithm}, we saw that the primary cause of the poor scaling of the current AKV algorithm is the LAPACK routine \texttt{dggev}, which solves for the whole eigensystem. To find the AKV spin we only require the three smallest-magnitude eigenvalues and their corresponding eigenvectors. There are standard iterative algorithms, implemented in libraries like ARPACK, that can find just the required eigenpairs very efficiently. For a highly deformed horizon, where $L\approx100$, \texttt{dggev} finds all the $\approx 10^4$ eigenpairs and we can reduce the required computation by a lot if we only find the three required eigenpairs using ARPACK. To find an eigenpair ARPACK just needs a series of matrix-vector products until it converges to the required solution. Because we only need three eigenpairs, theoretically the computational complexity of using ARPACK is $O(L^4)$ which is much better than the computational complexity of \texttt{dggev} ($O(L^6)$).
 
 In the following sections we will first discuss issues that ARPACK has in trying to find the eigenvalues with very small magnitude and how to resolve them. Then we will discuss the cost of assembling the matrices $M$ and $B$. Finally, we will discuss the cost of getting the action of the inverse of these matrices required by ARPACK.
 
-\subsection{\label{ssec:Shift Invert transform} Shift Invert transform}
+\subsection{\label{ssec:Shift Invert transform} Shift-invert transform}
 
 The number of iterations needed by ARPACK to converge depends on the distribution of the eigenvalues. If we are trying to find the first few largest eigenvalues and they are well separated, then the convergence is very fast. On the other hand, if we are trying to find the smallest-magnitude eigenvalues, convergence is very slow, and it might not even converge for some systems. For problems like ours, where we need to find the smallest-magnitude eigenvalues, the way to maintain good convergence is to use the shift-invert transform.
 
@@ -394,7 +396,7 @@ $L$ & Mat gen (s) & LU (s) & ARPACK (s) & \texttt{dggev} (s) \\
 \label{table:timing_data_PC}
 \end{table}
 
-\section{\label{sec:Matrix-free version of the AKV algorithm} Matrix free version of the AKV algorithm}
+\section{\label{sec:Matrix-free version of the AKV algorithm} Matrix-free version of the AKV algorithm}
 
 
 \begin{figure}[h]
@@ -445,7 +447,7 @@ To use the matrix-free version in practice requires having a good preconditioner
 
 \section{\label{sec:Speed difference between finding the smallest and the largest eigenvalues} Speed difference between finding the smallest-magnitude and the largest eigenvalues}
 
-ARPACK converges much faster when we solve for the largest eigenvalues, and they are well separated. This can be seen in the code below, where we construct an artificial matrix and use ARPACK to find the largest and the smallest-magnitude eigenvalues.
+ARPACK converges much faster when we solve for the largest eigenvalues, and they are well separated. This can be seen in Table \ref{table:arpack_toy_timing}, where we construct an artificial matrix and use ARPACK to find the largest and the smallest-magnitude eigenvalues.
 
 We generate a diagonal matrix with entries $1,4,9,16, \ldots, 500^2$.
 
