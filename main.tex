@@ -44,7 +44,7 @@
 
 The dynamics of a binary black hole system depend on its masses and spins.
 For a binary at finite separation, it is not possible to define these quantities in an unambiguous way; however, there are several reasonable definitions that reduce to the expected values in the limit of infinite separation.
-Approximate Killing vector (AKV) spin is one of the spin definitions we use in our numerical relativity code SpEC.
+Approximate Killing vector (AKV) spin is one of the spin definitions used in the numerical relativity code SpEC.
 AKV spin requires finding approximate Killing vectors on an apparent horizon, which reduces to a generalized eigenvalue problem of size O($L^2$), and a direct solve has time complexity $\mathcal{O}(L^6)$,
 where $L$ is the highest spherical harmonic mode used to represent the apparent horizon.
 This scaling means that the cost of computing AKV spins increases rapidly as we simulate systems at higher resolutions, especially those with high spin or mass ratios. We describe a new algorithm for computing AKV spins that is much faster than the current algorithm.
@@ -188,7 +188,7 @@ Apparent horizons in SpEC are represented using spherical harmonics. When the bl
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.75\textwidth]{./images/HPC_all_in_one.png}
-  \caption{Scaling of various parts of the algorithm with the highest spherical harmonic mode $L$. The runs were performed on a high-performance CPU cluster. The solid dots are the real data, while the dotted lines show the best fits. The figure was generated with Matplotlib \cite{matplotlib_2007}. The fits were weighted such that the measurements at higher $L$ have more weight, as they are less noisy. The legends include the scaling from these fits. We see that the scaling of matrix generation and \texttt{dggev} is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$, respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). By a large margin, the current bottleneck is matrix generation (red line).}
+  \caption{Scaling of various parts of the algorithm with the highest spherical harmonic mode $L$. The runs were performed on a high-performance CPU cluster. The solid dots are the real data, while the dotted lines show the best fits. The fits were weighted such that the measurements at higher $L$ have more weight, as they are less noisy. The legends include the scaling from these fits. We see that the scaling of matrix generation and \texttt{dggev} is slightly worse than the theoretical expectation of $O(L^4)$ and $O(L^6)$, respectively. Note that the new AKV algorithm using ARPACK + LU decomposition (purple + black lines) is orders of magnitude faster than the current AKV algorithm using dggev (blue line). By a large margin, the current bottleneck is matrix generation (red line).}
   \label{fig:HPC_all_in_one}
 \end{figure}
 
@@ -266,7 +266,7 @@ Note that not all norms lead to eigenvalue problems in which all eigenvalues are
 
 % One-time setup
 \node[block, fill=orange!20] (build) {Assemble matrices $M$ and $B$};
-\node[block, fill=orange!20, below of=build] (factor) {Form $M-\sigma B$ and compute its \\ LU decomposition and cache it};
+\node[block, fill=orange!20, below of=build] (factor) {Form $M-\sigma B$, compute its \\ LU decomposition, and cache it};
 
 % Iterative loop
 \node[input, fill=blue!10, below=1.8cm of factor] (x) {$x$ from ARPACK};
@@ -471,6 +471,17 @@ Shift-invert near $\sigma=0$ & 5.5 ms \\
 \end{table}
 
 We see that finding the three smallest-magnitude eigenvalues is much slower than finding the three largest-magnitude eigenvalues (19.6ms vs 1930ms). But if we use the shift-invert transform, which essentially transforms the smallest-magnitude eigenvalues into the largest-magnitude ones, ARPACK becomes much more efficient. This is just an artificial example to illustrate the importance of the shift-invert transform and the speedups that can be achieved. In our case, for a black hole with spin $(0,0,0.5)$, we get a speedup of around 5 times for $ L=15$ and around 10 times for $L=55$, with the speedup continuing to increase as the matrix size grows.
+
+\ack{
+This work was supported in part by the Sherman
+Fairchild Foundation, by NSF Grants PHY-2407742, PHY-2308615, and
+OAC-2513338 at Cornell, and
+NASA award 80NSSC26K0340; and by NSF Grants
+PHY-2309211, PHY-2309231, and OAC-2513339, and
+NASA award 80NSSC26K0340 at Caltech.
+Computations were performed at Caltech using the Resnick HPC Center.
+Figures were produced using Matplotlib \cite{matplotlib_2007}.
+}
 
 \clearpage
 \bibliographystyle{unsrt}
