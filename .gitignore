@@ -40,3 +40,4 @@ temp/
 .matplotlib
 database.json
 ads_api/*.csv
+arpack_iteration_counts
