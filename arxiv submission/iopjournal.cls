@@ -178,8 +178,4 @@
 \let\oldtabular\tabular
 \renewcommand{\tabular}{\fontsize{8}{10}\selectfont \oldtabular}
 
-%ORCID
-
-\newcommand{\orcid}[1]{\href{https://orcid.org/#1}{\includegraphics[width=8pt]{orcid}}}
-
 \endinput
