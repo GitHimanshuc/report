@@ -1,4 +1,5 @@
-% iopart-num.bst -- BibTeX style for IOP journals (Harvard-like numeric style)
+% iopart-num-title.bst -- iopart-num with article titles enabled
+% Modified from iopart-num.bst by adding article titles and arXiv links.
 % M. A. Caprio
 %
 % DESCRIPTION
@@ -1335,6 +1336,7 @@ FUNCTION {article}
   format.authors "author" output.check
   format.date "year" output.check
   date.block
+  format.title "title" output.check
   crossref missing$
     {
 %mc add section handling
@@ -1700,9 +1702,9 @@ FUNCTION {begin.bib}
   write$ newline$
   "  \def\url#1{{\tt #1}}\fi"
   write$ newline$
-  "\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi"
+  "\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{}\fi"
   write$ newline$
-  "\providecommand{\eprint}[2][]{\url{#2}}"
+  "\providecommand{\eprint}[2][]{\href{https://arxiv.org/abs/#2}{#2}}"
   write$ newline$
   "% Bibliography created with iopart-num v2.1"
   write$ newline$
