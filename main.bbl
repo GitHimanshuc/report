@@ -1,0 +1,226 @@
+\providecommand{\noopsort}[1]{}\providecommand{\singleletter}[1]{#1}%
+\providecommand{\newblock}{}
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{{\tt #1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{}\fi
+\providecommand{\eprint}[2][]{\href{https://arxiv.org/abs/#2}{#2}}
+% Bibliography created with iopart-num v2.1
+% /biblio/bibtex/contrib/iopart-num
+
+\bibitem{sxs25_5}
+{LIGO Scientific Collaboration}, {Aasi} J, {Abbott} B~P {\em et~al.\/} 2015
+  {Advanced LIGO} {\em Classical and Quantum Gravity\/} {\bf 32} 074001
+  (\textit{Preprint} \eprint{1411.4547})
+  \urlprefix\url{https://doi.org/10.1088/0264-9381/32/7/074001}
+
+\bibitem{sxs25_6}
+{Acernese} F, {Agathos} M, {Agatsuma} K {\em et~al.\/} 2015 {Advanced Virgo: a
+  second-generation interferometric gravitational wave detector} {\em Classical
+  and Quantum Gravity\/} {\bf 32} 024001 (\textit{Preprint} \eprint{1408.3978})
+  \urlprefix\url{https://doi.org/10.1088/0264-9381/32/2/024001}
+
+\bibitem{GWTC4.0}
+{Abac} A~G {\em et~al.\/} 2025 {GWTC-4.0: An Introduction to Version 4.0 of the
+  Gravitational-Wave Transient Catalog} {\em \apjl\/} {\bf 995} L18
+  (\textit{Preprint} \eprint{2508.18080})
+  \urlprefix\url{https://doi.org/10.3847/2041-8213/ae0c06}
+
+\bibitem{sxs25_2}
+{Abbott} B~P, {Abbott} R, {Abbott} T~D {\em et~al.\/} 2016 {GW150914: First
+  results from the search for binary black hole coalescence with Advanced LIGO}
+  {\em \prd\/} {\bf 93} 122003 (\textit{Preprint} \eprint{1602.03839})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.93.122003}
+
+\bibitem{sxs25_1}
+{Abbott} B~P, {Abbott} R, {Abbott} T~D {\em et~al.\/} 2016 {Observation of
+  Gravitational Waves from a Binary Black Hole Merger} {\em \prl\/} {\bf 116}
+  061102 (\textit{Preprint} \eprint{1602.03837})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevLett.116.061102}
+
+\bibitem{sxs25_3}
+{Abbott} B~P, {Abbott} R, {Abbott} T~D {\em et~al.\/} 2016 {GW150914: The
+  Advanced LIGO Detectors in the Era of First Discoveries} {\em \prl\/} {\bf
+  116} 131103 (\textit{Preprint} \eprint{1602.03838})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevLett.116.131103}
+
+\bibitem{sxs25_4}
+{Abbott} B~P, {Abbott} R, {Abbott} T~D {\em et~al.\/} 2016 {Properties of the
+  Binary Black Hole Merger GW150914} {\em \prl\/} {\bf 116} 241102
+  (\textit{Preprint} \eprint{1602.03840})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevLett.116.241102}
+
+\bibitem{NR_Baumgarte}
+{Baumgarte} T~W and {Shapiro} S~L 2010 {\em {Numerical Relativity: Solving
+  Einstein's Equations on the Computer}\/} (Cambridge University Press)
+  \urlprefix\url{https://doi.org/10.1017/CBO9781139193344}
+
+\bibitem{NR_shibata}
+{Shibata} M 2016 {\em {Numerical Relativity}\/} (World Scientific)
+  \urlprefix\url{https://doi.org/10.1142/9692}
+
+\bibitem{NR_Alcubierre}
+{Alcubierre} M 2008 {\em {Introduction to 3+1 Numerical Relativity}\/} (Oxford
+  University Press)
+  \urlprefix\url{https://doi.org/10.1093/acprof:oso/9780199205677.001.0001}
+
+\bibitem{sxs25_68}
+{Blackman} J, {Field} S~E, {Scheel} M~A {\em et~al.\/} 2017 {A Surrogate model
+  of gravitational waveforms from numerical relativity simulations of
+  precessing binary black hole mergers} {\em \prd\/} {\bf 95} 104023
+  (\textit{Preprint} \eprint{1701.00550})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.95.104023}
+
+\bibitem{sxs25_71}
+{Blackman} J, {Field} S~E, {Galley} C~R {\em et~al.\/} 2015 {Fast and Accurate
+  Prediction of Numerical Relativity Waveforms from Binary Black Hole
+  Coalescences Using Surrogate Models} {\em \prl\/} {\bf 115} 121102
+  (\textit{Preprint} \eprint{1502.07758})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevLett.115.121102}
+
+\bibitem{sxs25_72}
+{Varma} V, {Field} S~E, {Scheel} M~A {\em et~al.\/} 2019 {Surrogate model of
+  hybridized numerical relativity binary black hole waveforms} {\em \prd\/}
+  {\bf 99} 064045 (\textit{Preprint} \eprint{1812.07865})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.99.064045}
+
+\bibitem{sxs25_69}
+{Blackman} J, {Field} S~E, {Scheel} M~A {\em et~al.\/} 2017 {Numerical
+  relativity waveform surrogate model for generically precessing binary black
+  hole mergers} {\em \prd\/} {\bf 96} 024058 (\textit{Preprint}
+  \eprint{1705.07089})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.96.024058}
+
+\bibitem{sxs25_70}
+{Varma} V, {Field} S~E, {Scheel} M~A {\em et~al.\/} 2019 {Surrogate models for
+  precessing binary black hole simulations with unequal masses} {\em Physical
+  Review Research\/} {\bf 1} 033015 (\textit{Preprint} \eprint{1905.09300})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevResearch.1.033015}
+
+\bibitem{sxs25_43}
+{Buonanno} A and {Damour} T 1999 {Effective one-body approach to general
+  relativistic two-body dynamics} {\em \prd\/} {\bf 59} 084006
+  (\textit{Preprint} \eprint{gr-qc/9811091})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.59.084006}
+
+\bibitem{sxs25_44}
+{Buonanno} A and {Damour} T 2000 {Transition from inspiral to plunge in binary
+  black hole coalescences} {\em \prd\/} {\bf 62} 064015 (\textit{Preprint}
+  \eprint{gr-qc/0001013})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.62.064015}
+
+\bibitem{sxs25_45}
+{Buonanno} A, {Chen} Y and {Damour} T 2006 {Transition from inspiral to plunge
+  in precessing binaries of spinning black holes} {\em \prd\/} {\bf 74} 104005
+  (\textit{Preprint} \eprint{gr-qc/0508067})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.74.104005}
+
+\bibitem{sxs25_46}
+{Damour} T, {Jaranowski} P and {Sch{\"a}fer} G 2000 {Determination of the last
+  stable orbit for circular general relativistic binaries at the third
+  post-Newtonian approximation} {\em \prd\/} {\bf 62} 084011 (\textit{Preprint}
+  \eprint{gr-qc/0005034})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.62.084011}
+
+\bibitem{sxs25_49}
+{Damour} T 2008 {Introductory Lectures on the Effective One Body Formalism}
+  {\em International Journal of Modern Physics A\/} {\bf 23} 1130--1148
+  (\textit{Preprint} \eprint{0802.4047})
+  \urlprefix\url{https://doi.org/10.1142/S0217751X08039992}
+
+\bibitem{sxs25_50}
+{Ramos-Buades} A, {Buonanno} A, {Estell{\'e}s} H {\em et~al.\/} 2023 {Next
+  generation of accurate and efficient multipolar precessing-spin
+  effective-one-body waveforms for binary black holes} {\em \prd\/} {\bf 108}
+  124037 (\textit{Preprint} \eprint{2303.18046})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.108.124037}
+
+\bibitem{sxs25_74}
+{Evans} M, {Corsi} A, {Afle} C {\em et~al.\/} 2023 {Cosmic Explorer: A
+  Submission to the NSF MPSAC ngGW Subcommittee} {\em arXiv e-prints\/}
+  arXiv:2306.13745 (\textit{Preprint} \eprint{2306.13745})
+  \urlprefix\url{https://doi.org/10.48550/arXiv.2306.13745}
+
+\bibitem{sxs25_77}
+{Abac} A, {Abramo} R, {Albanesi} S {\em et~al.\/} 2026 {The Science of the
+  Einstein Telescope} {\em \jcap\/} {\bf 2026} 081 (\textit{Preprint}
+  \eprint{2503.12263})
+  \urlprefix\url{https://doi.org/10.1088/1475-7516/2026/03/081}
+
+\bibitem{sxs25_78}
+{Amaro-Seoane} P, {Audley} H, {Babak} S {\em et~al.\/} 2017 {Laser
+  Interferometer Space Antenna} {\em arXiv e-prints\/} arXiv:1702.00786
+  (\textit{Preprint} \eprint{1702.00786})
+  \urlprefix\url{https://doi.org/10.48550/arXiv.1702.00786}
+
+\bibitem{sxs25_83}
+{P{\"u}rrer} M and {Haster} C~J 2020 {Gravitational waveform accuracy
+  requirements for future ground-based detectors} {\em Physical Review
+  Research\/} {\bf 2} 023151 (\textit{Preprint} \eprint{1912.10055})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevResearch.2.023151}
+
+\bibitem{sxs25_143}
+{Ossokine} S, {Foucart} F, {Pfeiffer} H~P, {Boyle} M and {Szil{\'a}gyi} B 2015
+  {Improvements to the construction of binary black hole initial data} {\em
+  Classical and Quantum Gravity\/} {\bf 32} 245010 (\textit{Preprint}
+  \eprint{1506.01689})
+  \urlprefix\url{https://doi.org/10.1088/0264-9381/32/24/245010}
+
+\bibitem{SpECwebsite}
+{SpEC}: {Spectral Einstein Code}
+  \url{https://www.black-holes.org/for-researchers/spec} accessed: 2026-07-08
+
+\bibitem{lovelace_binary-black-hole_2008}
+Lovelace G, Owen R, Pfeiffer H~P and Chu T 2008 Binary-black-hole initial data
+  with nearly extremal spins {\em Physical Review D\/} {\bf 78} 084017
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.78.084017}
+
+\bibitem{Owen:2017yaj}
+Owen R, Fox A~S, Freiberg J~A and Jacques T~P 2019 {Black Hole Spin Axis in
+  Numerical Relativity} {\em Physical Review D\/} {\bf 99} 084031
+  (\textit{Preprint} \eprint{1708.07325})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.99.084031}
+
+\bibitem{lovelace08_73}
+{Dreyer} O, {Krishnan} B, {Shoemaker} D and {Schnetter} E 2003 {Introduction to
+  isolated horizons in numerical relativity} {\em \prd\/} {\bf 67} 024018
+  (\textit{Preprint} \eprint{gr-qc/0206008})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.67.024018}
+
+\bibitem{lapack_users_guide}
+Anderson E, Bai Z, Bischof C, Blackford S, Demmel J, Dongarra J, Du~Croz J,
+  Greenbaum A, Hammarling S, McKenney A and Sorensen D 1999 {\em {LAPACK}
+  Users' Guide\/} 3rd ed (Philadelphia, PA: Society for Industrial and Applied
+  Mathematics) ISBN 0-89871-447-8
+  \urlprefix\url{https://doi.org/10.1137/1.9780898719604}
+
+\bibitem{arpack_guide}
+Lehoucq R~B, Sorensen D~C and Yang C 1998 {\em {ARPACK} Users' Guide: Solution
+  of Large-Scale Eigenvalue Problems with Implicitly Restarted Arnoldi
+  Methods\/} Software, Environments, and Tools (Philadelphia, PA: Society for
+  Industrial and Applied Mathematics) ISBN 978-0-89871-407-4
+  \urlprefix\url{https://doi.org/10.1137/1.9780898719628}
+
+\bibitem{lovelace08_41}
+{Cook} G~B and {Whiting} B~F 2007 {Approximate Killing vectors on S$^{2}$} {\em
+  \prd\/} {\bf 76} 041501 (\textit{Preprint} \eprint{0706.0199})
+  \urlprefix\url{https://doi.org/10.1103/PhysRevD.76.041501}
+
+\bibitem{spectrecode}
+Deppe N, Throwe W, Kidder L~E, Vu N~L, Nelli K~C, Scheel M~A, Armaza C, Bonilla
+  M~S, Carpenter A, Foucart F, H\'ebert F, Kim Y, Kumar P, Lara G, Lovelace G,
+  Macedo A, Moxon J, Murphy M, O'Shea E, Pfeiffer H~P, Teukolsky S~A, Wittek
+  N~A {\em et~al.\/} 2026 \texttt{SpECTRE v2026.06.30}
+  \href{https://doi.org/10.5281/zenodo.21065180}{10.5281/zenodo.21065180}
+  \urlprefix\url{https://spectre-code.org}
+
+\bibitem{matplotlib_2007}
+Hunter J~D 2007 Matplotlib: A {2D} graphics environment {\em Computing in
+  Science \& Engineering\/} {\bf 9} 90--95
+  \urlprefix\url{https://doi.org/10.1109/MCSE.2007.55}
+
+\bibitem{SciencePlots}
+Garrett J 2021 {SciencePlots} Zenodo,
+  \url{https://doi.org/10.5281/zenodo.5512926} version 1.0.9
+
+\end{thebibliography}

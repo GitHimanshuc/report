@@ -1,0 +1,213 @@
+\providecommand{\noopsort}[1]{}\providecommand{\singleletter}[1]{#1}%
+\begin{thebibliography}{10}
+
+\bibitem{sxs25_5}
+{LIGO Scientific Collaboration}, J.~{Aasi}, B.~P. {Abbott}, et~al.
+\newblock {Advanced LIGO}.
+\newblock {\em Classical and Quantum Gravity}, 32(7):074001, April 2015.
+
+\bibitem{sxs25_6}
+F.~{Acernese}, M.~{Agathos}, K.~{Agatsuma}, et~al.
+\newblock {Advanced Virgo: a second-generation interferometric gravitational
+  wave detector}.
+\newblock {\em Classical and Quantum Gravity}, 32(2):024001, January 2015.
+
+\bibitem{GWTC4.0}
+A.~G. {Abac} et~al.
+\newblock {GWTC-4.0: An Introduction to Version 4.0 of the Gravitational-Wave
+  Transient Catalog}.
+\newblock {\em \apjl}, 995(1):L18, December 2025.
+
+\bibitem{sxs25_2}
+B.~P. {Abbott}, R.~{Abbott}, T.~D. {Abbott}, et~al.
+\newblock {GW150914: First results from the search for binary black hole
+  coalescence with Advanced LIGO}.
+\newblock {\em \prd}, 93(12):122003, June 2016.
+
+\bibitem{sxs25_1}
+B.~P. {Abbott}, R.~{Abbott}, T.~D. {Abbott}, et~al.
+\newblock {Observation of Gravitational Waves from a Binary Black Hole Merger}.
+\newblock {\em \prl}, 116(6):061102, February 2016.
+
+\bibitem{sxs25_3}
+B.~P. {Abbott}, R.~{Abbott}, T.~D. {Abbott}, et~al.
+\newblock {GW150914: The Advanced LIGO Detectors in the Era of First
+  Discoveries}.
+\newblock {\em \prl}, 116(13):131103, April 2016.
+
+\bibitem{sxs25_4}
+B.~P. {Abbott}, R.~{Abbott}, T.~D. {Abbott}, et~al.
+\newblock {Properties of the Binary Black Hole Merger GW150914}.
+\newblock {\em \prl}, 116(24):241102, June 2016.
+
+\bibitem{NR_Baumgarte}
+Thomas~W. {Baumgarte} and Stuart~L. {Shapiro}.
+\newblock {\em {Numerical Relativity: Solving Einstein's Equations on the
+  Computer}}.
+\newblock Cambridge University Press, 2010.
+
+\bibitem{NR_shibata}
+Masaru {Shibata}.
+\newblock {\em {Numerical Relativity}}.
+\newblock World Scientific, 2016.
+
+\bibitem{NR_Alcubierre}
+Miguel {Alcubierre}.
+\newblock {\em {Introduction to 3+1 Numerical Relativity}}.
+\newblock Oxford University Press, 2008.
+
+\bibitem{sxs25_68}
+Jonathan {Blackman}, Scott~E. {Field}, Mark~A. {Scheel}, et~al.
+\newblock {A Surrogate model of gravitational waveforms from numerical
+  relativity simulations of precessing binary black hole mergers}.
+\newblock {\em \prd}, 95(10):104023, May 2017.
+
+\bibitem{sxs25_71}
+Jonathan {Blackman}, Scott~E. {Field}, Chad~R. {Galley}, et~al.
+\newblock {Fast and Accurate Prediction of Numerical Relativity Waveforms from
+  Binary Black Hole Coalescences Using Surrogate Models}.
+\newblock {\em \prl}, 115(12):121102, September 2015.
+
+\bibitem{sxs25_72}
+Vijay {Varma}, Scott~E. {Field}, Mark~A. {Scheel}, et~al.
+\newblock {Surrogate model of hybridized numerical relativity binary black hole
+  waveforms}.
+\newblock {\em \prd}, 99(6):064045, March 2019.
+
+\bibitem{sxs25_69}
+Jonathan {Blackman}, Scott~E. {Field}, Mark~A. {Scheel}, et~al.
+\newblock {Numerical relativity waveform surrogate model for generically
+  precessing binary black hole mergers}.
+\newblock {\em \prd}, 96(2):024058, July 2017.
+
+\bibitem{sxs25_70}
+Vijay {Varma}, Scott~E. {Field}, Mark~A. {Scheel}, et~al.
+\newblock {Surrogate models for precessing binary black hole simulations with
+  unequal masses}.
+\newblock {\em Physical Review Research}, 1(3):033015, October 2019.
+
+\bibitem{sxs25_43}
+A.~{Buonanno} and T.~{Damour}.
+\newblock {Effective one-body approach to general relativistic two-body
+  dynamics}.
+\newblock {\em \prd}, 59(8):084006, April 1999.
+
+\bibitem{sxs25_44}
+Alessandra {Buonanno} and Thibault {Damour}.
+\newblock {Transition from inspiral to plunge in binary black hole
+  coalescences}.
+\newblock {\em \prd}, 62(6):064015, September 2000.
+
+\bibitem{sxs25_45}
+Alessandra {Buonanno}, Yanbei {Chen}, and Thibault {Damour}.
+\newblock {Transition from inspiral to plunge in precessing binaries of
+  spinning black holes}.
+\newblock {\em \prd}, 74(10):104005, November 2006.
+
+\bibitem{sxs25_46}
+Thibault {Damour}, Piotr {Jaranowski}, and Gerhard {Sch{\"a}fer}.
+\newblock {Determination of the last stable orbit for circular general
+  relativistic binaries at the third post-Newtonian approximation}.
+\newblock {\em \prd}, 62(8):084011, October 2000.
+
+\bibitem{sxs25_49}
+Thibault {Damour}.
+\newblock {Introductory Lectures on the Effective One Body Formalism}.
+\newblock {\em International Journal of Modern Physics A}, 23(8):1130--1148,
+  January 2008.
+
+\bibitem{sxs25_50}
+Antoni {Ramos-Buades}, Alessandra {Buonanno}, H{\'e}ctor {Estell{\'e}s}, et~al.
+\newblock {Next generation of accurate and efficient multipolar precessing-spin
+  effective-one-body waveforms for binary black holes}.
+\newblock {\em \prd}, 108(12):124037, December 2023.
+
+\bibitem{sxs25_74}
+Matthew {Evans}, Alessandra {Corsi}, Chaitanya {Afle}, et~al.
+\newblock {Cosmic Explorer: A Submission to the NSF MPSAC ngGW Subcommittee}.
+\newblock {\em arXiv e-prints}, page arXiv:2306.13745, June 2023.
+
+\bibitem{sxs25_77}
+Adrian {Abac}, Raul {Abramo}, Simone {Albanesi}, et~al.
+\newblock {The Science of the Einstein Telescope}.
+\newblock {\em \jcap}, 2026(3):081, March 2026.
+
+\bibitem{sxs25_78}
+Pau {Amaro-Seoane}, Heather {Audley}, Stanislav {Babak}, et~al.
+\newblock {Laser Interferometer Space Antenna}.
+\newblock {\em arXiv e-prints}, page arXiv:1702.00786, February 2017.
+
+\bibitem{sxs25_83}
+Michael {P{\"u}rrer} and Carl-Johan {Haster}.
+\newblock {Gravitational waveform accuracy requirements for future ground-based
+  detectors}.
+\newblock {\em Physical Review Research}, 2(2):023151, May 2020.
+
+\bibitem{sxs25_143}
+Serguei {Ossokine}, Francois {Foucart}, Harald~P. {Pfeiffer}, Michael {Boyle},
+  and B{\'e}la {Szil{\'a}gyi}.
+\newblock {Improvements to the construction of binary black hole initial data}.
+\newblock {\em Classical and Quantum Gravity}, 32(24):245010, December 2015.
+
+\bibitem{SpECwebsite}
+{SpEC}: Spectral einstein code.
+\newblock \url{https://www.black-holes.org/for-researchers/spec}.
+\newblock Accessed: 2026-07-08.
+
+\bibitem{lovelace_binary-black-hole_2008}
+Geoffrey Lovelace, Robert Owen, Harald~P. Pfeiffer, and Tony Chu.
+\newblock Binary-black-hole initial data with nearly extremal spins.
+\newblock {\em Physical Review D}, 78:084017, 2008.
+
+\bibitem{Owen:2017yaj}
+Robert Owen, Alex~S. Fox, John~A. Freiberg, and Terrence~Pierre Jacques.
+\newblock {Black Hole Spin Axis in Numerical Relativity}.
+\newblock {\em Phys. Rev.}, D99(8):084031, 2019.
+
+\bibitem{lovelace08_73}
+Olaf {Dreyer}, Badri {Krishnan}, Deirdre {Shoemaker}, and Erik {Schnetter}.
+\newblock {Introduction to isolated horizons in numerical relativity}.
+\newblock {\em \prd}, 67(2):024018, January 2003.
+
+\bibitem{lapack_users_guide}
+E.~Anderson, Z.~Bai, C.~Bischof, S.~Blackford, J.~Demmel, J.~Dongarra,
+  J.~Du~Croz, A.~Greenbaum, S.~Hammarling, A.~McKenney, and D.~Sorensen.
+\newblock {\em {LAPACK} Users' Guide}.
+\newblock Society for Industrial and Applied Mathematics, Philadelphia, PA,
+  third edition, 1999.
+
+\bibitem{arpack_guide}
+R.~B. Lehoucq, D.~C. Sorensen, and C.~Yang.
+\newblock {\em {ARPACK} Users' Guide: Solution of Large-Scale Eigenvalue
+  Problems with Implicitly Restarted Arnoldi Methods}.
+\newblock Software, Environments, and Tools. Society for Industrial and Applied
+  Mathematics, Philadelphia, PA, 1998.
+
+\bibitem{lovelace08_41}
+Gregory~B. {Cook} and Bernard~F. {Whiting}.
+\newblock {Approximate Killing vectors on S$^{2}$}.
+\newblock {\em \prd}, 76(4):041501, August 2007.
+
+\bibitem{spectrecode}
+Nils Deppe, William Throwe, Lawrence~E. Kidder, Nils~L. Vu, Kyle~C. Nelli,
+  Mark~A. Scheel, Crist\'obal Armaza, Marceline~S. Bonilla, Alexander
+  Carpenter, Francois Foucart, Fran\c{c}ois H\'ebert, Yoonsoo Kim, Prayush
+  Kumar, Guillermo Lara, Geoffrey Lovelace, Alexandra Macedo, Jordan Moxon,
+  Michael Murphy, Eamonn O'Shea, Harald~P. Pfeiffer, Saul~A. Teukolsky,
+  Nikolas~A. Wittek, et~al.
+\newblock \texttt{SpECTRE v2026.06.30}.
+\newblock
+  \href{https://doi.org/10.5281/zenodo.21065180}{10.5281/zenodo.21065180}, June
+  2026.
+
+\bibitem{matplotlib_2007}
+J.~D. Hunter.
+\newblock Matplotlib: A 2d graphics environment.
+\newblock {\em Computing in Science \& Engineering}, 9(3):90--95, 2007.
+
+\bibitem{SciencePlots}
+John~D. Garrett.
+\newblock {garrettj403/SciencePlots}.
+\newblock September 2021.
+
+\end{thebibliography}

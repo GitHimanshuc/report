@@ -1,6 +1,5 @@
 # LaTeX build artifacts
 *.aux
-*.bbl
 *.bcf
 *.blg
 *.ent
